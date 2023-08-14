@@ -49,7 +49,7 @@
                         <i class="ti-shopping-cart"></i>
                         Xác nhận mật khẩu
                     </label>
-                    <input type="password2" name="password2" class="modal-input" placeholder="Confirm your password" required="" autocomplete="current-password">
+                    <input type="password" name="password2" class="modal-input" placeholder="Confirm your password" required="" autocomplete="current-password">
 
                     {% for message in messages %}
                     <h3 style="color: red">{{ message}}</h3>
@@ -62,12 +62,12 @@
             <footer class="modal-footer">
                 <div class="modal-register">
                     <p>
-                        <a href="">Đăng nhập</a>
+                        <a href="/login">Đăng nhập</a>
                     </p>
                 </div>
                 <div class="modal-help">
                     <p>
-                        <a href="">Quên mật khẩu ?</a>
+                        <a href="/forgotpassword">Quên mật khẩu ?</a>
                     </p>
                 </div>
             </footer>

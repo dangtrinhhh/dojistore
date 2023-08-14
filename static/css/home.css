@@ -1,0 +1,82 @@
+:root {
+    --greentea-color: #3CB815;
+    --carot-color: #F65005;
+}
+
+.greentea-color {
+    color: var(--greentea-color);
+}
+
+.greentea-bgcolor {
+    background-color: var(--greentea-color);
+}
+
+.carot-color {
+    color: var(--carot-color);
+}
+
+.carot-bgcolor {
+    background-color: var(--carot-color);
+}
+
+.shopping-bag-icon i:hover {
+    color: var(--carot-color);
+}
+
+.cursor-pointer {
+    cursor: pointer !important;
+}
+
+nav {
+    background-color: #fff !important;
+}
+
+.navbar-brand h1 {
+    font-family: "Lora",serif;
+    font-weight: bold;
+}
+
+/* .carousel-caption {
+    min-height: 450px;
+} */
+
+.carousel-caption h1 {
+    font-family: "Lora",serif;
+    font-weight: bold;
+    text-align: left;
+}
+
+.text-lora {
+    font-family: "Lora",serif;
+    font-weight: bold;
+}
+
+.carousel-caption a {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #fff; 
+}
+
+.carousel-item img {
+    min-height: 450px;
+    object-fit: cover;
+}
+
+.navbar-nav .nav-item {
+    margin: 10px;
+}
+
+.navbar-nav a {
+    font-weight: bold;
+}
+
+.navbar-nav a:hover {
+    color: var(--greentea-color)!important;
+    cursor: pointer!important;
+}
+
+@media (min-width: 1300px) {
+    .carousel-caption {
+        top: 40%;
+    }
+}

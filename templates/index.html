@@ -1,123 +1,106 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="icon" href="{% static 'img/logo.png' %}" type="image/x-icon" />
-    <link rel="stylesheet" type="text/css"  href="{% static 'style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
     <link rel="stylesheet" href="{% static '/font/themify-icons-font/themify-icons.css' %}">
     <link rel="stylesheet" href="{% static 'font/fontawesome/css/all.css' %}">
-    <title>Trang Bán Hàng</title>
-</head>
-
-<body>
-    <header class="navbar-header">
-        <nav>
-            <ul>
-                <h1><a href="#">DojiStore</a></h1>
-            </ul>
-            <ul>
-                <h3><a href="#">Khuyễn mãi</a></h3>
-                <h3><a href="#">Sản phẩm</a></h3>
-                <h3><a href="#">Liên hệ</a></h3>
-                <h3><a href="#">Fanpage</a></h3>
-            </ul>
-            <ul>
-                <h3><a href="#">Giỏ hàng <i class="fas fa-shopping-cart"></i></a></h3>
-            </ul>
-            <ul>
-                {% if user.is_authenticated %}
-                <li><a>Xin chào <b>{{ user.username }}</b></a></li>
-                <li>
-                    <div class="circle">
-                        <img src="{% static 'img/default-avatar.png' %}" alt="Avatar">
+    <title>DojiStore | Homepage</title>
+  </head>
+  <body>
+    <!-- Navbar Start -->
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-white m-0 py-lg-0 px-lg-5 wow fadeIn" data-wow-delay="0.1s">
+        <a href="/" class="navbar-brand ms-4 ms-lg-0">
+            <h1 class="fw-bold greentea-color m-0">Doji<span class="carot-color"> Store</span></h1>
+        </a>
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="/" class="nav-item nav-link active">Home</a>
+                <a href="/about" class="nav-item nav-link">About Us</a>
+                <a href="/product" class="nav-item nav-link">Products</a>
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                    <div class="dropdown-menu m-0">
+                        <a href="/blog" class="dropdown-item">Blog Grid</a>
+                        <a href="/feature" class="dropdown-item">Our Features</a>
+                        <a href="/testimonial" class="dropdown-item">Testimonial</a>
                     </div>
-                </li>
-                <li><a class="btn-logout" href="logout">Đăng xuất</a></li>
+                </div>
+                <a href="/contact" class="nav-item nav-link">Contact Us</a>
+                <a class="btn-sm-square shopping-bag-icon rounded-circle ms-3 m-auto" href="">
+                    <i class="fa fa-shopping-bag greentea-color me-3"></i>
+                </a>
+                {% if user.is_authenticated %}
+                <a class="nav-item nav-link">Hi <b>{{ user.username }}</b></a>
+                <div class="circle m-auto">
+                    <img src="{% static 'img/default-avatar.png' %}" alt="Avatar">
+                </div>
+                <a class="nav-item nav-link btn-logout" href="logout">Logout</a>
                 {% else %}
-                <li><a href="#">Giỏ hàng <i class="fas fa-shopping-cart"></i></a></li>
-                <li><a class="btn-login">Đăng nhập</a></li>
-                <li><a class="btn-register">Đăng kí</a></li>
+                <a class="nav-item nav-link btn-login">Login</a>
+                <a class="nav-item nav-link btn-register">Register</a>
                 {% endif %}
-            </ul>
-        </nav>
-    </header>
-    <div class="container">
-        <div class="product">
-            <img src="{% static 'img/img21-scaled.jpg' %}" alt="Sản phẩm 1">
-            <h2>Sản phẩm 1</h2>
-            <p>Giá: $100</p>
-            <p>Sản phẩm chính hãng</p>
-            <button class="add-to-cart-button">Thêm vào <i class="fas fa-shopping-cart"></i></button>
+            </div>
         </div>
+    </nav>
+    <!-- Navbar End -->
 
-        <div class="product">
-            <img src="{% static 'img/img21-scaled.jpg' %}" alt="Sản phẩm 2">
-            <h2>Sản phẩm 2</h2>
-            <p>Giá: $150</p>
-            <p>Sản phẩm chính hãng</p>
-            <button class="add-to-cart-button">Thêm vào <i class="fas fa-shopping-cart"></i></button>
+    <!-- Carousel Start -->
+    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="{% static 'img/carousel-1.jpg'%}" class="d-block w-100" alt="Carousel 1">
+            <div class="carousel-caption">
+                <div class="container">
+                    <div class="row justify-content-start">
+                        <div class="col-lg-7">
+                            <h1 class="display-2 text-dark mb-5 animated slideInDown">Organic Food Is Good For Health</h1>
+                            <a href="" class="btn greentea-bgcolor rounded-pill py-sm-3 px-sm-5">Products</a>
+                            <a href="" class="btn carot-bgcolor rounded-pill py-sm-3 px-sm-5 ms-3">Services</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img src="{% static 'img/carousel-1.jpg'%}" class="d-block w-100" alt="Carousel 2">
+            <div class="carousel-caption">
+                <div class="container">
+                    <div class="row justify-content-start">
+                        <div class="col-lg-7">
+                            <h1 class="display-2 text-dark mb-5 animated slideInDown">Natural Food Is Always Healthy</h1>
+                            <a href="/product" class="btn greentea-bgcolor rounded-pill py-sm-3 px-sm-5">Products</a>
+                            <a href="/services" class="btn carot-bgcolor rounded-pill py-sm-3 px-sm-5 ms-3">Services</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
         </div>
-
-        <div class="product">
-            <img src="{% static 'img/img21-scaled.jpg' %}" alt="Sản phẩm 3">
-            <h2>Sản phẩm 3</h2>
-            <p>Giá: $80</p>
-            <p>Sản phẩm chính hãng</p>
-            <button class="add-to-cart-button">Thêm vào <i class="fas fa-shopping-cart"></i></button>
-        </div>
-
-        <div class="product">
-            <img src="{% static 'img/img21-scaled.jpg' %}" alt="Sản phẩm 1">
-            <h2>Sản phẩm 1</h2>
-            <p>Giá: $100</p>
-            <p>Sản phẩm chính hãng</p>
-            <button class="add-to-cart-button">Thêm vào <i class="fas fa-shopping-cart"></i></button>
-        </div>
-
-        <div class="product">
-            <img src="{% static 'img/img21-scaled.jpg' %}" alt="Sản phẩm 2">
-            <h2>Sản phẩm 2</h2>
-            <p>Giá: $150</p>
-            <p>Sản phẩm chính hãng</p>
-            <button class="add-to-cart-button">Thêm vào <i class="fas fa-shopping-cart"></i></button>
-        </div>
-
-        <div class="product">
-            <img src="{% static 'img/img21-scaled.jpg' %}" alt="Sản phẩm 3">
-            <h2>Sản phẩm 3</h2>
-            <p>Giá: $80</p>
-            <p>Sản phẩm chính hãng</p>
-            <button class="add-to-cart-button">Thêm vào <i class="fas fa-shopping-cart"></i></button>
-        </div>
-
-        <div class="product">
-            <img src="{% static 'img/img21-scaled.jpg' %}" alt="Sản phẩm 1">
-            <h2>Sản phẩm 1</h2>
-            <p>Giá: $100</p>
-            <p>Sản phẩm chính hãng</p>
-            <button class="add-to-cart-button">Thêm vào <i class="fas fa-shopping-cart"></i></button>
-        </div>
-
-        <div class="product">
-            <img src="{% static 'img/img21-scaled.jpg' %}" alt="Sản phẩm 2">
-            <h2>Sản phẩm 2</h2>
-            <p>Giá: $150</p>
-            <p>Sản phẩm chính hãng</p>
-            <button class="add-to-cart-button">Thêm vào <i class="fas fa-shopping-cart"></i></button>
-        </div>
-
-        <div class="product">
-            <img src="{% static 'img/img21-scaled.jpg' %}" alt="Sản phẩm 3">
-            <h2>Sản phẩm 3</h2>
-            <p>Giá: $80</p>
-            <p>Sản phẩm chính hãng</p>
-            <button class="add-to-cart-button">Thêm vào <i class="fas fa-shopping-cart"></i></button>
-        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon p-4" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+          <span class="carousel-control-next-icon p-4" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
     </div>
-    
+    <!-- Carousel End -->
+
+    <!-- Modal Start -->
+
     <div id="modal" class="modal js-modal">
         <div class="modal-container js-modal-container">
             <div class="modal-close">
@@ -125,7 +108,7 @@
             </div>
 
             <header class="modal-header">
-                Chào mừng đến với DojiStore
+                Welcome to DojiStore
             </header>
 
             <div class="modal-body">
@@ -134,13 +117,13 @@
                     {% csrf_token %}
                     <label class="modal-label">
                         <i class="ti-user"></i>
-                        Tên tài khoản
+                        Username
                     </label>
                     <input type="text" name="username" class="modal-input" placeholder="Your username" required=""  autocomplete="username">
 
                     <label class="modal-label">
                         <i class="ti-shopping-cart"></i>
-                        Mật khẩu
+                        Password
                     </label>
                     <input type="password" name="password" class="modal-input" placeholder="Your password" required="" autocomplete="current-password">
                     
@@ -148,22 +131,17 @@
                     <h3 style="color: red">{{ message}}</h3>
                     {% endfor %}
                     
-                    <input type="submit" value="Đăng nhập" class="buy-tickets">
+                    <input type="submit" name="login" value="Login" class="buy-tickets">
                 </form>
             </div>
-
-            <footer class="modal-footer">
-                <div class="modal-register">
-                    <p>
-                        <a href="">Đăng kí</a>
-                    </p>
+            <div class="d-flex justify-content-between">
+                <div class="m-4">
+                    <a class="btn-register cursor-pointer">Register</a>
                 </div>
-                <div class="modal-help">
-                    <p>
-                        <a href="">Quên mật khẩu ?</a>
-                    </p>
+                <div class="m-4">
+                    <a href="/forgotpassword">Forgot password ?</a>
                 </div>
-            </footer>
+            </div>
         </div>
     </div>
 
@@ -174,7 +152,7 @@
             </div>
 
             <header class="modal-header">
-                Chào mừng đến với DojiStore
+                Welcome to DojiStore
             </header>
 
             <div class="modal-body">
@@ -185,49 +163,78 @@
                         <i class="ti-email"></i>
                         Email
                     </label>
-                    <input type="email" name="email" class="modal-input" placeholder="Your username" required=""  autocomplete="username">
+                    <input type="email" name="email" class="modal-input" placeholder="Your email" required=""  autocomplete="username">
 
                     <label class="modal-label">
                         <i class="ti-user"></i>
-                        Tên tài khoản
+                        Username
                     </label>
                     <input type="text" name="username" class="modal-input" placeholder="Your username" required=""  autocomplete="username">
 
                     <label class="modal-label">
                         <i class="ti-shopping-cart"></i>
-                        Mật khẩu
+                        Password
                     </label>
                     <input type="password" name="password" class="modal-input" placeholder="Your password" required="" autocomplete="current-password">
 
                     <label class="modal-label">
                         <i class="ti-shopping-cart"></i>
-                        Xác nhận mật khẩu
+                        Confirm Password
                     </label>
-                    <input type="password2" name="password2" class="modal-input" placeholder="Confirm your password" required="" autocomplete="current-password">
+                    <input type="password" name="password2" class="modal-input" placeholder="Confirm your password" required="" autocomplete="current-password">
 
                     {% for message in messages %}
                     <h3 style="color: red">{{ message}}</h3>
                     {% endfor %}
 
-                    <input type="submit" value="Đăng nhập" class="buy-tickets">
+                    <input type="submit" name="register" value="Register" class="buy-tickets">
                 </form>
             </div>
 
-            <footer class="modal-footer">
-                <div class="modal-register">
-                    <p>
-                        <a href="">Đăng nhập</a>
-                    </p>
+            <div class="d-flex justify-content-between">
+                <div class="m-4">
+                    <a class="btn-login cursor-pointer">Login</a>
                 </div>
-                <div class="modal-help">
-                    <p>
-                        <a href="">Quên mật khẩu ?</a>
-                    </p>
+                <div class="m-4">
+                    <a href="/forgotpassword">Forgot password ?</a>
                 </div>
-            </footer>
+            </div>
         </div>
     </div>
-    <script src="{% static 'js/main.js' %}"></script>
-</body>
 
+    <!-- Modal End -->
+
+    <!-- About Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                    <div class="about-img position-relative overflow-hidden p-5 pe-0">
+                        <img class="img-fluid w-100" src="{% static 'img/about.jpg' %}">
+                    </div>
+                </div>
+                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                    <h1 class="text-lora display-5 mb-4">Best Organic Fruits And Vegetables</h1>
+                    <p class="mb-4">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna dolore erat amet</p>
+                    <p><i class="fa fa-check greentea-color me-3"></i>Tempor erat elitr rebum at clita</p>
+                    <p><i class="fa fa-check greentea-color me-3"></i>Aliqu diam amet diam et eos</p>
+                    <p><i class="fa fa-check greentea-color me-3"></i>Clita duo justo magna dolore erat amet</p>
+                    <a class="btn greentea-bgcolor text-white rounded-pill py-3 px-5 mt-3" href="">Read More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- About End -->
+
+    <!-- Optional JavaScript; choose one of the two! -->
+    <script src="{% static 'js/main.js' %}"></script>
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    -->
+  </body>
 </html>

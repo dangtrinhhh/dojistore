@@ -8,19 +8,39 @@ def index(request):
     # To get Feature from database:
     # features = Feature.objects.all()
     print(request)
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        
-        user = auth.authenticate(username=username, password=password)
-        
-        if user is not None:
-            auth.login(request, user)
-            return redirect('/')
+    if request.method == "POST":
+        email = request.POST.get('email', '')
+        if email == '':
+            username = request.POST['username']
+            password = request.POST['password']
+            
+            user = auth.authenticate(username=username, password=password)
+            
+            if user is not None:
+                auth.login(request, user)
+                return redirect('/')
+            else:
+                messages.info(request, 'Tên tài khoản hoặc mật khẩu không đúng.')
+                return redirect('/login')
         else:
-            messages.info(request, 'Tên tài khoản hoặc mật khẩu không đúng.')
-            return redirect('/login')
-             
+            email = request.POST['email']
+            username = request.POST['username']
+            password = request.POST['password']
+            password2 = request.POST['password2']
+            if password == password2:
+                if User.objects.filter(email=email).exists():
+                    messages.info(request, 'Email đã tồn tại.')
+                    return redirect('register')
+                elif User.objects.filter(username=username).exists():
+                    messages.info(request, 'Tên đăng nhập đã tồn tại.')
+                    return redirect('register')
+                else:
+                    user = User.objects.create_user(username=username, email=email, password=password)
+                    user.save()
+                    return redirect('login')
+            else:
+                messages.info(request, 'Mật khẩu không khớp')
+                return redirect('register')
     else:
         return render(request, 'index.html')
 
