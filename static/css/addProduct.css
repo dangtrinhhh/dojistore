@@ -1,0 +1,12 @@
+body {
+    background-image: url(../img/bg-fruit-2.png);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    overflow-x: hidden;
+}
+
+.container-xxl {
+    background-color: #fff;
+    border-radius: 10px;
+}
