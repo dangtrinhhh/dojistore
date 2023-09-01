@@ -57,6 +57,8 @@ modalContainer2.addEventListener('click', function(event) {
     event.stopPropagation()
 })
 
+// Product Handle Function
+
 function updateProductName(newName) {
     const productNameElement = document.querySelector('.product-name');
     if (productNameElement) {
@@ -103,5 +105,30 @@ function updateSaleIcon() {
         } else {
             bigsaleIcon.style.display = 'none';
         }
+    }
+}
+
+// Blog Handle Function:
+
+
+function updateBlogTitle(newTitle) {
+    const blogTitleElement = document.querySelector('.blog-title-demo');
+    if (blogTitleElement) {
+        blogTitleElement.textContent = newTitle;
+    }
+}
+
+function updateBlogContent(newContent) {
+    const blogContentElement = document.querySelector('.blog-content');
+    if (blogContentElement) {
+        blogContentElement.textContent = newContent;
+    }
+}
+
+function updateBlogImage(inputElement) {
+    const blogImageElement = document.getElementById('blog-image');
+    if (blogImageElement && inputElement.files && inputElement.files[0]) {
+        const newImage = URL.createObjectURL(inputElement.files[0]);
+        blogImageElement.src = newImage;
     }
 }

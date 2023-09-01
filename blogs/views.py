@@ -8,16 +8,15 @@ from .models import Blog
 # Create your views here.
 def writeblog(request):
     if request.method == 'POST':
-        product = Blog()
-        product.name = request.POST.get('name')
-        product.typeProduct = request.POST.get('typeProduct')
-        product.description = request.POST.get('description')
+        blog = Blog()
+        blog.title = request.POST.get('title')
+        blog.content = request.POST.get('content')
         
         if len(request.FILES) != 0:
-            product.image = request.FILES['image']
+            blog.image = request.FILES['image']
         
-        product.save()
-        messages.success(request, "Add Product Successfully")
+        blog.save()
+        messages.success(request, "Add Blog Successfully")
         return redirect("/")
     else:
         return render(request, 'writeblog.html')
@@ -27,7 +26,7 @@ def blogs(request):
     return render(request, 'blogs.html', {'blogs': blogs})
     
 def blogDetails(request, slug):
-    blog = Blog.objects.get(title=slug)
+    blog = Blog.objects.get(id=slug)
     return render(request, 'blogDetails.html', {'blog': blog})
 
 def aboutUs(request):

@@ -28,7 +28,7 @@ def index(request):
                 auth.login(request, user)
                 return redirect('/')
             else:
-                messages.info(request, 'Tên tài khoản hoặc mật khẩu không đúng.')
+                messages.info(request, 'Invalid username or password.')
                 return redirect('/login')
         else:
             email = request.POST['email']
@@ -37,17 +37,17 @@ def index(request):
             password2 = request.POST['password2']
             if password == password2:
                 if User.objects.filter(email=email).exists():
-                    messages.info(request, 'Email đã tồn tại.')
+                    messages.info(request, 'Email is already existed.')
                     return redirect('register')
                 elif User.objects.filter(username=username).exists():
-                    messages.info(request, 'Tên đăng nhập đã tồn tại.')
+                    messages.info(request, 'Username is already existed.')
                     return redirect('register')
                 else:
                     user = User.objects.create_user(username=username, email=email, password=password)
                     user.save()
                     return redirect('login')
             else:
-                messages.info(request, 'Mật khẩu không khớp')
+                messages.info(request, 'Passwords donot match')
                 return redirect('register')
     else:
         return render(request, 'index.html', {'fruits': fruits, 'vegetables': vegetables, 'others': others, 'blogs': blogs})
@@ -86,7 +86,7 @@ def login(request):
             auth.login(request, user)
             return redirect( '/' )
         else:
-            messages.info(request, 'Tên tài khoản hoặc mật khẩu không đúng.')
+            messages.info(request, 'Invalid username or password.')
             return redirect('login')
         
     else: 
