@@ -1,0 +1,9 @@
+.bg-header {
+    background-image: url(../img/carousel-1.jpg);
+    height: 400px;
+    text-decoration: none;
+}
+
+.ml-200 {
+    margin-left: 200px;
+}

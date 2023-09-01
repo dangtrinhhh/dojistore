@@ -1,6 +1,6 @@
 :root {
     --greentea-color: #3CB815;
-    --carot-color: #F65005;
+    --carrot-color: #F65005;
 }
 
 .greentea-color {
@@ -11,34 +11,27 @@
     background-color: var(--greentea-color);
 }
 
-.carot-color {
-    color: var(--carot-color);
+.carrot-color {
+    color: var(--carrot-color);
 }
 
-.carot-bgcolor {
-    background-color: var(--carot-color);
-}
-
-.shopping-bag-icon i:hover {
-    color: var(--carot-color);
+.carrot-bgcolor {
+    background-color: var(--carrot-color);
 }
 
 .cursor-pointer {
     cursor: pointer !important;
 }
 
-nav {
+.header-navbar {
     background-color: #fff !important;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
 }
 
 .navbar-brand h1 {
     font-family: "Lora",serif;
     font-weight: bold;
 }
-
-/* .carousel-caption {
-    min-height: 450px;
-} */
 
 .carousel-caption h1 {
     font-family: "Lora",serif;
@@ -48,7 +41,8 @@ nav {
 
 .text-lora {
     font-family: "Lora",serif;
-    font-weight: bold;
+    font-weight: 700;
+    line-height: 1.2;
 }
 
 .carousel-caption a {
@@ -75,8 +69,117 @@ nav {
     cursor: pointer!important;
 }
 
+.hover-greentea-text:hover {
+    color: var(--greentea-color)!important;
+}
+
+.hover-underlined-text:hover {
+    text-decoration: underline !important;
+}
+
+.hover-cursor-pointer:hover {
+    cursor: pointer !important;
+}
+
+.bg-fruit-1 {
+    background-image: url(../img/bg-fruit-1.png);
+    min-height: 80vh;
+}
+
+.bg-fruit-2 {
+    background-image: url(../img/bg-fruit-2.png);
+    min-height: 350px;
+}
+
+.btn-primary {
+    background-color: var(--greentea-color) !important;
+    border-color: var(--greentea-color) !important;
+}
+
+.btn-primary:hover {
+    background-color: #31a010 !important;
+}
+
+.btn-carrot {
+    background-color: var(--carrot-color) !important;
+    border-color: var(--carrot-color) !important;
+    color: #fff !important;
+}
+
+.btn-carrot:hover {
+    background-color: #c71c06 !important;
+}
+
+.btn-outline-primary {
+    color: var(--greentea-color) !important;
+    border-color: var(--greentea-color) !important;
+}
+
+.btn-outline-primary:hover {
+    color: #fff !important;
+    background-color: var(--greentea-color) !important;
+}
+
+.btn-check:active+.btn-outline-primary, .btn-check:checked+.btn-outline-primary, .btn-outline-primary.active, .btn-outline-primary.dropdown-toggle.show, .btn-outline-primary:active {
+    color: #fff !important;
+    background-color: var(--greentea-color) !important;
+    border-color: var(--greentea-color) !important;
+}
+
+.card-img-top {
+    height: 20rem !important;
+    object-fit: cover;
+}
+
+.cart-btn {
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    z-index: 10000;
+    font-size: 1.7rem;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid var(--greentea-color) !important;
+    background-color: #fff;
+}
+
+.cart-btn:hover {
+    background-color: var(--greentea-color) !important;
+}
+
+.cart-btn:hover i {
+    color: #fff !important;
+}
+
+.product-item a:hover {
+    color: var(--greentea-color) !important;
+}
+
+.product-sections {
+
+}
+
+.blog-item {
+    padding: 0 !important;
+}
+
+.blog-item:hover {
+    border: 5px solid #3CB815 !important;
+}
+
+.blog-title:hover {
+    color: #3CB815 !important;
+}
+
 @media (min-width: 1300px) {
     .carousel-caption {
         top: 40%;
+    }
+}
+
+@media (max-width: 1000px) {
+    .hello-user {
+        display: none;
     }
 }
