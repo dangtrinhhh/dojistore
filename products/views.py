@@ -12,7 +12,7 @@ def index(request):
     # Product.objects.get() can only return 1 product
     fruits = Product.objects.filter(typeProduct__iexact='fruit').order_by('-createdAt')
     vegetables = Product.objects.filter(typeProduct__iexact='vegetable').order_by('-createdAt')
-    others = Product.objects.exclude(typeProduct__iexact='other').order_by('-createdAt')
+    others = Product.objects.filter(typeProduct__iexact='other').order_by('-createdAt')
     # __icontain: get element contain keyword
     blogs = Blog.objects.all().order_by('-createdAt')
     
@@ -117,7 +117,7 @@ def addproduct(request):
 def products(request):
     fruits = Product.objects.filter(typeProduct__iexact='fruit').order_by('-createdAt')
     vegetables = Product.objects.filter(typeProduct__iexact='vegetable').order_by('-createdAt')
-    others = Product.objects.exclude(typeProduct__iexact='other').order_by('-createdAt')
+    others = Product.objects.filter(typeProduct__iexact='other').order_by('-createdAt')
     return render(request, 'products.html', {'fruits': fruits, 'vegetables': vegetables, 'others': others})
     
 def productDetails(request, slug):
