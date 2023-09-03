@@ -366,6 +366,20 @@
                                         {% endif %}
                                     </div>
                                 </div>
+                                {% if user.is_staff %}
+                                <div class="d-flex border-top">
+                                    <small class="w-50 text-center border-end py-2">
+                                        <a class="text-body text-decoration-none" href="/products/edit/{{ fruit.id }}">
+                                            <i class="fa fa-pen greentea-color me-2"></i>Edit
+                                        </a>
+                                    </small>
+                                    <small class="w-50 text-center py-2">
+                                        <a class="text-body text-decoration-none" href="/products/delete/{{ fruit.id }}">
+                                            <i class="fa fa-trash carrot-color me-2"></i>Delete
+                                        </a>
+                                    </small>
+                                </div>
+                                {% else %}
                                 <div class="d-flex border-top">
                                     <small class="w-50 text-center border-end py-2">
                                         <a class="text-body text-decoration-none" href="/products/{{ fruit.id }}">
@@ -378,6 +392,7 @@
                                         </a>
                                     </small>
                                 </div>
+                                {% endif %}
                             </div>
                         </div>
                         {% endfor %}
@@ -422,6 +437,20 @@
                                         {% endif %}
                                     </div>
                                 </div>
+                                {% if user.is_staff %}
+                                <div class="d-flex border-top">
+                                    <small class="w-50 text-center border-end py-2">
+                                        <a class="text-body text-decoration-none" href="/products/edit/{{ vegetable.id }}">
+                                            <i class="fa fa-pen greentea-color me-2"></i>Edit
+                                        </a>
+                                    </small>
+                                    <small class="w-50 text-center py-2">
+                                        <a class="text-body text-decoration-none" href="/products/delete/{{ vegetable.id }}">
+                                            <i class="fa fa-trash carrot-color me-2"></i>Delete
+                                        </a>
+                                    </small>
+                                </div>
+                                {% else %}
                                 <div class="d-flex border-top">
                                     <small class="w-50 text-center border-end py-2">
                                         <a class="text-body text-decoration-none" href="/products/{{ vegetable.id }}">
@@ -434,6 +463,7 @@
                                         </a>
                                     </small>
                                 </div>
+                                {% endif %}
                             </div>
                         </div>
                         {% endfor %}
@@ -478,6 +508,20 @@
                                         {% endif %}
                                     </div>
                                 </div>
+                                {% if user.is_staff %}
+                                <div class="d-flex border-top">
+                                    <small class="w-50 text-center border-end py-2">
+                                        <a class="text-body text-decoration-none" href="/products/edit/{{ other.id }}">
+                                            <i class="fa fa-pen greentea-color me-2"></i>Edit
+                                        </a>
+                                    </small>
+                                    <small class="w-50 text-center py-2">
+                                        <a class="text-body text-decoration-none" href="/products/delete/{{ other.id }}">
+                                            <i class="fa fa-trash carrot-color me-2"></i>Delete
+                                        </a>
+                                    </small>
+                                </div>
+                                {% else %}
                                 <div class="d-flex border-top">
                                     <small class="w-50 text-center border-end py-2">
                                         <a class="text-body text-decoration-none" href="/products/{{ other.id }}">
@@ -490,6 +534,7 @@
                                         </a>
                                     </small>
                                 </div>
+                                {% endif %}
                             </div>
                         </div>
                         {% endfor %}
