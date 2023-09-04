@@ -2,6 +2,7 @@ import os
 from .settings import *
 from .settings import BASE_DIR
 
+SECRET_KEY = os.eviron['SECRET']
 ALLOWED_HOSTS = [os.eviron['WEBSITE_HOSTNAME']]
 CFRS_TRUSTED_ORIGINS = ['https://' + os.eviron['WEBSITE_HOSTNAME']]
 DEBUG = False
