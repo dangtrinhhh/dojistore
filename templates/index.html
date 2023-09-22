@@ -15,7 +15,6 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
     <link rel="stylesheet" href="{% static '/font/themify-icons-font/themify-icons.css' %}">
     <link rel="stylesheet" href="{% static 'font/fontawesome/css/all.css' %}">
-    <script src="{% static 'js/header.js' %}" type="text/javascript" defer></script>
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
     <title>DojiStore | Homepage</title>
 </head>
@@ -651,7 +650,13 @@
                 {% for blog in blogs %}
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="blog-item border">
-                        <img class="card-img-top w-100" src="{{ blog.image.url }}" alt="Blog Image">
+                        <div class="position-relative bg-light overflow-hidden">
+                            <img class="card-img-top w-100" src="{{ blog.image.url }}" alt="Blog Image">
+                            <div
+                                class="carrot-bgcolor rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">
+                                New</div>
+                        </div>
+                        <!-- <img class="card-img-top w-100" src="{{ blog.image.url }}" alt="Blog Image"> -->
                         <div class="bg-light p-4">
                             <a class="d-block blog-title h5 lh-base text-decoration-none fw-bold text-dark mb-4"
                                 href="/blogs/{{ blog.id }}">{{ blog.title }}</a>
@@ -661,7 +666,22 @@
                                 <small class="me-3"><i class="fa fa-calendar greentea-color me-2"></i>{{ blog.createdAt.day }}/{{ blog.createdAt.month }}/{{ blog.createdAt.year }}</small>
                             </div>
                         </div>
+                        {% if user.is_staff %}
+                            <div class="d-flex border-top">
+                                <small class="w-50 text-center border-end py-2">
+                                    <a class="text-body text-decoration-none" href="/blogs/edit/{{ blog.id }}">
+                                        <i class="fa fa-pen greentea-color me-2"></i>Edit
+                                    </a>
+                                </small>
+                                <small class="w-50 text-center py-2">
+                                    <a class="text-body text-decoration-none" href="/blogs/delete/{{ blog.id }}">
+                                        <i class="fa fa-trash carrot-color me-2"></i>Delete
+                                    </a>
+                                </small>
+                            </div>
+                        {% endif %}
                     </div>
+                    
                 </div>
                 {% endfor %}
             </div>

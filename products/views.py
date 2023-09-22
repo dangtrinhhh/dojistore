@@ -114,6 +114,41 @@ def addproduct(request):
     else:
         return render(request, 'addproduct.html')
     
+def editproduct(request, slug):
+    if request.method == 'POST':
+        newName = request.POST.get('name', '')
+        newTypeProduct = request.POST.get('typeProduct', '')
+        newPrice = request.POST.get('price', '')
+        newPriceSale = request.POST.get('pricesale', '')
+        newDescription = request.POST.get('description', '')
+        
+        product = Product.objects.get(id=slug)
+        if newName != '':
+            product.name = newName
+        if newTypeProduct != '':
+            product.typeProduct = newTypeProduct
+        if newPrice != '':
+            product.price = newPrice
+        if newPriceSale != '':
+            product.pricesale = newPriceSale
+        if newDescription != '':
+            product.description = newDescription
+        if len(request.FILES) != 0:
+            product.image = request.FILES['image']
+        
+        product.save()
+        messages.success(request, "Update Product Successfully")
+        return redirect("/")
+    else:
+        product = Product.objects.get(id=slug)
+        return render(request, 'editproduct.html', {'product': product})
+
+def deleteproduct(request, slug):
+    product = Product.objects.get(id=slug)
+    product.delete()
+    messages.success(request, "Delete Product Successfully")
+    return redirect("/")
+
 def products(request):
     fruits = Product.objects.filter(typeProduct__iexact='fruit').order_by('-createdAt')
     vegetables = Product.objects.filter(typeProduct__iexact='vegetable').order_by('-createdAt')

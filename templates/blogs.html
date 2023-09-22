@@ -200,12 +200,27 @@
                     <div class="blog-item border">
                         <img class="card-img-top w-100" src="{{ blog.image.url }}" alt="Blog Image">
                         <div class="bg-light p-4">
-                            <a class="d-block blog-title h5 lh-base mb-4" href="/blogs/{{ blog.id }}">{{ blog.title }}</a>
+                            <a class="d-block blog-title h5 lh-base text-decoration-none fw-bold text-dark mb-4" href="/blogs/{{ blog.id }}">{{ blog.title }}</a>
+                            <p class="blog-content text-truncate mb-2">{{ blog.content }}</p>
                             <div class="text-muted border-top pt-4">
-                                <small class="me-3"><i class="fa fa-user text-primary me-2"></i>Admin</small>
-                                <small class="me-3"><i class="fa fa-calendar text-primary me-2"></i>{{ blog.createdAt.day }}/{{ blog.createdAt.month }}/{{ blog.createdAt.year }}</small>
+                                <small class="me-3"><i class="fa fa-user greentea-color me-2"></i>Admin</small>
+                                <small class="me-3"><i class="fa fa-calendar greentea-color me-2"></i>{{ blog.createdAt.day }}/{{ blog.createdAt.month }}/{{ blog.createdAt.year }}</small>
                             </div>
                         </div>
+                        {% if user.is_staff %}
+                            <div class="d-flex border-top">
+                                <small class="w-50 text-center border-end py-2">
+                                    <a class="text-body text-decoration-none" href="/blogs/edit/{{ blog.id }}">
+                                        <i class="fa fa-pen greentea-color me-2"></i>Edit
+                                    </a>
+                                </small>
+                                <small class="w-50 text-center py-2">
+                                    <a class="text-body text-decoration-none" href="/blogs/delete/{{ blog.id }}">
+                                        <i class="fa fa-trash carrot-color me-2"></i>Delete
+                                    </a>
+                                </small>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
                 {% endfor %}

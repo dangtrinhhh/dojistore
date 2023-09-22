@@ -20,6 +20,35 @@ def writeblog(request):
         return redirect("/")
     else:
         return render(request, 'writeblog.html')
+  
+    
+def editblog(request, slug):
+    if request.method == 'POST':
+        newTitle = request.POST.get('title', '')
+        newContent = request.POST.get('content', '')
+        
+        blog = Blog.objects.get(id=slug)
+        if newTitle != '':
+            blog.title = newTitle
+        if newContent != '':
+            blog.content = newContent
+        if len(request.FILES) != 0:
+            blog.image = request.FILES['image']
+        
+        # blog.createdAt = datetime.now
+        blog.save()
+        messages.success(request, "Update Blog Successfully")
+        return redirect("/")
+    else:
+        blog = Blog.objects.get(id=slug)
+        return render(request, 'editblog.html', {'blog': blog})
+
+def deleteblog(request, slug):
+    blog = Blog.objects.get(id=slug)
+    blog.delete()
+    messages.success(request, "Delete Blog Successfully")
+    return redirect("/")
+  
     
 def blogs(request):
     blogs = Blog.objects.all().order_by('-createdAt')

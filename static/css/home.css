@@ -15,6 +15,10 @@
     color: var(--carrot-color);
 }
 
+.carrot-color-hover:hover {
+    color: var(--carrot-color) !important;
+}
+
 .carrot-bgcolor {
     background-color: var(--carrot-color);
 }
