@@ -189,6 +189,7 @@ nav li {
     width: 200px !important;
     height: 200px !important;
     border-radius: 50% !important;
+    border: 5px solid var(--greentea-color) !important;
 }
 
 @media (max-width: 800px) {

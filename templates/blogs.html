@@ -229,10 +229,134 @@
     </div>
     <!-- Blog End -->
 
-    <div class="footer-section fw-bold">
-        <div class="footer-element"><p>Copyright © 2023, Powered by dodotrinh. All Rights Reserved</p></div>
-        <div class="footer-element"><p><i class="fas fa-map-marker-alt" style="margin-right: 15px;"></i>Saigon</p></div>
+    <!-- Footer Start -->
+    <div class="mt-5 text-lora">
+
+        <footer class="bg-footer text-center text-lg-start text-white">
+        <!-- Grid container -->
+        <div class="container p-4">
+            <!--Grid row-->
+            <div class="row my-4">
+                
+            <!--Grid column-->
+            <div class="col-lg-3 col-md-6 mb-4 mb-md-0 pt-4 border-top">
+    
+                <div class="rounded-circle bg-white shadow-1-strong d-flex align-items-center justify-content-center mb-4 mx-auto" style="width: 150px; height: 150px; border-radius: 50%;">
+                <img src="{% static 'img/logo.png'%}" style="border-radius: 50%;" height="130" alt=""
+                    loading="lazy" />
+                </div>
+    
+                <p class="text-center mx-4">Discover the Freshness of Nature in Every Bite with Our Organic Selections !</p>
+    
+                <ul class="list-unstyled d-flex flex-row justify-content-center">
+                <li>
+                    <a class="text-white px-2" href="https://www.facebook.com/dojiorganics">
+                    <i class="fab fa-facebook-square fa-2x"></i>
+                    </a>
+                </li>
+                <li>
+                    <a class="text-white px-2" href="https://l.facebook.com/l.php?u=https%3A%2F%2Fwww.instagram.com%2Fdoji_beauty%2F%3Ffbclid%3DIwAR0cNQOZiNlyHbwwLj6EWBu_lnKeEEZgG4ma6_cEs5GWZ7PTPGscewHOSRs&h=AT0NwONksW58dI2w18ymZIc3AIYzl3MgExYIUeqzIimlrzEDS9_39xnKDOkwl5CTVoqkae12eqlo9KPDbP6YU0-1ez3hdo0vqlEpjODuq_g2hVvfaTZ-iuel8aV7ibdojXS4sA">
+                    <i class="fab fa-instagram fa-2x"></i>
+                    </a>
+                </li>
+                <li>
+                    <a class="text-white ps-2" href="https://www.linkedin.com/in/dangtrinhhh">
+                    <i class="fab fa-linkedin fa-2x"></i>
+                    </a>
+                </li>
+                </ul>
+    
+            </div>
+            <!--Grid column-->
+    
+            <!--Grid column-->
+            <div class="col-lg-3 col-md-6 mb-4 mb-md-0 pt-4 border-top">
+                <h5 class="fw-bold mb-4 fs-3 text">Organic Food</h5>
+    
+                <ul class="list-unstyled">
+                <li class="mb-2 text-start">
+                    <a href="#!" class="text-white text-decoration-none hover-underlined-text"><i class="fas fa-seedling pe-3"></i>Fruits and Vegetables</a>
+                </li>
+                <li class="mb-2 text-start">
+                    <a href="#!" class="text-white text-decoration-none hover-underlined-text"><i class="fas fa-seedling pe-3"></i>Grains</a>
+                </li>
+                <li class="mb-2 text-start">
+                    <a href="#!" class="text-white text-decoration-none hover-underlined-text"><i class="fas fa-seedling pe-3"></i>Dairy Products</a>
+                </li>
+                <li class="mb-2 text-start">
+                    <a href="#!" class="text-white text-decoration-none hover-underlined-text"><i class="fas fa-seedling pe-3"></i>Meat and Poultry</a>
+                </li>
+                <li class="mb-2 text-start">
+                    <a href="#!" class="text-white text-decoration-none hover-underlined-text"><i class="fas fa-seedling pe-3"></i>Seafood</a>
+                </li>
+                <li class="mb-2 text-start">
+                    <a href="#!" class="text-white text-decoration-none hover-underlined-text"><i class="fas fa-seedling pe-3"></i>Nuts and Seeds</a>
+                </li>
+                <li class="mb-2 text-start">
+                    <a href="#!" class="text-white text-decoration-none hover-underlined-text"><i class="fas fa-seedling pe-3"></i>Beverages</a>
+                </li>
+                </ul>
+            </div>
+            <!--Grid column-->
+    
+            <!--Grid column-->
+            <div class="col-lg-3 col-md-6 mb-4 mb-md-0 pt-4 border-top">
+                <h5 class="fw-bold mb-4 fs-3 text">Contact</h5>
+    
+                <ul class="list-unstyled">
+                <li class="text-start">
+                    <p><i class="fas fa-map-marker-alt pe-2"></i>Ho Chi Minh City, Viet Nam</p>
+                </li>
+                <li class="text-start">
+                    <p><i class="fas fa-phone pe-2"></i>+ 84 938 475 370</p>
+                </li>
+                <li class="text-start">
+                    <p><i class="fas fa-envelope pe-2 mb-0"></i>dangtrinh.dev@gmail.com</p>
+                </li>
+                </ul>
+            </div>
+            <!--Grid column-->
+
+            <!--Grid column-->
+            <div class="col-lg-3 col-md-6 mb-4 mb-md-0 pt-4 border-top">
+                <h5 class="fw-bold mb-4 fs-3 text">Latest News</h5>
+    
+                <ul class="list-unstyled">
+                {% for blog in blogs|slice:":2" %}
+                <li class="mb-4 text-start">
+                    <div class="row align-items-start">
+                        <div class="col-6">
+                            <img src="{{ blog.image.url }}" class="w-100 img-blog-footer" alt="Blog Image">
+                        </div>
+                        <div class="col-6">
+                            <a href="/blogs/{{ blog.id }}" class="text-decoration-none hover-underlined-text text-light">{{ blog.title }}</a>
+                        </div>
+                    </div>
+                    <div class="text-light pt-1">
+                        <small class="me-2"><i class="fa fa-user me-2"></i>Admin</small>
+                        <small class=""><i class="fa fa-calendar me-2"></i>{{ blog.createdAt.day }}/{{ blog.createdAt.month }}/{{ blog.createdAt.year }}</small>
+                    </div>
+                </li>
+                {% endfor %}
+                </ul>
+            </div>
+            <!--Grid column-->
+
+            </div>
+            <!--Grid row-->
+        </div>
+        <!-- Grid container -->
+    
+        <!-- Copyright -->
+        <div class="text-center p-4 fs-5 text" style="background-color: rgba(0, 0, 0, 0.2)">
+            Copyright © 2023, Powered by 
+            <a class="text-white fw-bold" href="https://facebook.com/dangtrinhhh">dangtrinh</a>
+        </div>
+        <!-- Copyright -->
+        </footer>
+    
     </div>
+    <!-- Footer End -->
 
     <!-- Optional JavaScript; choose one of the two! -->
     <script src="{% static 'js/main.js' %}"></script>

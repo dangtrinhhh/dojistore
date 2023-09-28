@@ -15,9 +15,13 @@ def writeblog(request):
         if len(request.FILES) != 0:
             blog.image = request.FILES['image']
         
-        blog.save()
-        messages.success(request, "Add Blog Successfully")
-        return redirect("/")
+        try:
+            blog.save()
+            messages.success(request, "Add Blog Successfully")
+            return redirect("/")
+        except Exception as e:
+            messages.error(request, f"Failed to create blog: {str(e)}")
+            return redirect("writeblog.html")
     else:
         return render(request, 'writeblog.html')
   
@@ -26,6 +30,7 @@ def editblog(request, slug):
     if request.method == 'POST':
         newTitle = request.POST.get('title', '')
         newContent = request.POST.get('content', '')
+        setNewest = request.POST.get('setToNewest', '')
         
         blog = Blog.objects.get(id=slug)
         if newTitle != '':
@@ -34,20 +39,31 @@ def editblog(request, slug):
             blog.content = newContent
         if len(request.FILES) != 0:
             blog.image = request.FILES['image']
-        
-        # blog.createdAt = datetime.now
-        blog.save()
-        messages.success(request, "Update Blog Successfully")
-        return redirect("/")
+        if setNewest == 'on':
+            blog.createdAt = datetime.now()
+
+        try:
+            blog.save()
+            messages.success(request, "Update Blog Successfully")
+            return redirect("/")
+        except Exception as e:
+            messages.error(request, f"Error updating blog: {str(e)}")
+            return redirect("editblog", slug=slug)
     else:
         blog = Blog.objects.get(id=slug)
         return render(request, 'editblog.html', {'blog': blog})
 
 def deleteblog(request, slug):
     blog = Blog.objects.get(id=slug)
-    blog.delete()
-    messages.success(request, "Delete Blog Successfully")
-    return redirect("/")
+    
+    try:
+        blog.delete()
+        messages.success(request, "Delete Blog Successfully")
+        return redirect("/")
+    except Exception as e:
+        messages.error(request, f"Failed to delete blog: {str(e)}")
+        return redirect("/")
+
   
     
 def blogs(request):
@@ -56,7 +72,8 @@ def blogs(request):
     
 def blogDetails(request, slug):
     blog = Blog.objects.get(id=slug)
-    return render(request, 'blogDetails.html', {'blog': blog})
+    blogs = Blog.objects.all().order_by('-createdAt')[:6]
+    return render(request, 'blogDetails.html', {'blog': blog, 'blogs': blogs})
 
 def aboutUs(request):
     blogs = Blog.objects.all().order_by('-createdAt')
@@ -65,3 +82,6 @@ def aboutUs(request):
 def contact(request):
     blogs = Blog.objects.all().order_by('-createdAt')
     return render(request, 'contact.html', {'blogs': blogs})
+
+def profile(request):
+    return render(request, 'profile.html', {})

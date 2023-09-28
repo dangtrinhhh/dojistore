@@ -10,11 +10,11 @@ from blogs.models import Blog
 def index(request):
     # To get Products from database:
     # Product.objects.get() can only return 1 product
-    fruits = Product.objects.filter(typeProduct__iexact='fruit').order_by('-createdAt')
-    vegetables = Product.objects.filter(typeProduct__iexact='vegetable').order_by('-createdAt')
-    others = Product.objects.filter(typeProduct__iexact='other').order_by('-createdAt')
+    fruits = Product.objects.filter(typeProduct__iexact='fruit').order_by('-createdAt')[:8]
+    vegetables = Product.objects.filter(typeProduct__iexact='vegetable').order_by('-createdAt')[:8]
+    others = Product.objects.filter(typeProduct__iexact='other').order_by('-createdAt')[:8]
     # __icontain: get element contain keyword
-    blogs = Blog.objects.all().order_by('-createdAt')
+    blogs = Blog.objects.all().order_by('-createdAt')[:6]
     
     if request.method == "POST":
         email = request.POST.get('email', '')
@@ -26,6 +26,7 @@ def index(request):
             
             if user is not None:
                 auth.login(request, user)
+                messages.success(request, 'Login successfully.')
                 return redirect('/')
             else:
                 messages.info(request, 'Invalid username or password.')
@@ -45,6 +46,7 @@ def index(request):
                 else:
                     user = User.objects.create_user(username=username, email=email, password=password)
                     user.save()
+                    messages.success(request, 'Register successfully.')
                     return redirect('login')
             else:
                 messages.info(request, 'Passwords donot match')
@@ -108,9 +110,13 @@ def addproduct(request):
         if len(request.FILES) != 0:
             product.image = request.FILES['image']
         
-        product.save()
-        messages.success(request, "Add Product Successfully")
-        return redirect("/")
+        try:
+            product.save()
+            messages.success(request, "Add Product Successfully")
+            return redirect("/")
+        except Exception as e:
+            messages.error(request, f"Failed to add product: {str(e)}")
+            return redirect("addproduct.html")
     else:
         return render(request, 'addproduct.html')
     
@@ -121,6 +127,7 @@ def editproduct(request, slug):
         newPrice = request.POST.get('price', '')
         newPriceSale = request.POST.get('pricesale', '')
         newDescription = request.POST.get('description', '')
+        setNewest = request.POST.get('setToNewest', '')
         
         product = Product.objects.get(id=slug)
         if newName != '':
@@ -135,25 +142,37 @@ def editproduct(request, slug):
             product.description = newDescription
         if len(request.FILES) != 0:
             product.image = request.FILES['image']
+        if setNewest == 'on':
+            product.createdAt = datetime.now()
         
-        product.save()
-        messages.success(request, "Update Product Successfully")
-        return redirect("/")
+        try:
+            product.save()
+            messages.success(request, "Update Product Successfully")
+            return redirect("/")
+        except Exception as e:
+            messages.error(request, f"Failed to update product: {str(e)}")
+            return redirect("editproduct", slug=slug)
+
     else:
         product = Product.objects.get(id=slug)
         return render(request, 'editproduct.html', {'product': product})
 
 def deleteproduct(request, slug):
     product = Product.objects.get(id=slug)
-    product.delete()
-    messages.success(request, "Delete Product Successfully")
-    return redirect("/")
+    try:
+        product.delete()
+        messages.success(request, "Delete Product Successfully")
+        return redirect("/")
+    except Exception as e:
+        messages.error(request, f"Failed to delete product: {str(e)}")
+        return redirect("/")
 
 def products(request):
     fruits = Product.objects.filter(typeProduct__iexact='fruit').order_by('-createdAt')
     vegetables = Product.objects.filter(typeProduct__iexact='vegetable').order_by('-createdAt')
     others = Product.objects.filter(typeProduct__iexact='other').order_by('-createdAt')
-    return render(request, 'products.html', {'fruits': fruits, 'vegetables': vegetables, 'others': others})
+    blogs = Blog.objects.all().order_by('-createdAt')[:6]
+    return render(request, 'products.html', {'fruits': fruits, 'vegetables': vegetables, 'others': others, 'blogs': blogs})
     
 def productDetails(request, slug):
     product = Product.objects.get(id=slug)

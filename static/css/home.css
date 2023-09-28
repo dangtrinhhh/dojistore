@@ -46,7 +46,6 @@
 .text-lora {
     font-family: "Lora",serif;
     font-weight: 700;
-    line-height: 1.2;
 }
 
 .carousel-caption a {
@@ -168,12 +167,37 @@
     padding: 0 !important;
 }
 
-.blog-item:hover {
-    border: 5px solid #3CB815 !important;
-}
-
 .blog-title:hover {
     color: #3CB815 !important;
+}
+
+#alerts-section {
+    width: 450px;
+    position: fixed;
+    bottom: 0;
+    left: 20;
+    z-index: 1000;
+    margin-left: 20px;
+}
+
+.img-blog-footer {
+    height: 100px !important;
+    object-fit: cover;
+}
+
+.bg-footer {
+    background-color: #71a372;
+}
+
+.gradient-custom {
+/* fallback for old browsers */
+background: #f6d365;
+
+/* Chrome 10-25, Safari 5.1-6 */
+background: -webkit-linear-gradient(to right bottom, rgba(246, 211, 101, 1), rgba(253, 160, 133, 1));
+
+/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+background: linear-gradient(to right bottom, rgba(246, 211, 101, 1), rgba(253, 160, 133, 1))
 }
 
 @media (min-width: 1300px) {

@@ -11,6 +11,7 @@ class Product(models.Model):
     price = models.CharField(max_length=500)
     pricesale = models.CharField(max_length=500, default=price)
     description = models.CharField(max_length=100000)
+    
     def save(self, *args, **kwargs):
         if self.pricesale and self.price:
             self.onSale = float(self.pricesale) < float(self.price)
