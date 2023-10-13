@@ -1,3 +1,2 @@
 psycopg2-binary==2.9.9
 Django==4.2.3
-pypi==2.1
