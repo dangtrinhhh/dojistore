@@ -140,6 +140,7 @@ pypi==2.1
 PyRect==0.1.4
 pyrsistent==0.18.1
 PyScreeze==0.1.27
+python==3.9
 python-dateutil==2.8.2
 python-dotenv==1.0.0
 python-multipart==0.0.6
@@ -205,3 +206,4 @@ whitenoise==6.5.0
 widgetsnbextension==3.6.0
 zipp==3.8.0
 zope.interface==6.1
+-i https://pypi.org/simple/
