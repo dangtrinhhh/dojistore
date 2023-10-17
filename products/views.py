@@ -55,6 +55,7 @@ def index(request):
         return render(request, 'index.html', {'fruits': fruits, 'vegetables': vegetables, 'others': others, 'blogs': blogs})
 
 def register(request):
+    nextUrl = request.POST.get('next')
     if request.method == 'POST':
         email = request.POST['email']
         username = request.POST['username']
@@ -70,7 +71,9 @@ def register(request):
             else:
                 user = User.objects.create_user(username=username, email=email, password=password)
                 user.save()
-                return redirect('login')
+                user = auth.authenticate(username=username, password=password)
+                auth.login(request, user)
+                return redirect(nextUrl)
         else:
             messages.info(request, 'Password doesn\'t match')
             return redirect('register')
@@ -83,10 +86,10 @@ def login(request):
         password = request.POST['password']
         
         user = auth.authenticate(username=username, password=password)
-        
+        nextUrl = request.POST.get('next')
         if user is not None:
             auth.login(request, user)
-            return redirect( '/' )
+            return redirect(nextUrl)
         else:
             messages.info(request, 'Invalid username or password.')
             return redirect('login')
@@ -96,7 +99,7 @@ def login(request):
     
 def logout(request):
     auth.logout(request)
-    return redirect( '/' )
+    return redirect('/')
 
 def addproduct(request):
     if request.method == 'POST':
