@@ -101,6 +101,30 @@ def logout(request):
     auth.logout(request)
     return redirect('/')
 
+def changePassword(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        username = request.POST['username']
+        password = request.POST['password']
+        password2 = request.POST['password2']
+        if password == password2:
+            if User.objects.filter(email=email).exists():
+                messages.info(request, 'Email already exists')
+                return redirect('register')
+            elif User.objects.filter(username=username).exists():
+                messages.info(request, 'Username already exists')
+                return redirect('register')
+            else:
+                user = User.objects.create_user(username=username, email=email, password=password)
+                user.save()
+                user = auth.authenticate(username=username, password=password)
+                auth.login(request, user)
+                return redirect(nextUrl)
+        else:
+            messages.info(request, 'Password doesn\'t match')
+    else:
+        return redirect('/profile')
+
 def addproduct(request):
     if request.method == 'POST':
         product = Product()
