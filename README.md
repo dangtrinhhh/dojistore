@@ -39,3 +39,6 @@ python manage.py makemigrations, migrate, collectstatic
 sudo ufw allow 8000 
 
 (screen) python manage.py runserver 0.0.0.0:8000
+
+# Redirect port 80 (HTTP) to port 8000
+sudo /sbin/iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8000
