@@ -1,6 +1,9 @@
 # dojistore
 My ecomerce website using Django, HTML, CSS, JavaScript
 
+# Create instance:
+Note: Create key pair, save testing.pem file (important)
+
 # Connect instance:
 go to SSH client tab in EC2 instance
 
