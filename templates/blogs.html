@@ -159,7 +159,7 @@
                     <a class="btn-register cursor-pointer">Register</a>
                 </div>
                 <div class="m-4">
-                    <a href="/forgotpassword">Forgot password ?</a>
+                    <a href="/accounts/password/reset/">Forgot password ?</a>
                 </div>
             </div>
         </div>
@@ -217,7 +217,7 @@
                     <a class="btn-login cursor-pointer">Login</a>
                 </div>
                 <div class="m-4">
-                    <a href="/forgotpassword">Forgot password ?</a>
+                    <a href="/accounts/password/reset/">Forgot password ?</a>
                 </div>
             </div>
         </div>
@@ -253,7 +253,7 @@
                         <img class="card-img-top w-100" src="{{ blog.image.url }}" alt="Blog Image">
                         <div class="bg-light p-4">
                             <a class="d-block blog-title h5 lh-base text-decoration-none fw-bold text-dark mb-4" href="/blogs/{{ blog.id }}">{{ blog.title }}</a>
-                            <p class="blog-content text-truncate mb-2">{{ blog.content }}</p>
+                            <!-- <p class="blog-content text-truncate mb-2">{{ blog.content|safe }}</p> -->
                             <div class="text-muted border-top pt-4">
                                 <small class="me-3"><i class="fa fa-user greentea-color me-2"></i>Admin</small>
                                 <small class="me-3"><i class="fa fa-calendar greentea-color me-2"></i>{{ blog.createdAt.day }}/{{ blog.createdAt.month }}/{{ blog.createdAt.year }}</small>

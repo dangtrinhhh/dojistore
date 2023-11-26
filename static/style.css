@@ -160,7 +160,7 @@ nav li {
 }
 
 .blog-title {
-    height: 100px;
+    /* height: 100px; */
 }
 
 .footer-section {
@@ -190,6 +190,17 @@ nav li {
     height: 200px !important;
     border-radius: 50% !important;
     border: 5px solid var(--greentea-color) !important;
+}
+
+.bg-footer {
+    background-color: #009688;
+}
+
+.truncate-wrapper {
+    max-width: 200px; /* Đặt max-width tùy thuộc vào nhu cầu của bạn */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 @media (max-width: 800px) {

@@ -4,26 +4,56 @@ from django.contrib.auth.models import User, auth
 from django.contrib import messages
 from datetime import datetime
 from .models import Blog
+from .forms import BlogPostForm
 
 # Create your views here.
 def writeblog(request):
     if request.method == 'POST':
-        blog = Blog()
-        blog.title = request.POST.get('title')
-        blog.content = request.POST.get('content')
-        
-        if len(request.FILES) != 0:
-            blog.image = request.FILES['image']
-        
         try:
-            blog.save()
-            messages.success(request, "Add Blog Successfully")
-            return redirect("/")
-        except Exception as e:
-            messages.error(request, f"Failed to create blog: {str(e)}")
-            return redirect("writeblog.html")
+            form = BlogPostForm(request.POST, request.FILES)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Add Blog Successfully")
+                return redirect("/writeblog")
+        except MultiValueDictKeyError:
+            messages.error(request, f"Failed to add blog: {str(e)}")
+            pass
     else:
-        return render(request, 'writeblog.html')
+        form = BlogPostForm()
+    context = {
+        'form': form
+    }
+    return render(request, 'writeblog.html', context)
+# def writeblog(request):
+#     if request.method == 'POST':
+#         form = BlogPostForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return render(request, 'writeblog.html')
+#             # return HttpResponse('New Blog Successfully Added')
+#     else:
+#         form = BlogPostForm()
+#         context = {
+#             'form':form
+#         }
+#     return render(request, 'writeblog.html', {'form':form})
+    # if request.method == 'POST':
+    #     blog = Blog()
+    #     blog.title = request.POST.get('title')
+    #     blog.content = request.POST.get('content')
+        
+    #     if len(request.FILES) != 0:
+    #         blog.image = request.FILES['image']
+        
+    #     try:
+    #         blog.save()
+    #         messages.success(request, "Add Blog Successfully")
+    #         return redirect("/")
+    #     except Exception as e:
+    #         messages.error(request, f"Failed to create blog: {str(e)}")
+            # return redirect("writeblog.html")
+    # else:
+        # return render(request, 'writeblog.html')
   
     
 def editblog(request, slug):

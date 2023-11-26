@@ -26,7 +26,7 @@ def index(request):
             
             if user is not None:
                 auth.login(request, user)
-                messages.success(request, 'Login successfully.')
+                messages.success(request, f"Login successfully! Welcome back, {username}.")
                 return redirect('/')
             else:
                 messages.info(request, 'Invalid username or password.')
@@ -86,10 +86,12 @@ def login(request):
         password = request.POST['password']
         
         user = auth.authenticate(username=username, password=password)
-        nextUrl = request.POST.get('next')
+        # nextUrl = request.POST.get('next')
         if user is not None:
             auth.login(request, user)
-            return redirect(nextUrl)
+            messages.success(request, f"Login successfully! Welcome back, {username}.")
+            return redirect("/")
+            # return redirect(nextUrl)
         else:
             messages.info(request, 'Invalid username or password.')
             return redirect('login')
@@ -101,7 +103,7 @@ def logout(request):
     auth.logout(request)
     return redirect('/')
 
-def changePassword(request):
+def forgotpassword(request):
     if request.method == 'POST':
         email = request.POST['email']
         username = request.POST['username']
@@ -119,11 +121,28 @@ def changePassword(request):
                 user.save()
                 user = auth.authenticate(username=username, password=password)
                 auth.login(request, user)
-                return redirect(nextUrl)
+                return redirect('/login')
         else:
             messages.info(request, 'Password doesn\'t match')
     else:
         return redirect('/profile')
+
+def updatepassword(request):
+    if request.method == 'POST':
+        password = request.POST['password']
+        password2 = request.POST['password2']
+        user = request.user
+        if password == password2:
+            user.set_password(password)
+            user.save()
+            messages.success(request, 'Update password successfully')
+            messages.info(request, 'Please login')
+            return redirect('/login')
+        else:
+            messages.error(request, 'Password doesn\'t match')
+            return render(request, 'profile.html')
+    else:
+        return render(request, 'profile.html')
 
 def addproduct(request):
     if request.method == 'POST':
@@ -140,10 +159,10 @@ def addproduct(request):
         try:
             product.save()
             messages.success(request, "Add Product Successfully")
-            return redirect("/")
+            return redirect("/addproduct")
         except Exception as e:
             messages.error(request, f"Failed to add product: {str(e)}")
-            return redirect("addproduct.html")
+            return redirect("/addproduct")
     else:
         return render(request, 'addproduct.html')
     
@@ -202,8 +221,11 @@ def products(request):
     return render(request, 'products.html', {'fruits': fruits, 'vegetables': vegetables, 'others': others, 'blogs': blogs})
     
 def productDetails(request, slug):
-    product = Product.objects.get(id=slug)
+    product = Product.objects.get(product_id=slug)
     return render(request, 'productDetails.html', {'product': product})
+
+def cart(request):
+    return render(request, 'cart.html', {})
 
 def page_not_found(request, exception):
     return render(request, '404.html', status=404)

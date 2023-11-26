@@ -1,0 +1,42 @@
+.password-toggle {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    padding: 8px;
+}
+
+.password-toggle input[type="password"] {
+    flex: 1;
+    border: none;
+    outline: none;
+}
+
+.password-toggle i {
+    cursor: pointer;
+}
+
+.password-toggle:hover {
+    color: rgb(89, 94, 231);
+}
+
+#password-fields {
+    display: none;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease-in-out;
+}
+
+#password-fields input {
+    align-items: center;
+    border: 1px solid #ccc;
+    padding: 8px;
+    width: 100%;
+}
+
+.mh-ps {
+    min-height: 230px;
+}
+
+.mw-ps {
+    min-width: 260px;
+}

@@ -155,6 +155,19 @@
     color: #fff !important;
 }
 
+/* Thêm quy tắc CSS cho .circle-badge */
+.circle-badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: #EA001B;
+    border-radius: 50%;
+    padding: 5px 8px;
+    color: white;
+    font-size: 10px;
+    text-align: center;
+}
+
 .product-item a:hover {
     color: var(--greentea-color) !important;
 }

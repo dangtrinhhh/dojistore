@@ -159,7 +159,7 @@
                     <a class="btn-register cursor-pointer">Register</a>
                 </div>
                 <div class="m-4">
-                    <a href="/forgotpassword">Forgot password ?</a>
+                    <a href="/accounts/password/reset/">Forgot password ?</a>
                 </div>
             </div>
         </div>
@@ -217,7 +217,7 @@
                     <a class="btn-login cursor-pointer">Login</a>
                 </div>
                 <div class="m-4">
-                    <a href="/forgotpassword">Forgot password ?</a>
+                    <a href="/accounts/password/reset/">Forgot password ?</a>
                 </div>
             </div>
         </div>
@@ -278,7 +278,7 @@
                                     <div class="carrot-bgcolor rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
                                 </div>
                                 <div class="text-center p-4">
-                                    <a class="d-block h4 text-decoration-none text-dark text-lora mb-2" href="/products/{{ fruit.id }}">{{ fruit.name|default:" " }}</a>
+                                    <a class="d-block h4 text-decoration-none text-dark text-lora mb-2" href="/products/{{ fruit.product_id }}">{{ fruit.name|default:" " }}</a>
                                     <div class="product-details d-flex align-items-center justify-content-start">
                                         <div>
                                             <div class="text-body text-decoration-line-through text-truncate text-start p-0">
@@ -296,12 +296,12 @@
                                 {% if user.is_staff %}
                                 <div class="d-flex border-top">
                                     <small class="w-50 text-center border-end py-2">
-                                        <a class="text-body text-decoration-none" href="/products/edit/{{ fruit.id }}">
+                                        <a class="text-body text-decoration-none" href="/products/edit/{{ fruit.product_id }}">
                                             <i class="fa fa-pen greentea-color me-2"></i>Edit
                                         </a>
                                     </small>
                                     <small class="w-50 text-center py-2">
-                                        <a class="text-body text-decoration-none" href="/products/delete/{{ fruit.id }}">
+                                        <a class="text-body text-decoration-none" href="/products/delete/{{ fruit.product_id }}">
                                             <i class="fa fa-trash carrot-color me-2"></i>Delete
                                         </a>
                                     </small>
@@ -309,7 +309,7 @@
                                 {% else %}
                                 <div class="d-flex border-top">
                                     <small class="w-50 text-center border-end py-2">
-                                        <a class="text-body text-decoration-none" href="/products/{{ fruit.id }}">
+                                        <a class="text-body text-decoration-none" href="/products/{{ fruit.product_id }}">
                                             <i class="fa fa-eye greentea-color me-2"></i>View detail
                                         </a>
                                     </small>
@@ -339,7 +339,7 @@
                                     <div class="carrot-bgcolor rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
                                 </div>
                                 <div class="text-center p-4">
-                                    <a class="d-block h4 text-decoration-none text-dark text-lora mb-2" href="/products/{{ vegetable.id }}">{{ vegetable.name|default:" " }}</a>
+                                    <a class="d-block h4 text-decoration-none text-dark text-lora mb-2" href="/products/{{ vegetable.product_id }}">{{ vegetable.name|default:" " }}</a>
                                     <div class="product-details d-flex align-items-center justify-content-start">
                                         <div>
                                             <div class="text-body text-decoration-line-through text-truncate text-start p-0">
@@ -357,12 +357,12 @@
                                 {% if user.is_staff %}
                                 <div class="d-flex border-top">
                                     <small class="w-50 text-center border-end py-2">
-                                        <a class="text-body text-decoration-none" href="/products/edit/{{ vegetable.id }}">
+                                        <a class="text-body text-decoration-none" href="/products/edit/{{ vegetable.product_id }}">
                                             <i class="fa fa-pen greentea-color me-2"></i>Edit
                                         </a>
                                     </small>
                                     <small class="w-50 text-center py-2">
-                                        <a class="text-body text-decoration-none" href="/products/delete/{{ vegetable.id }}">
+                                        <a class="text-body text-decoration-none" href="/products/delete/{{ vegetable.product_id }}">
                                             <i class="fa fa-trash carrot-color me-2"></i>Delete
                                         </a>
                                     </small>
@@ -370,7 +370,7 @@
                                 {% else %}
                                 <div class="d-flex border-top">
                                     <small class="w-50 text-center border-end py-2">
-                                        <a class="text-body text-decoration-none" href="/products/{{ vegetable.id }}">
+                                        <a class="text-body text-decoration-none" href="/products/{{ vegetable.product_id }}">
                                             <i class="fa fa-eye greentea-color me-2"></i>View detail
                                         </a>
                                     </small>
@@ -404,7 +404,7 @@
                                     <div class="carrot-bgcolor rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">New</div>
                                 </div>
                                 <div class="text-center p-4">
-                                    <a class="d-block h4 text-decoration-none text-dark text-lora mb-2" href="/products/{{ other.id }}">{{ other.name|default:" " }}</a>
+                                    <a class="d-block h4 text-decoration-none text-dark text-lora mb-2" href="/products/{{ other.product_id }}">{{ other.name|default:" " }}</a>
                                     <div class="product-details d-flex align-items-center justify-content-start">
                                         <div>
                                             <div class="text-body text-decoration-line-through text-truncate text-start p-0">
@@ -422,12 +422,12 @@
                                 {% if user.is_staff %}
                                 <div class="d-flex border-top">
                                     <small class="w-50 text-center border-end py-2">
-                                        <a class="text-body text-decoration-none" href="/products/edit/{{ other.id }}">
+                                        <a class="text-body text-decoration-none" href="/products/edit/{{ other.product_id }}">
                                             <i class="fa fa-pen greentea-color me-2"></i>Edit
                                         </a>
                                     </small>
                                     <small class="w-50 text-center py-2">
-                                        <a class="text-body text-decoration-none" href="/products/delete/{{ other.id }}">
+                                        <a class="text-body text-decoration-none" href="/products/delete/{{ other.product_id }}">
                                             <i class="fa fa-trash carrot-color me-2"></i>Delete
                                         </a>
                                     </small>
@@ -435,7 +435,7 @@
                                 {% else %}
                                 <div class="d-flex border-top">
                                     <small class="w-50 text-center border-end py-2">
-                                        <a class="text-body text-decoration-none" href="/products/{{ other.id }}">
+                                        <a class="text-body text-decoration-none" href="/products/{{ other.product_id }}">
                                             <i class="fa fa-eye greentea-color me-2"></i>View detail
                                         </a>
                                     </small>

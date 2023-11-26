@@ -25,8 +25,8 @@ SECRET_KEY = 'django-insecure-$zljqo972i=qjpzcjx%old9dy$utpl$jkbxb)tq%mh2tplkdam
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = ['*']
-ALLOWED_HOSTS = [".awsapprunner.com"]
+ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = [".awsapprunner.com"]
 
 # Application definition
 
@@ -38,10 +38,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'products',
-    'blogs'
+    'blogs',
+    'order',
+    'ckeditor',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount'
 ]
 
 MIDDLEWARE = [
+    'allauth.account.middleware.AccountMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -75,27 +81,28 @@ WSGI_APPLICATION = 'dojistore.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'dojistore',
-#         'USER': 'postgres',
-#         'PASSWORD': '@Trinhdilam9.',
-#         'HOST': 'localhost',
-#     }
-# }
-
 DATABASES = {
-  'default': {
-    'ENGINE': 'django.db.backends.postgresql',
-    'NAME': 'neondb',
-    'USER': 'dangtrinhdo2910',
-    'PASSWORD': 'qjtS0BolX9Uy',
-    'HOST': 'ep-super-block-46042024.ap-southeast-1.aws.neon.tech',
-    'PORT': '5432',
-    'OPTIONS': {'sslmode': 'require'},
-  }
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'dojistore',
+        'USER': 'postgres',
+        'PASSWORD': '@Trinhdilam9.',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
 }
+
+# DATABASES = {
+#   'default': {
+#     'ENGINE': 'django.db.backends.postgresql',
+#     'NAME': 'neondb',
+#     'USER': 'dangtrinhdo2910',
+#     'PASSWORD': 'qjtS0BolX9Uy',
+#     'HOST': 'ep-super-block-46042024.ap-southeast-1.aws.neon.tech',
+#     'PORT': '5432',
+#     'OPTIONS': {'sslmode': 'require'},
+#   }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -115,6 +122,30 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+# Add these lines at the end of the file
+# SITE_ID = 1
+# LOGIN_REDIRECT_URL = '/'
+# ACCOUNT_EMAIL_VERIFICATION = 'none'
+# Thiết lập Allauth
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # Bắt buộc xác nhận email
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1/24/4
+
+# settings.py
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'dojistore.official@gmail.com'
+# EMAIL_HOST_PASSWORD = '@Trinhdilam9.'
+EMAIL_HOST_PASSWORD = 'lemf qevs jjir anxf'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -133,6 +164,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), )
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
 
 # MEDIA_URL = "images/"

@@ -5,6 +5,7 @@ from datetime import datetime
 # Create your models here.
 
 class Product(models.Model):
+    product_id = models.AutoField(primary_key=True)
     image = models.ImageField(upload_to='images/products', null=True, blank=True, max_length=50000)
     name = models.CharField(max_length=500)
     typeProduct = models.CharField(max_length=500)
