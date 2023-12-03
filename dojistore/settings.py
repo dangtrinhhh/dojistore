@@ -57,6 +57,20 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',  # Chọn level thích hợp: DEBUG, INFO, WARNING, ERROR, CRITICAL
+    },
+}
+
 ROOT_URLCONF = 'dojistore.urls'
 
 TEMPLATES = [
@@ -144,7 +158,6 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'dojistore.official@gmail.com'
-# EMAIL_HOST_PASSWORD = '@Trinhdilam9.'
 EMAIL_HOST_PASSWORD = 'lemf qevs jjir anxf'
 
 # Internationalization

@@ -6,6 +6,24 @@ from datetime import datetime
 from .models import Product
 from blogs.models import Blog
 
+from allauth.account.views import PasswordResetView
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from allauth.account.utils import filter_users_by_email
+
+class CustomPasswordResetView(PasswordResetView):
+    def form_valid(self, form):
+        email = form.cleaned_data['email']
+        users = filter_users_by_email(email)
+
+        if not users:
+            # User not found, display an error message
+            messages.error(self.request, "This email address hasn't been signed up yet.")
+            return self.render_to_response(self.get_context_data(form=form))
+
+        # Proceed with the password reset process
+        return super().form_valid(form)
+
 # Create your views here.
 def index(request):
     # To get Products from database:
@@ -21,9 +39,12 @@ def index(request):
         if email == '':
             username = request.POST['username']
             password = request.POST['password']
+            print(username + "/" + password)
             
             user = auth.authenticate(username=username, password=password)
-            
+            print(user)
+            user2 = auth.authenticate(username='20280107@student.hcmus.edu.vn', password='20280107')
+            print(user2)
             if user is not None:
                 auth.login(request, user)
                 messages.success(request, f"Login successfully! Welcome back, {username}.")
