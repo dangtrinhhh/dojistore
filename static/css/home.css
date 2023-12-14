@@ -80,6 +80,11 @@
     text-decoration: underline !important;
 }
 
+.btn:focus,.btn:active {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
 .hover-cursor-pointer:hover {
     cursor: pointer !important;
 }

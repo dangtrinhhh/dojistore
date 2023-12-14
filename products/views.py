@@ -42,9 +42,7 @@ def index(request):
             print(username + "/" + password)
             
             user = auth.authenticate(username=username, password=password)
-            print(user)
-            user2 = auth.authenticate(username='20280107@student.hcmus.edu.vn', password='20280107')
-            print(user2)
+
             if user is not None:
                 auth.login(request, user)
                 messages.success(request, f"Login successfully! Welcome back, {username}.")
@@ -196,7 +194,7 @@ def editproduct(request, slug):
         newDescription = request.POST.get('description', '')
         setNewest = request.POST.get('setToNewest', '')
         
-        product = Product.objects.get(id=slug)
+        product = Product.objects.get(product_id=slug)
         if newName != '':
             product.name = newName
         if newTypeProduct != '':
@@ -221,11 +219,12 @@ def editproduct(request, slug):
             return redirect("editproduct", slug=slug)
 
     else:
-        product = Product.objects.get(id=slug)
+        product = Product.objects.get(product_id=slug)
         return render(request, 'editproduct.html', {'product': product})
 
 def deleteproduct(request, slug):
-    product = Product.objects.get(id=slug)
+    product = Product.objects.get(product_id=slug)
+    
     try:
         product.delete()
         messages.success(request, "Delete Product Successfully")
