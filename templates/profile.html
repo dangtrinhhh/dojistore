@@ -243,48 +243,42 @@
                     <i class="far fa-edit mb-5"></i>
                   </div>
                   <div class="col-md-8">
-                    <div class="card-body p-4">
-                      <h5>Information</h5>
-                      <hr class="mt-0 mb-4">
-                      <div class="row pt-1">
-                        <div class="col-6 mb-3">
-                          <h5>Email</h5>
-                          <p class="text-muted">{{ user.email }}</p>
-                        </div>
-                        <div class="col-6 mb-3">
-                          <h5>Phone</h5>
-                          <p class="text-muted">{{ user.phoneNumber }}</p>
-                        </div>
-                      </div>
-                      <div class="row pt-1">
-                        <div class="mh-ps col-6 mb-3 mw-ps">
-                          <h5>Password</h5>
-                          {% comment %} <p class="text-muted">{{ user.password }}</p> {% endcomment %}
-                          <div class="password-toggle">
-                              <input type="password" id="current-password" placeholder="Current Password" value="current_password">
-                              <i id="toggle-password" class="fa fa-pen" onclick="togglePasswordFields"></i>
+                    <form action="updatepassword" method="POST">
+                      {% csrf_token %}
+                      <div class="card-body p-4">
+                        <h5>Information</h5>
+                        <hr class="mt-0 mb-4">
+                        <div class="row pt-1">
+                          <div class="col-6 mb-3">
+                            <h5>Email</h5>
+                            <p class="text-muted">{{ user.email }}</p>
                           </div>
-                      
-                          <div id="password-fields">
-                            <form action="updatepassword" method="POST">
-                              {% csrf_token %}
+                          <div class="col-6 mb-3">
+                            <h5>Phone</h5>
+                            <input class="input-padding" type="text" name="phoneNumber" id="new-phone-number" value="{{ user_profile.phone }}" placeholder="New Phone Number">
+                          </div>
+                        </div>
+                        <div class="row pt-1">
+                          <div class="mh-ps col-6 mb-3 mw-ps">
+                            <h5>Password</h5>
+                            {% comment %} <p class="text-muted">{{ user.password }}</p> {% endcomment %}
+                            <div class="password-toggle">
+                                <input type="password" id="current-password" placeholder="Current Password" value="current_password">
+                                <i id="toggle-password" class="fa fa-pen" onclick="togglePasswordFields"></i>
+                            </div>
+                            <div id="password-fields">
                               <input type="password" name="password" id="new-password" placeholder="New Password">
                               <input type="password" name="password2" id="confirm-password" placeholder="Confirm New Password">
-                              <input type="submit" value="Update" name="update">
-                            </form>
+                            </div>
                           </div>
-                        </div>
-                        <div class="col-6 mb-3">
-                          <h5>Most Viewed</h5>
-                          <p class="text-muted">Dolor sit amet</p>
+                          <div class="col-6 mb-3">
+                            <h5>Address</h5>
+                            <input class="input-padding" type="text" name="address" id="new-address" value="{{ user_profile.address }}" placeholder="New Address">
+                          </div>
+                          <input class="py-1" type="submit" value="Save changes" name="save">
                         </div>
                       </div>
-                      <div class="d-flex justify-content-start">
-                        <a href="#!"><i class="fab fa-facebook-f fa-lg me-3"></i></a>
-                        <a href="#!"><i class="fab fa-twitter fa-lg me-3"></i></a>
-                        <a href="#!"><i class="fab fa-instagram fa-lg"></i></a>
-                      </div>
-                    </div>
+                    </form>
                   </div>
                 </div>
               </div>
