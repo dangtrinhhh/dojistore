@@ -104,7 +104,10 @@ def register(request):
                 user.save()
                 user = auth.authenticate(username=username, password=password)
                 auth.login(request, user)
-                return redirect(nextUrl)
+                if nextUrl != '' and nextUrl is not None:
+                    return redirect(nextUrl)
+                else:
+                    return redirect('/')
         else:
             messages.info(request, 'Password doesn\'t match')
             return redirect('register')
