@@ -71,7 +71,7 @@ def editblog(request, slug):
         if len(request.FILES) != 0:
             blog.image = request.FILES['image']
         if setNewest == 'on':
-            blog.createdAt = datetime.now()
+            blog.last_updated = datetime.now()
 
         try:
             blog.save()
@@ -98,20 +98,20 @@ def deleteblog(request, slug):
   
     
 def blogs(request):
-    blogs = Blogs.objects.all().order_by('-createdAt')
+    blogs = Blogs.objects.all().order_by('-created_at')
     return render(request, 'blogs.html', {'blogs': blogs})
     
 def blogDetails(request, slug):
     blog = Blogs.objects.get(id=slug)
-    blogs = Blogs.objects.all().order_by('-createdAt')[:6]
+    blogs = Blogs.objects.all().order_by('-created_at')[:6]
     return render(request, 'blogDetails.html', {'blog': blog, 'blogs': blogs})
 
 def aboutUs(request):
-    blogs = Blogs.objects.all().order_by('-createdAt')
+    blogs = Blogs.objects.all().order_by('-created_at')
     return render(request, 'aboutUs.html', {'blogs': blogs})
 
 def contact(request):
-    blogs = Blogs.objects.all().order_by('-createdAt')
+    blogs = Blogs.objects.all().order_by('-created_at')
     return render(request, 'contact.html', {'blogs': blogs})
 
 def profile(request):

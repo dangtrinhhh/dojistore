@@ -1147,7 +1147,7 @@
                 </p> -->
                 <div class="text-muted border-top pt-4">
                   <small class="me-3"><i class="fa fa-user greentea-color me-2"></i>Admin</small>
-                  <small class="me-3"><i class="fa fa-calendar greentea-color me-2"></i>{{blog.createdAt.day }}/{{ blog.createdAt.month }}/{{blog.createdAt.year }}</small>
+                  <small class="me-3"><i class="fa fa-calendar greentea-color me-2"></i>{{blog.created_at.day }}/{{ blog.created_at.month }}/{{blog.created_at.year }}</small>
                 </div>
               </div>
               {% if user.is_staff %}
@@ -1348,7 +1348,7 @@
                   </div>
                   <div class="text-light pt-1">
                     <small class="me-2"><i class="fa fa-user me-2"></i>Admin</small>
-                    <small class=""><i class="fa fa-calendar me-2"></i>{{ blog.createdAt.day}}/{{ blog.createdAt.month }}/{{ blog.createdAt.year}}</small>
+                    <small class=""><i class="fa fa-calendar me-2"></i>{{ blog.created_at.day}}/{{ blog.created_at.month }}/{{ blog.created_at.year}}</small>
                   </div>
                 </li>
                 {% endfor %}

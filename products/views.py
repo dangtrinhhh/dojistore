@@ -3,8 +3,9 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
 from datetime import datetime
-from .models import Products
+from .models import Products, Product_Types, Product_Images
 from blogs.models import Blogs
+from order.models import Carts, Cart_Details, Orders, Order_Details
 from .models import Users
 
 from allauth.account.views import PasswordResetView
@@ -25,19 +26,26 @@ class CustomPasswordResetView(PasswordResetView):
         # Proceed with the password reset process
         return super().form_valid(form)
 
+def getProductOrderedType():
+    unique_names = Product_Types.objects.values_list('name', flat=True).distinct()
+    for name in unique_names:
+        products_for_type = Products.objects.filter(product_type_id__name=name)
+        yield products_for_type
+
 # Create your views here.
 def index(request):
+    products_for_type = getProductOrderedType()
     # To get Products from database:
     # Products.objects.get() can only return 1 product
-    fruits = Products.objects.filter(typeProduct__iexact='fruit').order_by('-createdAt')[:8]
-    vegetables = Products.objects.filter(typeProduct__iexact='vegetable').order_by('-createdAt')[:8]
-    others = Products.objects.filter(typeProduct__iexact='other').order_by('-createdAt')[:8]
+    # fruits = Products.objects.filter(typeProduct__iexact='fruit').order_by('-created_at')[:8]
+    # vegetables = Products.objects.filter(typeProduct__iexact='vegetable').order_by('-created_at')[:8]
+    # others = Products.objects.filter(typeProduct__iexact='other').order_by('-created_at')[:8]
     # __icontain: get element contain keyword
-    blogs = Blogs.objects.all().order_by('-createdAt')[:6]
+    blogs = Blogs.objects.all().order_by('-created_at')[:6]
     
     if request.method == "POST":
-        user = request.user
-        user_profile, created = Users.objects.get_or_create(user=user)
+        # user = request.user
+        # user_profile, created = Users.objects.get_or_create(user=user)
         email = request.POST.get('email', '')
         if email == '':
             username = request.POST['username']
@@ -74,7 +82,8 @@ def index(request):
                 messages.info(request, 'Passwords donot match')
                 return redirect('register')
     else:
-        return render(request, 'index.html', {'fruits': fruits, 'vegetables': vegetables, 'others': others, 'blogs': blogs, 'user_profile': user_profile})
+        # , 'user_profile': user_profile
+        return render(request, 'index.html', {'products_for_type': products_for_type, 'blogs': blogs})
 
 def register(request):
     nextUrl = request.POST.get('next')
@@ -125,30 +134,6 @@ def logout(request):
     auth.logout(request)
     return redirect('/')
 
-def forgotpassword(request):
-    if request.method == 'POST':
-        email = request.POST['email']
-        username = request.POST['username']
-        password = request.POST['password']
-        password2 = request.POST['password2']
-        if password == password2:
-            if User.objects.filter(email=email).exists():
-                messages.info(request, 'Email already exists')
-                return redirect('register')
-            elif User.objects.filter(username=username).exists():
-                messages.info(request, 'Username already exists')
-                return redirect('register')
-            else:
-                user = User.objects.create_user(username=username, email=email, password=password)
-                user.save()
-                user = auth.authenticate(username=username, password=password)
-                auth.login(request, user)
-                return redirect('/login')
-        else:
-            messages.info(request, 'Password doesn\'t match')
-    else:
-        return redirect('/profile')
-
 def updatepassword(request):
     user = request.user
     user_profile, created = Users.objects.get_or_create(user=user)
@@ -184,26 +169,32 @@ def updatepassword(request):
         return render(request, 'profile.html', {'user_profile': user_profile})
 
 def addproduct(request):
+    unique_names = Product_Types.objects.values_list('name', flat=True).distinct()
+
     if request.method == 'POST':
         product = Products()
         product.name = request.POST.get('name')
-        product.typeProduct = request.POST.get('typeProduct')
+        product_type_name = request.POST.get('typeProduct')
+
+        # Get or create Product_Type
+        product_type, created = Product_Types.objects.get_or_create(name=product_type_name)
+        product.product_type_id = product_type
+
         product.price = request.POST.get('price')
         product.pricesale = request.POST.get('pricesale', '')
         product.description = request.POST.get('description')
-        
-        if len(request.FILES) != 0:
-            product.image = request.FILES['image']
-        
-        try:
-            product.save()
-            messages.success(request, "Add Product Successfully")
-            return redirect("/addproduct")
-        except Exception as e:
-            messages.error(request, f"Failed to add product: {str(e)}")
-            return redirect("/addproduct")
-    else:
-        return render(request, 'addproduct.html')
+        product.save()
+
+        # Process uploaded image
+        if 'image' in request.FILES:
+            image = request.FILES['image']
+            product_image = Product_Images(product=product, url=image)
+            product_image.save()
+
+        messages.success(request, "Add Product Successfully")
+        return redirect("/addproduct")
+
+    return render(request, 'addproduct.html', {'unique_names': unique_names})
     
 def editproduct(request, slug):
     if request.method == 'POST':
@@ -228,7 +219,8 @@ def editproduct(request, slug):
         if len(request.FILES) != 0:
             product.image = request.FILES['image']
         if setNewest == 'on':
-            product.createdAt = datetime.now()
+            product.created_at = datetime.now()
+        product.last_updated = datetime.now()
         
         try:
             product.save()
@@ -254,11 +246,13 @@ def deleteproduct(request, slug):
         return redirect("/")
 
 def products(request):
-    fruits = Products.objects.filter(typeProduct__iexact='fruit').order_by('-createdAt')
-    vegetables = Products.objects.filter(typeProduct__iexact='vegetable').order_by('-createdAt')
-    others = Products.objects.filter(typeProduct__iexact='other').order_by('-createdAt')
-    blogs = Blogs.objects.all().order_by('-createdAt')[:6]
-    return render(request, 'products.html', {'fruits': fruits, 'vegetables': vegetables, 'others': others, 'blogs': blogs})
+    
+    # fruits = Products.objects.filter(typeProduct__iexact='fruit').order_by('-created_at')
+    # vegetables = Products.objects.filter(typeProduct__iexact='vegetable').order_by('-created_at')
+    # others = Products.objects.filter(typeProduct__iexact='other').order_by('-created_at')
+    products_for_type = getProductOrderedType()
+    blogs = Blogs.objects.all().order_by('-created_at')[:6]
+    return render(request, 'products.html', {'products_for_type': products_for_type, 'blogs': blogs})
     
 def productDetails(request, slug):
     product = Products.objects.get(product_id=slug)

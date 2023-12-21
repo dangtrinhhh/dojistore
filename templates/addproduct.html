@@ -237,9 +237,12 @@
                                                     </div>
                                                     <select class="form-select form-control mb-3" Required name="typeProduct" aria-label="Default select example">
                                                         <option selected>Select Product Type</option>
-                                                        <option value="fruit">Fruits</option>
+                                                        {% for unique_name in unique_names %}
+                                                          <option value="{{ unique_name }}">{{ unique_name }}</option>
+                                                        {% endfor %}
+                                                        <!-- <option value="fruit">Fruits</option>
                                                         <option value="vegetable">Vegetables</option>
-                                                        <option value="other">Others</option>
+                                                        <option value="other">Others</option> -->
                                                     </select>
                                                     <div class="mb-3">
                                                         <label for="" class="form-label">Price:</label>

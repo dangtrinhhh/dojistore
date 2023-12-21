@@ -12,7 +12,6 @@ urlpatterns = [
     path('login', views.login, name='login'),
     path('logout', views.logout, name='logout'),
     path('register', views.register, name='register'),
-    path('forgotpassword', views.forgotpassword, name='forgotpassword'),
     path('updatepassword', views.updatepassword, name='updatepassword'),
     path('cart', views.cart, name='cart'),
     path('accounts/password/reset/', CustomPasswordResetView.as_view(), name='account_reset_password'),
