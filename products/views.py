@@ -172,80 +172,97 @@ def updatepassword(request):
         return render(request, 'profile.html', {'user_profile': user_profile})
 
 def addproduct(request):
-    unique_names = Product_Types.objects.values_list('name', flat=True).distinct()
+    user = request.user
+    
+    if user and user.is_superuser:
+        unique_names = Product_Types.objects.values_list('name', flat=True).distinct()
 
-    if request.method == 'POST':
-        product = Products()
-        product.name = request.POST.get('name')
-        product_type_name = request.POST.get('typeProduct')
+        if request.method == 'POST':
+            product = Products()
+            product.name = request.POST.get('name')
+            product_type_name = request.POST.get('typeProduct')
 
-        # Get or create Product_Type
-        product_type, created = Product_Types.objects.get_or_create(name=product_type_name)
-        product.product_type_id = product_type
+            # Get or create Product_Type
+            product_type, created = Product_Types.objects.get_or_create(name=product_type_name)
+            product.product_type_id = product_type
 
-        product.price = request.POST.get('price')
-        product.pricesale = request.POST.get('pricesale', '')
-        product.description = request.POST.get('description')
-        product.save()
+            product.price = request.POST.get('price')
+            product.pricesale = request.POST.get('pricesale', '')
+            product.description = request.POST.get('description')
+            product.save()
 
-        # Process uploaded image
-        if 'image' in request.FILES:
-            image = request.FILES['image']
-            product_image = Product_Images(product=product, url=image)
-            product_image.save()
+            # Process uploaded image
+            if 'image' in request.FILES:
+                image = request.FILES['image']
+                product_image = Product_Images(product=product, url=image)
+                product_image.save()
 
-        messages.success(request, "Add Product Successfully")
-        return redirect("/addproduct")
+            messages.success(request, "Add Product Successfully")
+            return redirect("/addproduct")
 
-    return render(request, 'addproduct.html', {'unique_names': unique_names})
+        return render(request, 'addproduct.html', {'unique_names': unique_names})
+    else:
+        messages.info(request, "You don't have permission to access this page.")
+        return redirect("/")
     
 def editproduct(request, slug):
-    if request.method == 'POST':
-        newName = request.POST.get('name', '')
-        newTypeProduct = request.POST.get('typeProduct', '')
-        newPrice = request.POST.get('price', '')
-        newPriceSale = request.POST.get('pricesale', '')
-        newDescription = request.POST.get('description', '')
-        setNewest = request.POST.get('setToNewest', '')
-        
-        product = Products.objects.get(product_id=slug)
-        if newName != '':
-            product.name = newName
-        if newTypeProduct != '':
-            product.typeProduct = newTypeProduct
-        if newPrice != '':
-            product.price = newPrice
-        if newPriceSale != '':
-            product.pricesale = newPriceSale
-        if newDescription != '':
-            product.description = newDescription
-        if len(request.FILES) != 0:
-            product.image = request.FILES['image']
-        if setNewest == 'on':
-            product.created_at = datetime.now()
-        product.last_updated = datetime.now()
-        
-        try:
-            product.save()
-            messages.success(request, "Update Product Successfully")
-            return redirect("/")
-        except Exception as e:
-            messages.error(request, f"Failed to update product: {str(e)}")
-            return redirect("editproduct", slug=slug)
+    user = request.user
+    
+    if user and user.is_superuser:
+        if request.method == 'POST':
+            newName = request.POST.get('name', '')
+            newTypeProduct = request.POST.get('typeProduct', '')
+            newPrice = request.POST.get('price', '')
+            newPriceSale = request.POST.get('pricesale', '')
+            newDescription = request.POST.get('description', '')
+            setNewest = request.POST.get('setToNewest', '')
+            
+            product = Products.objects.get(product_id=slug)
+            if newName != '':
+                product.name = newName
+            if newTypeProduct != '':
+                product.typeProduct = newTypeProduct
+            if newPrice != '':
+                product.price = newPrice
+            if newPriceSale != '':
+                product.pricesale = newPriceSale
+            if newDescription != '':
+                product.description = newDescription
+            if len(request.FILES) != 0:
+                product.image = request.FILES['image']
+            if setNewest == 'on':
+                product.created_at = datetime.now()
+            product.last_updated = datetime.now()
+            
+            try:
+                product.save()
+                messages.success(request, "Update Product Successfully")
+                return redirect("/")
+            except Exception as e:
+                messages.error(request, f"Failed to update product: {str(e)}")
+                return redirect("editproduct", slug=slug)
 
+        else:
+            product = Products.objects.get(product_id=slug)
+            return render(request, 'editproduct.html', {'product': product})
     else:
-        product = Products.objects.get(product_id=slug)
-        return render(request, 'editproduct.html', {'product': product})
+        messages.info(request, "You don't have permission to access this page.")
+        return redirect("/")
 
 def deleteproduct(request, slug):
     product = Products.objects.get(product_id=slug)
+    user = request.user
     
-    try:
-        product.delete()
-        messages.success(request, "Delete Product Successfully")
-        return redirect("/")
-    except Exception as e:
-        messages.error(request, f"Failed to delete product: {str(e)}")
+    if user and user.is_superuser:
+        try:
+            product.delete()
+            messages.success(request, "Delete Product Successfully")
+            return redirect("/")
+        except Exception as e:
+            messages.error(request, f"Failed to delete product: {str(e)}")
+            return redirect("/")
+    else:
+        messages.info(request, "You don't have permission to access this page.")
         return redirect("/")
 
 def products(request):
@@ -263,6 +280,9 @@ def productDetails(request, slug):
 
 def cart(request):
     return render(request, 'cart.html', {})
+
+def loading(request):
+    return render(request, 'loading.html', {})
 
 def page_not_found(request, exception):
     return render(request, '404.html', status=404)

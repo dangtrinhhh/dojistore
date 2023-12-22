@@ -13,6 +13,7 @@ urlpatterns = [
     path('logout', views.logout, name='logout'),
     path('register', views.register, name='register'),
     path('updatepassword', views.updatepassword, name='updatepassword'),
+    path('loading', views.loading, name='loading'),
     path('cart', views.cart, name='cart'),
     path('accounts/password/reset/', CustomPasswordResetView.as_view(), name='account_reset_password'),
     path('accounts/', include('allauth.urls')),

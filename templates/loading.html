@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+    <link rel="icon" href="{% static 'img/logo.png' %}" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/loading.css' %}" />
+    <link rel="stylesheet" href="{% static '/font/themify-icons-font/themify-icons.css' %}" />
+    <link rel="stylesheet" href="{% static 'font/fontawesome/css/all.css' %}" />
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+    <title>DojiStore | Homepage</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Loading</h1>
+        <div class="loading">
+
+            <div class="bike">
+                <div class="bar1">
+                    <div class="under1"></div>
+                </div>
+                <div class="bar2">
+                    <div class="barsmall leftBar">
+                        <div class="seat1"></div>
+                        <div class="seat2"></div>
+                    </div>
+                    <div class="barsmall rightBar">
+                        <div class="tiny"></div>
+                        <div class="circle-small"></div>
+                    </div>
+                </div>
+                <div class="bar3"></div>
+                <div class="wheel right">
+                    <div class="spoke one"></div>
+                    <div class="spoke two"></div>
+                    <div class="spoke three"></div>
+                    <div class="spoke four"></div>
+                </div>
+                <div class="wheel left">
+                    <div class="spoke one"></div>
+                    <div class="spoke two"></div>
+                    <div class="spoke three"></div>
+                    <div class="spoke four"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Optional JavaScript; choose one of the two! -->
+    <script src="{% static 'js/main.js' %}"></script>
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    -->
+</body>
+
+</html>

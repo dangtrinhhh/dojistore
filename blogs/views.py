@@ -9,90 +9,76 @@ from products.models import Users
 
 # Create your views here.
 def writeblog(request):
-    if request.method == 'POST':
-        try:
-            form = BlogPostForm(request.POST, request.FILES)
-            if form.is_valid():
-                form.save()
-                messages.success(request, "Add Blog Successfully")
-                return redirect("/writeblog")
-        except MultiValueDictKeyError:
-            messages.error(request, f"Failed to add blog: {str(e)}")
-            pass
+    user = request.user
+    if user and user.is_superuser:
+        if request.method == 'POST':
+            try:
+                form = BlogPostForm(request.POST, request.FILES)
+                if form.is_valid():
+                    form.save()
+                    messages.success(request, "Add Blog Successfully")
+                    return redirect("/writeblog")
+            except MultiValueDictKeyError:
+                messages.error(request, f"Failed to add blog: {str(e)}")
+                pass
+        else:
+            form = BlogPostForm()
+        context = {
+            'form': form
+        }
+        return render(request, 'writeblog.html', context)
     else:
-        form = BlogPostForm()
-    context = {
-        'form': form
-    }
-    return render(request, 'writeblog.html', context)
-# def writeblog(request):
-#     if request.method == 'POST':
-#         form = BlogPostForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return render(request, 'writeblog.html')
-#             # return HttpResponse('New Blog Successfully Added')
-#     else:
-#         form = BlogPostForm()
-#         context = {
-#             'form':form
-#         }
-#     return render(request, 'writeblog.html', {'form':form})
-    # if request.method == 'POST':
-    #     blog = Blog()
-    #     blog.title = request.POST.get('title')
-    #     blog.content = request.POST.get('content')
-        
-    #     if len(request.FILES) != 0:
-    #         blog.image = request.FILES['image']
-        
-    #     try:
-    #         blog.save()
-    #         messages.success(request, "Add Blog Successfully")
-    #         return redirect("/")
-    #     except Exception as e:
-    #         messages.error(request, f"Failed to create blog: {str(e)}")
-            # return redirect("writeblog.html")
-    # else:
-        # return render(request, 'writeblog.html')
-  
+        messages.info(request, "You don't have permission to access this page.")
+        return redirect("/")
     
 def editblog(request, slug):
-    if request.method == 'POST':
-        newTitle = request.POST.get('title', '')
-        newContent = request.POST.get('content', '')
-        setNewest = request.POST.get('setToNewest', '')
-        
-        blog = Blogs.objects.get(id=slug)
-        if newTitle != '':
-            blog.title = newTitle
-        if newContent != '':
-            blog.content = newContent
-        if len(request.FILES) != 0:
-            blog.image = request.FILES['image']
-        if setNewest == 'on':
-            blog.last_updated = datetime.now()
+    user = request.user
+    
+    if user and user.is_superuser:
+        if request.method == 'POST':
+            newTitle = request.POST.get('title', '')
+            newContent = request.POST.get('content', '')
+            setNewest = request.POST.get('setToNewest', '')
+            
+            blog = Blogs.objects.get(id=slug)
+            if newTitle != '':
+                blog.title = newTitle
+            if newContent != '':
+                blog.content = newContent
+            if len(request.FILES) != 0:
+                blog.image = request.FILES['image']
+            if setNewest == 'on':
+                blog.last_updated = datetime.now()
 
-        try:
-            blog.save()
-            messages.success(request, "Update Blog Successfully")
-            return redirect("/")
-        except Exception as e:
-            messages.error(request, f"Error updating blog: {str(e)}")
-            return redirect("editblog", slug=slug)
+            try:
+                blog.save()
+                messages.success(request, "Update Blog Successfully")
+                return redirect("/")
+            except Exception as e:
+                messages.error(request, f"Error updating blog: {str(e)}")
+                return redirect("editblog", slug=slug)
+        else:
+            blog = Blogs.objects.get(id=slug)
+            return render(request, 'editblog.html', {'blog': blog})
     else:
-        blog = Blogs.objects.get(id=slug)
-        return render(request, 'editblog.html', {'blog': blog})
+        messages.info(request, "You don't have permission to access this page.")
+        return redirect("/")
 
 def deleteblog(request, slug):
-    blog = Blogs.objects.get(id=slug)
+    user = request.user
     
-    try:
-        blog.delete()
-        messages.success(request, "Delete Blog Successfully")
-        return redirect("/")
-    except Exception as e:
-        messages.error(request, f"Failed to delete blog: {str(e)}")
+    if user and user.is_superuser:
+        blog = Blogs.objects.get(id=slug)
+        
+        try:
+            blog.delete()
+            messages.success(request, "Delete Blog Successfully")
+            return redirect("/")
+        except Exception as e:
+            messages.error(request, f"Failed to delete blog: {str(e)}")
+            return redirect("/")
+    else:
+        messages.info(request, "You don't have permission to access this page.")
         return redirect("/")
 
   

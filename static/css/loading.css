@@ -1,0 +1,219 @@
+@import url('https://fonts.googleapis.com/css?family=Satisfy');
+
+:root {
+  --bike-color: #4A536A;
+  --seat-color: #1F2843;
+  --wheel-color: black;
+  --spokes-color: #646C82;
+  --handles-color: #1F2843;
+  --background: #898F9F;
+  --text: white;
+  --text-shadow: #1F2843;
+  --bike-speed: 10s;
+  --wheel-speed: 2.5s;
+  --multiplier: 1.5;
+}
+
+.container {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+h1 {
+  z-index: 150;
+  position: relative;
+  top: calc(190px * var(--multiplier));
+  font-size: calc(85px * var(--multiplier));
+  margin: 0 auto;
+  color: var(--text);
+  text-align: center;
+  font-family: 'Satisfy', cursive;
+  text-shadow: calc(2px * var(--multiplier)) calc(2px * var(--multiplier)) var(--text-shadow);
+}
+
+@keyframes move {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading {
+  margin: 0 auto;
+  color: white;
+  text-align: center;
+  width: calc(300px * var(--multiplier));
+  height: calc(300px * var(--multiplier));
+  background-color: var(--background);
+  border-radius: 50%;
+  transform: rotate(0deg);
+  animation-name: move;
+  animation-duration: var(--bike-speed);
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+.bike {
+  z-index: 25;
+  display: inline-block;
+  position: relative;
+  left: -0px;
+  bottom: calc(210px * var(--multiplier));
+}
+
+.spoke {
+  position: relative;
+  z-index: -1;
+  margin-top: 50%;
+  width: 100%;
+  height: calc(1px * var(--multiplier));
+  background-color: var(--spokes-color);
+}
+
+.two {
+  transform: rotate(90deg);
+  bottom: calc(46px * var(--multiplier));
+}
+
+.three {
+  transform: rotate(45deg);
+  bottom: calc(92px * var(--multiplier));
+}
+
+.four {
+  transform: rotate(-45deg);
+  bottom: calc(138px * var(--multiplier));
+}
+
+.under1 {
+  position: relative;
+  top: calc(27px * var(--multiplier));
+  right: calc(25px * var(--multiplier));
+  height: calc(10px * var(--multiplier));
+  width: calc(160px * var(--multiplier));
+  background-color: var(--bike-color);
+  transform: rotate(-50deg);
+}
+
+.seat1 {
+  position: relative;
+  bottom: calc(8px * var(--multiplier));
+  right: calc(5px * var(--multiplier));
+  height: calc(13px * var(--multiplier));
+  width: calc(15px * var(--multiplier));
+  background-color: var(--seat-color);
+  border-radius: 50%;
+}
+
+.seat2 {
+  position: relative;
+  bottom: calc(20px * var(--multiplier));
+  height: calc(10px * var(--multiplier));
+  width: calc(35px * var(--multiplier));
+  background-color: var(--seat-color);
+  border-radius: 0 50% 33% 0;
+}
+
+.barsmall {
+  position: relative;
+  bottom: calc(25px * var(--multiplier));
+  background-color: var(--bike-color);
+  height: calc(25px * var(--multiplier));
+  width: calc(10px * var(--multiplier));
+}
+
+.leftBar {
+  left: 0px;
+  height: calc(90px * var(--multiplier));
+  transform: rotate(-10deg);
+}
+
+.rightBar {
+  left: calc(91px * var(--multiplier));
+  bottom: calc(115px * var(--multiplier));
+  border-radius: calc(3px * var(--multiplier)) 0 0 0;
+}
+
+.bar1 {
+  z-index: 25;
+  position: relative;
+  bottom: calc(-97px * var(--multiplier));
+  right: calc(23px * var(--multiplier));
+  background-color: var(--bike-color);
+  height: calc(100px * var(--multiplier));
+  width: calc(10px * var(--multiplier));
+  transform: rotate(25deg);
+}
+
+.bar2 {
+  background-color: var(--bike-color);
+  height: calc(10px * var(--multiplier));
+  width: calc(100px * var(--multiplier));
+}
+
+.bar3 {
+  z-index: 25;
+  position: relative;
+  bottom: calc(13px * var(--multiplier));
+  left: calc(113px * var(--multiplier));
+  background-color: var(--bike-color);
+  height: calc(100px * var(--multiplier));
+  width: calc(10px * var(--multiplier));
+  transform: rotate(-25deg);
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.wheel {
+  height: calc(100px * var(--multiplier));
+  width: calc(100px * var(--multiplier));
+  border: var(--wheel-color) calc(5px * var(--multiplier)) solid;
+  border-radius: 50%;
+  transform: rotate(0deg);
+  animation-name: spin;
+  animation-duration: var(--wheel-speed);
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+.left {
+  position: relative;
+  right: calc(85px * var(--multiplier));
+  bottom: calc(175px * var(--multiplier));
+}
+
+.right {
+  position: relative;
+  left: calc(85px * var(--multiplier));
+  bottom: calc(75px * var(--multiplier));
+}
+
+.circle-small {
+  position: relative;
+  background-color: var(--handles-color);
+  height: calc(15px * var(--multiplier));
+  width: calc(15px * var(--multiplier));
+  border-radius: 50%;
+  bottom: calc(45px * var(--multiplier));
+  left: calc(15px * var(--multiplier));
+}
+
+.tiny {
+  position: relative;
+  bottom: calc(17px * var(--multiplier));
+  left: calc(8px * var(--multiplier));
+  background-color: var(--bike-color);
+  height: calc(25px * var(--multiplier));
+  width: calc(10px * var(--multiplier));
+  transform: rotate(45deg);
+}
