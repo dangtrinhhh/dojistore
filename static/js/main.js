@@ -139,26 +139,66 @@ function togglePasswordFields() {
     passwordFields.style.display = passwordFields.style.display === "none" ? "block" : "none";
 }
 
-document.querySelectorAll('.add-to-cart').forEach(function (button) {
-    button.addEventListener('click', function (event) {
-        event.preventDefault();
 
-        // Lấy id sản phẩm từ thuộc tính data
-        var productId = button.getAttribute('data-product-id');
-
-        // Thực hiện các thao tác thêm sản phẩm vào giỏ hàng ở đây
-        // ...
-
-        // Cập nhật số lượng sản phẩm trong giỏ hàng
-        updateCartItemCount();
-    });
-});
+// Handle API
 
 // Hàm cập nhật số lượng sản phẩm trong giỏ hàng
-function updateCartItemCount() {
-    // Thực hiện logic để lấy số lượng sản phẩm trong giỏ hàng (tùy thuộc vào cách bạn triển khai giỏ hàng)
-    var cartItemCount = 10; // Đổi số này bằng số lượng thực tế trong giỏ hàng
+// function updateCartItemCount(product_id, quantity) {
+//   const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+    
+//   console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+//   console.log(csrfToken)
+//   // Thực hiện logic để lấy số lượng sản phẩm trong giỏ hàng (tùy thuộc vào cách bạn triển khai giỏ hàng)
+//   var cartItemCount = 10; // Đổi số này bằng số lượng thực tế trong giỏ hàng
 
-    // Cập nhật số lượng trên giao diện
-    document.getElementById('cart-item-count').innerText = cartItemCount;
-}
+//   // Cập nhật số lượng trên giao diện
+//   document.getElementById('cart-item-count').innerText = cartItemCount;
+
+//   const productId = 1; // ID của sản phẩm
+//   const quantity = 2; // Số lượng sản phẩm
+
+//   fetch('/api/add-to-cart/', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//       'X-CSRFToken': csrfToken, // Điền CSRF token nếu bạn đang sử dụng CSRF protection
+//     },
+//     body: JSON.stringify({ product_id: productId, quantity }),
+//   })
+//     .then(response => response.json())
+//     .then(data => {
+//       console.log('Giỏ hàng đã được cập nhật:', data);
+//       // Xử lý dữ liệu giỏ hàng nếu cần
+//     })
+//     .catch(error => {
+//       console.error('Lỗi khi thêm vào giỏ hàng:', error);
+//     });
+
+// }
+// Hàm cập nhật số lượng sản phẩm trong giỏ hàng
+function updateCartItemCount(product_id, quantity) {
+    // Lấy giá trị của CSRF token từ trang web
+    const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+  
+    // Thực hiện fetch với CSRF token lấy từ trang web
+    fetch('/api/add-to-cart/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrfToken,
+      },
+      body: JSON.stringify({ product_id: product_id, quantity: quantity }), // Sử dụng tham số truyền vào
+    })
+      .then(response => response.json())
+      .then(data => {
+        // Xử lý dữ liệu giỏ hàng nếu cần
+        console.log('Giỏ hàng đã được cập nhật:', data);
+        // Cập nhật số lượng trên giao diện
+        var cartItemCount = parseInt(document.getElementById('cart-item-count').innerText);
+        document.getElementById('cart-item-count').innerText = cartItemCount + quantity;
+      })
+      .catch(error => {
+        console.error('Lỗi khi thêm vào giỏ hàng:', error);
+      });
+  }
+  

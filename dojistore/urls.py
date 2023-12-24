@@ -21,6 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('products.urls')),
     path('', include('blogs.urls')),
+    path('api/', include('order.urls')),
     path('accounts/', include('allauth.urls')),
 ]
 
@@ -32,3 +33,10 @@ urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    
+from django.conf import settings
+from django.views.static import serve
+from django.urls import re_path
+
+if settings.DEBUG is False:  # Only use WhiteNoise in production
+    urlpatterns += [re_path(r'^static/(?P<path>.*)$', serve)]

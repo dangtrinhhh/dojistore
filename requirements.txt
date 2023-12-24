@@ -15,5 +15,5 @@ virtualenv==20.24.2
 virtualenv-clone==0.5.7
 virtualenvwrapper==4.8.4
 virtualenvwrapper-win==1.2.7
-django-allauth
-collectstatic
+django-allauth==0.58.2
+djangorestframework==3.14.0

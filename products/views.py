@@ -7,7 +7,6 @@ from .models import Products, Product_Types, Product_Images
 from blogs.models import Blogs
 from order.models import Carts, Cart_Details, Orders, Order_Details
 from .models import Users
-
 from allauth.account.views import PasswordResetView
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -26,26 +25,54 @@ class CustomPasswordResetView(PasswordResetView):
         # Proceed with the password reset process
         return super().form_valid(form)
 
+from django.db.models import F, Value, CharField
+
 def getProductOrderedType():
-    unique_names = Product_Types.objects.values_list('name', flat=True).distinct()
-    for name in unique_names:
-        products_for_type = Products.objects.filter(product_type_id__name=name)
-        yield products_for_type
+    # Lấy danh sách tất cả các loại sản phẩm
+    product_types = Product_Types.objects.all()
+
+    # Tạo một danh sách để lưu trữ sản phẩm và hình ảnh tương ứng
+    products_with_images = []
+
+    # Lặp qua từng loại sản phẩm và lấy danh sách sản phẩm tương ứng
+    for product_type in product_types:
+        products = Products.objects.filter(product_type_id=product_type.product_type_id)
+
+        # Tạo một danh sách hình ảnh cho từng sản phẩm
+        products_and_images = []
+
+        for product in products:
+            # Lấy danh sách hình ảnh cho sản phẩm hiện tại
+            images = Product_Images.objects.filter(product=product)
+
+            # Thêm sản phẩm và danh sách hình ảnh vào danh sách chung
+            products_and_images.append({
+                'product': product,
+                'images': images
+            })
+
+        # Thêm danh sách sản phẩm và hình ảnh vào danh sách chung
+        products_with_images.append({
+            'product_type': product_type,
+            'products_and_images': products_and_images
+        })
+    return products_with_images
 
 # Create your views here.
 def index(request):
-    products_for_type = getProductOrderedType()
-    # To get Products from database:
-    # Products.objects.get() can only return 1 product
-    # fruits = Products.objects.filter(typeProduct__iexact='fruit').order_by('-created_at')[:8]
-    # vegetables = Products.objects.filter(typeProduct__iexact='vegetable').order_by('-created_at')[:8]
-    # others = Products.objects.filter(typeProduct__iexact='other').order_by('-created_at')[:8]
-    # __icontain: get element contain keyword
+    user = request.user  # Đây là user đăng nhập, nếu có
+    cart = None
+    if user.is_authenticated:
+        user_profile, created = Users.objects.get_or_create(user=user)
+        cart, created = Carts.objects.get_or_create(user=user_profile)
+    
+    # print(request.META.get("REMOTE_ADDR"))
+    
+    product_types = Product_Types.objects.all()
+    products_with_images = getProductOrderedType() 
     blogs = Blogs.objects.all().order_by('-created_at')[:6]
     
     if request.method == "POST":
-        # user = request.user
-        # user_profile, created = Users.objects.get_or_create(user=user)
         email = request.POST.get('email', '')
         if email == '':
             username = request.POST['username']
@@ -82,8 +109,7 @@ def index(request):
                 messages.info(request, 'Passwords donot match')
                 return redirect('register')
     else:
-        # , 'user_profile': user_profile
-        return render(request, 'index.html', {'products_for_type': products_for_type, 'blogs': blogs})
+        return render(request, 'index.html', {'product_types': product_types, 'products_with_images': products_with_images, 'blogs': blogs, 'cart': cart})
 
 def register(request):
     nextUrl = request.POST.get('next')
@@ -138,8 +164,11 @@ def logout(request):
     return redirect('/')
 
 def updatepassword(request):
-    user = request.user
-    user_profile, created = Users.objects.get_or_create(user=user)
+    user = request.user  # Đây là user đăng nhập, nếu có
+    cart = None
+    if user.is_authenticated:
+        user_profile, created = Users.objects.get_or_create(user=user)
+        cart, created = Carts.objects.get_or_create(user=user_profile)
     
     if request.method == 'POST':
         password = request.POST['password']
@@ -169,10 +198,14 @@ def updatepassword(request):
         
         messages.success(request, 'Update successfully')
     else:
-        return render(request, 'profile.html', {'user_profile': user_profile})
+        return render(request, 'profile.html', {'user_profile': user_profile, 'cart': cart})
 
 def addproduct(request):
-    user = request.user
+    user = request.user  # Đây là user đăng nhập, nếu có
+    cart = None
+    if user.is_authenticated:
+        user_profile, created = Users.objects.get_or_create(user=user)
+        cart, created = Carts.objects.get_or_create(user=user_profile)
     
     if user and user.is_superuser:
         unique_names = Product_Types.objects.values_list('name', flat=True).distinct()
@@ -200,13 +233,17 @@ def addproduct(request):
             messages.success(request, "Add Product Successfully")
             return redirect("/addproduct")
 
-        return render(request, 'addproduct.html', {'unique_names': unique_names})
+        return render(request, 'addproduct.html', {'unique_names': unique_names, 'cart': cart})
     else:
         messages.info(request, "You don't have permission to access this page.")
         return redirect("/")
     
 def editproduct(request, slug):
-    user = request.user
+    user = request.user  # Đây là user đăng nhập, nếu có
+    cart = None
+    if user.is_authenticated:
+        user_profile, created = Users.objects.get_or_create(user=user)
+        cart, created = Carts.objects.get_or_create(user=user_profile)
     
     if user and user.is_superuser:
         if request.method == 'POST':
@@ -244,7 +281,7 @@ def editproduct(request, slug):
 
         else:
             product = Products.objects.get(product_id=slug)
-            return render(request, 'editproduct.html', {'product': product})
+            return render(request, 'editproduct.html', {'product': product, 'cart': cart})
     else:
         messages.info(request, "You don't have permission to access this page.")
         return redirect("/")
@@ -266,23 +303,46 @@ def deleteproduct(request, slug):
         return redirect("/")
 
 def products(request):
-    
-    # fruits = Products.objects.filter(typeProduct__iexact='fruit').order_by('-created_at')
-    # vegetables = Products.objects.filter(typeProduct__iexact='vegetable').order_by('-created_at')
-    # others = Products.objects.filter(typeProduct__iexact='other').order_by('-created_at')
-    products_for_type = getProductOrderedType()
+    user = request.user  # Đây là user đăng nhập, nếu có
+    cart = None
+    if user.is_authenticated:
+        user_profile, created = Users.objects.get_or_create(user=user)
+        cart, created = Carts.objects.get_or_create(user=user_profile)
+        
+    product_types = Product_Types.objects.all()
+    products_with_images = getProductOrderedType() 
     blogs = Blogs.objects.all().order_by('-created_at')[:6]
-    return render(request, 'products.html', {'products_for_type': products_for_type, 'blogs': blogs})
+    return render(request, 'products.html', {'product_types': product_types, 'products_with_images': products_with_images, 'blogs': blogs, 'cart': cart})
     
 def productDetails(request, slug):
+    user = request.user  # Đây là user đăng nhập, nếu có
+    cart = None
+    if user.is_authenticated:
+        user_profile, created = Users.objects.get_or_create(user=user)
+        cart, created = Carts.objects.get_or_create(user=user_profile)
+        
     product = Products.objects.get(product_id=slug)
-    return render(request, 'productDetails.html', {'product': product})
+    product_images = Product_Images.objects.filter(product=product)
+    print(product_images)
+    return render(request, 'productDetails.html', {'product': product, 'product_images': product_images, 'cart': cart})
 
 def cart(request):
-    return render(request, 'cart.html', {})
+    user = request.user  # Đây là user đăng nhập, nếu có
+    cart = None
+    if user.is_authenticated:
+        user_profile, created = Users.objects.get_or_create(user=user)
+        cart, created = Carts.objects.get_or_create(user=user_profile)
+    return render(request, 'cart.html', {'cart': cart})
 
 def loading(request):
     return render(request, 'loading.html', {})
 
-def page_not_found(request, exception):
+def page_not_found_view(request, exception):
     return render(request, '404.html', status=404)
+
+def server_error_view(request):
+    return render(request, '500.html', status=500)
+
+def handler404(request, exception):
+    return render(request, '404.html', status=404)
+

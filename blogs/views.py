@@ -5,7 +5,9 @@ from django.contrib import messages
 from datetime import datetime
 from .models import Blogs
 from .forms import BlogPostForm
-from products.models import Users
+from products.models import Users, Products, Product_Types, Product_Images
+from order.models import Carts, Cart_Details, Orders, Order_Details
+from products.views import getProductOrderedType
 
 # Create your views here.
 def writeblog(request):
@@ -32,7 +34,11 @@ def writeblog(request):
         return redirect("/")
     
 def editblog(request, slug):
-    user = request.user
+    user = request.user  # Đây là user đăng nhập, nếu có
+    cart = None
+    if user.is_authenticated:
+        user_profile, created = Users.objects.get_or_create(user=user)
+        cart, created = Carts.objects.get_or_create(user=user_profile)
     
     if user and user.is_superuser:
         if request.method == 'POST':
@@ -59,7 +65,7 @@ def editblog(request, slug):
                 return redirect("editblog", slug=slug)
         else:
             blog = Blogs.objects.get(id=slug)
-            return render(request, 'editblog.html', {'blog': blog})
+            return render(request, 'editblog.html', {'blog': blog, 'cart': cart})
     else:
         messages.info(request, "You don't have permission to access this page.")
         return redirect("/")
@@ -84,23 +90,52 @@ def deleteblog(request, slug):
   
     
 def blogs(request):
+    user = request.user  # Đây là user đăng nhập, nếu có
+    cart = None
+    if user.is_authenticated:
+        user_profile, created = Users.objects.get_or_create(user=user)
+        cart, created = Carts.objects.get_or_create(user=user_profile)
     blogs = Blogs.objects.all().order_by('-created_at')
-    return render(request, 'blogs.html', {'blogs': blogs})
+    return render(request, 'blogs.html', {'blogs': blogs, 'cart': cart})
     
 def blogDetails(request, slug):
+    user = request.user  # Đây là user đăng nhập, nếu có
+    cart = None
+    if user.is_authenticated:
+        user_profile, created = Users.objects.get_or_create(user=user)
+        cart, created = Carts.objects.get_or_create(user=user_profile)
+        
     blog = Blogs.objects.get(id=slug)
     blogs = Blogs.objects.all().order_by('-created_at')[:6]
-    return render(request, 'blogDetails.html', {'blog': blog, 'blogs': blogs})
+    return render(request, 'blogDetails.html', {'blog': blog, 'blogs': blogs, 'cart': cart})
 
 def aboutUs(request):
+    user = request.user  # Đây là user đăng nhập, nếu có
+    cart = None
+    if user.is_authenticated:
+        user_profile, created = Users.objects.get_or_create(user=user)
+        cart, created = Carts.objects.get_or_create(user=user_profile)
+        
+    product_types = Product_Types.objects.all()
+    products_with_images = getProductOrderedType() 
     blogs = Blogs.objects.all().order_by('-created_at')
-    return render(request, 'aboutUs.html', {'blogs': blogs})
+    return render(request, 'aboutUs.html', {'product_types': product_types, 'products_with_images': products_with_images, 'blogs': blogs, 'cart': cart})
 
 def contact(request):
+    user = request.user  # Đây là user đăng nhập, nếu có
+    cart = None
+    if user.is_authenticated:
+        user_profile, created = Users.objects.get_or_create(user=user)
+        cart, created = Carts.objects.get_or_create(user=user_profile)
+        
     blogs = Blogs.objects.all().order_by('-created_at')
-    return render(request, 'contact.html', {'blogs': blogs})
+    return render(request, 'contact.html', {'blogs': blogs, 'cart': cart})
 
 def profile(request):
-    user = request.user
-    user_profile, created = Users.objects.get_or_create(user=user)
-    return render(request, 'profile.html', {'user_profile': user_profile})
+    user = request.user  # Đây là user đăng nhập, nếu có
+    cart = None
+    if user.is_authenticated:
+        user_profile, created = Users.objects.get_or_create(user=user)
+        cart, created = Carts.objects.get_or_create(user=user_profile)
+        
+    return render(request, 'profile.html', {'user_profile': user_profile, 'cart': cart})

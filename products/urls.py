@@ -1,6 +1,30 @@
 from django.urls import path, include
 from . import views
 from .views import CustomPasswordResetView
+from django.conf.urls import handler404
+from .views import page_not_found_view
+from django.conf.urls import handler500
+from .views import server_error_view
+from django.shortcuts import render
+from django.urls import re_path
+
+
+# trong urls.py
+from django.urls import path
+from .views import handler404
+
+handler404 = handler404  # Tạo biến global cho view
+
+# Thêm đoạn code sau vào urlpatterns
+# handler404 = handler404  # Sử dụng view tùy chỉnh cho lỗi 404
+
+# handler500 = server_error_view
+# handler404 = page_not_found_view
+
+# def handler404(request, exception, template_name='404.html'):
+#     response = render(request, template_name)
+#     response.status_code = 404
+#     return response
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -17,6 +41,9 @@ urlpatterns = [
     path('cart', views.cart, name='cart'),
     path('accounts/password/reset/', CustomPasswordResetView.as_view(), name='account_reset_password'),
     path('accounts/', include('allauth.urls')),
+    path('handler404/', handler404),
     # path('accounts/reset/fail', CustomPasswordResetView.as_view(), name='password_reset'),
 ]
 
+# handler404 = handler404
+# handler404 = re_path(r'^.*$', handler404)

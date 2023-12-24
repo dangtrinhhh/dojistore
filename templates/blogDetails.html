@@ -59,32 +59,41 @@
             </div>
           </div>
           {% endif %} {% if user.is_authenticated %}
-          <a class="hello-user nav-item nav-link"
+          <!-- <a class="hello-user nav-item nav-link"
             >Hi <b>{{ user.username }}</b></a
-          >
+          > -->
           <nav class="navbar navbar-expand-lg navbar-light m-0 p-0">
             <div class="container-fluid">
               <ul class="navbar-nav m-0 p-0">
+                <!-- Shopping Cart Button Start -->
+                <li class="nav-item m-0 p-0">
+                  <a class="nav-link shopping-bag-icon d-flex align-items-center m-auto mx-2" href="/cart">
+                    <i class="fa fa-shopping-bag greentea-color"></i>
+                    <span class="circle-badge" id="cart-item-count">{{ cart.total_quantity }}</span>
+                  </a>
+                </li>
+                <!-- Shopping Cart Button End -->
                 <!-- Avatar -->
                 <li class="nav-item dropdown m-0 p-0">
                   <a
-                    class="nav-link dropdown-toggle d-flex align-items-center m-0 p-0"
+                    class="nav-link dropdown-toggle d-flex align-items-center m-auto"
                     href="#"
                     id="navbarDropdownMenuLink"
                     role="button"
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                   >
-                    <img
+                    <i class="fa fa-user greentea-color"></i>
+                    <!-- <img
                       src="{% static 'img/default-avatar.png' %}"
                       class="rounded-circle"
                       height="50"
                       alt="Avatar"
                       loading="lazy"
-                    />
+                    /> -->
                   </a>
                   <ul
-                    class="dropdown-menu"
+                    class="dropdown-menu  dropdown-menu-end mt-4"
                     aria-labelledby="navbarDropdownMenuLink"
                   >
                     <li>
@@ -109,6 +118,14 @@
       </div>
     </nav>
     <!-- Navbar End -->
+
+    <!-- Chatbot Button Start -->
+    <button class="cart-btn btn-outline-primary border-2">
+      <a class="shopping-bag-icon m-auto" href="/cart">
+          <i class="fa fa-comments greentea-color"></i>
+      </a>
+    </button>
+    <!-- Chatbot Button End -->
 
     <!-- Shopping Cart Button Start -->
     <button class="cart-btn btn-outline-primary border-2">
