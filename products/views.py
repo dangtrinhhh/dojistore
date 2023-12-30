@@ -163,7 +163,7 @@ def logout(request):
     auth.logout(request)
     return redirect('/')
 
-def updatepassword(request):
+def updateprofile(request):
     user = request.user  # Đây là user đăng nhập, nếu có
     cart = None
     if user.is_authenticated:
@@ -194,9 +194,9 @@ def updatepassword(request):
                 return redirect('/login')
             else:
                 messages.error(request, 'Password doesn\'t match')
-                return render(request, 'profile.html')
         
         messages.success(request, 'Update successfully')
+        return redirect("/profile")
     else:
         return render(request, 'profile.html', {'user_profile': user_profile, 'cart': cart})
 

@@ -103,7 +103,7 @@ DATABASES = {
         'NAME': 'dojistore',
         'USER': 'postgres',
         'PASSWORD': '@Trinhdilam9.',
-        'HOST': 'localhost',
+        'HOST': 'localhost', # db
         'PORT': '5432',
     }
 }

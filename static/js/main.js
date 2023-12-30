@@ -49,11 +49,11 @@ modal.addEventListener('click', hideBuyTickets)
 
 modal2.addEventListener('click', hideBuyTickets)
 
-modalContainer.addEventListener('click', function(event) {
+modalContainer.addEventListener('click', function (event) {
     event.stopPropagation()
 })
 
-modalContainer2.addEventListener('click', function(event) {
+modalContainer2.addEventListener('click', function (event) {
     event.stopPropagation()
 })
 
@@ -145,7 +145,7 @@ function togglePasswordFields() {
 // Hàm cập nhật số lượng sản phẩm trong giỏ hàng
 // function updateCartItemCount(product_id, quantity) {
 //   const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
-    
+
 //   console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 //   console.log(csrfToken)
 //   // Thực hiện logic để lấy số lượng sản phẩm trong giỏ hàng (tùy thuộc vào cách bạn triển khai giỏ hàng)
@@ -179,26 +179,85 @@ function togglePasswordFields() {
 function updateCartItemCount(product_id, quantity) {
     // Lấy giá trị của CSRF token từ trang web
     const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
-  
+
     // Thực hiện fetch với CSRF token lấy từ trang web
     fetch('/api/add-to-cart/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': csrfToken,
-      },
-      body: JSON.stringify({ product_id: product_id, quantity: quantity }), // Sử dụng tham số truyền vào
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken,
+        },
+        body: JSON.stringify({ product_id: product_id, quantity: quantity }), // Sử dụng tham số truyền vào
     })
-      .then(response => response.json())
-      .then(data => {
-        // Xử lý dữ liệu giỏ hàng nếu cần
-        console.log('Giỏ hàng đã được cập nhật:', data);
-        // Cập nhật số lượng trên giao diện
-        var cartItemCount = parseInt(document.getElementById('cart-item-count').innerText);
-        document.getElementById('cart-item-count').innerText = cartItemCount + quantity;
-      })
-      .catch(error => {
-        console.error('Lỗi khi thêm vào giỏ hàng:', error);
-      });
-  }
-  
+        .then(response => response.json())
+        .then(data => {
+            // Xử lý dữ liệu giỏ hàng nếu cần
+            console.log('Giỏ hàng đã được cập nhật:', data);
+            // Cập nhật số lượng trên giao diện
+            var cartItemCount = parseInt(document.getElementById('cart-item-count').innerText);
+            document.getElementById('cart-item-count').innerText = cartItemCount + quantity;
+        })
+        .catch(error => {
+            console.error('Lỗi khi thêm vào giỏ hàng:', error);
+        });
+}
+
+// Hàm fetch giỏ hàng
+function fetchCart() {
+    fetch('/api/carts/', {
+        method: 'GET',
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Dữ liệu giỏ hàng:', data);
+            // Xử lý dữ liệu giỏ hàng nếu cần
+        })
+        .catch(error => {
+            console.error('Lỗi khi lấy dữ liệu giỏ hàng:', error);
+        });
+}
+
+// Hàm fetch chi tiết giỏ hàng
+function fetchCartDetails(cartId) {
+    fetch(`/api/cart-details/${cartId}`, {
+        method: 'GET',
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Dữ liệu chi tiết giỏ hàng:', data);
+            // Xử lý dữ liệu chi tiết giỏ hàng nếu cần
+        })
+        .catch(error => {
+            console.error('Lỗi khi lấy dữ liệu chi tiết giỏ hàng:', error);
+        });
+}
+
+// Hàm fetch đơn hàng
+function fetchOrders() {
+    fetch('/orders/', {
+        method: 'GET',
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Dữ liệu đơn hàng:', data);
+            // Xử lý dữ liệu đơn hàng nếu cần
+        })
+        .catch(error => {
+            console.error('Lỗi khi lấy dữ liệu đơn hàng:', error);
+        });
+}
+
+// Hàm fetch chi tiết đơn hàng
+function fetchOrderDetails(orderId) {
+    fetch(`/order-details/?order=${orderId}`, {
+        method: 'GET',
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Dữ liệu chi tiết đơn hàng:', data);
+            // Xử lý dữ liệu chi tiết đơn hàng nếu cần
+        })
+        .catch(error => {
+            console.error('Lỗi khi lấy dữ liệu chi tiết đơn hàng:', error);
+        });
+}  
