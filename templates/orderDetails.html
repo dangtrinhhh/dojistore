@@ -233,76 +233,68 @@
 
     <!-- Modal End -->
     
-    <section class="h-100 gradient-custom">
-      <div class="container py-5">
-        <div class="row d-flex justify-content-center my-4">
-          <div class="col-md-8">
-            <div class="card mb-4">
-              <div class="card-header py-3">
-                <h5 class="mb-0">Cart - {{ cart.total_quantity }} items</h5>
-              </div>
-              <div id="productContainer" class="card-body"></div>
-            </div>
-            <div class="card mb-4">
-              <div class="card-body">
-                <p><strong>Expected shipping delivery</strong></p>
-                <p class="mb-0">12.10.2020 - 14.10.2020</p>
-              </div>
-            </div>
-            <div class="card mb-4 mb-lg-0">
-              <div class="card-body">
-                <p><strong>We accept</strong></p>
-                <img class="me-2" width="45px"
-                  src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/visa.svg"
-                  alt="Visa" />
-                <img class="me-2" width="45px"
-                  src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/amex.svg"
-                  alt="American Express" />
-                <img class="me-2" width="45px"
-                  src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/mastercard.svg"
-                  alt="Mastercard" />
-                <img class="me-2" width="45px"
-                  src="https://vcci-hcm.org.vn/wp-content/uploads/2022/12/1.png"
-                  alt="ZaloPay acceptance mark" />
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="card mb-4">
-              <div class="card-header py-3">
-                <h5 class="mb-0">Summary</h5>
-              </div>
-              <div class="card-body">
-                <ul class="list-group list-group-flush">
-                  <li
-                    class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-                    Products
-                    <span id="total-amount-product"></span>
-                  </li>
-                  <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                    Shipping
-                    <span>Gratis</span>
-                  </li>
-                  <li
-                    class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+    <section class="vh-100" style="background-color: #8c9eff;">
+        <div class="container py-5 h-100">
+          <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12">
+              <div class="card card-stepper text-black" style="border-radius: 16px;">
+      
+                <div class="card-body p-5">
+      
+                  <div class="d-flex justify-content-between align-items-center mb-5">
                     <div>
-                      <strong>Total amount</strong>
-                      <strong>
-                        <p class="mb-0">(including VAT)</p>
-                      </strong>
+                      <h5 class="mb-0">INVOICE <span class="text-primary font-weight-bold">#Y34XDHR</span></h5>
                     </div>
-                    <span><strong id="total-amount"></strong></span>
-                  </li>
-                </ul>
-    
-                <button type="button" class="btn btn-primary btn-lg btn-block">
-                  Go to checkout
-                </button>
+                    <div class="text-end">
+                      <p class="mb-0">Expected Arrival <span>01/12/19</span></p>
+                      <p class="mb-0">USPS <span class="font-weight-bold">234094567242423422898</span></p>
+                    </div>
+                  </div>
+      
+                  <ul id="progressbar-2" class="d-flex justify-content-between mx-0 mt-0 mb-5 px-0 pt-0 pb-2">
+                    <li class="step0 active text-center" id="step1"></li>
+                    <li class="step0 active text-center" id="step2"></li>
+                    <li class="step0 active text-center" id="step3"></li>
+                    <li class="step0 text-muted text-end" id="step4"></li>
+                  </ul>
+      
+                  <div class="d-flex justify-content-between">
+                    <div class="d-lg-flex align-items-center">
+                      <i class="fas fa-clipboard-list fa-3x me-lg-4 mb-3 mb-lg-0"></i>
+                      <div>
+                        <p class="fw-bold mb-1">Order</p>
+                        <p class="fw-bold mb-0">Processed</p>
+                      </div>
+                    </div>
+                    <div class="d-lg-flex align-items-center">
+                      <i class="fas fa-box-open fa-3x me-lg-4 mb-3 mb-lg-0"></i>
+                      <div>
+                        <p class="fw-bold mb-1">Order</p>
+                        <p class="fw-bold mb-0">Shipped</p>
+                      </div>
+                    </div>
+                    <div class="d-lg-flex align-items-center">
+                      <i class="fas fa-shipping-fast fa-3x me-lg-4 mb-3 mb-lg-0"></i>
+                      <div>
+                        <p class="fw-bold mb-1">Order</p>
+                        <p class="fw-bold mb-0">En Route</p>
+                      </div>
+                    </div>
+                    <div class="d-lg-flex align-items-center">
+                      <i class="fas fa-home fa-3x me-lg-4 mb-3 mb-lg-0"></i>
+                      <div>
+                        <p class="fw-bold mb-1">Order</p>
+                        <p class="fw-bold mb-0">Arrived</p>
+                      </div>
+                    </div>
+                  </div>
+      
+                </div>
+      
               </div>
             </div>
           </div>
         </div>
-      </div>
     </section>
 
     <div class="footer-section fw-bold">
@@ -312,115 +304,6 @@
 
     <!-- Optional JavaScript; choose one of the two! -->
     <script src="{% static 'js/main.js' %}"></script>
-    <script>
-       // Function to generate HTML code based on product data
-       function generateProductHTML(product) {
-        return `
-            <div class="row">
-              <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
-                <!-- Image -->
-                <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
-                  <img src="${product.product.images[0].url}" class="w-100" />
-                  <a href="#!">
-                    <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
-                  </a>
-                </div>
-                <!-- Image -->
-              </div>
-    
-              <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
-                <!-- Data -->
-                <p><strong>${product.product.name}</strong></p>
-                <p>Total sold: ${product.product.quantity_sold}</p>
-                <p>Current stock: ${product.product.quantity}</p>
-    
-                <button type="button" class="btn btn-primary btn-sm me-1 mb-2" data-mdb-toggle="tooltip" title="Remove item">
-                  <i class="fas fa-trash"></i>
-                </button>
-                <button type="button" class="btn btn-danger btn-sm mb-2" data-mdb-toggle="tooltip" title="Move to the wish list">
-                  <i class="fas fa-heart"></i>
-                </button>
-                <!-- Data -->
-              </div>
-    
-              <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
-                <!-- Quantity -->
-                <div class="d-flex mb-4" style="max-width: 300px">
-                  <button class="btn btn-primary px-3 me-2" onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                    <i class="fas fa-minus"></i>
-                  </button>
-    
-                  <div class="form-outline">
-                    <input id="form1" min="0" name="quantity" value="${product.quantity}" type="number" class="form-control" />
-                    <label class="form-label" for="form1">Quantity</label>
-                  </div>
-    
-                  <button class="btn btn-primary px-3 ms-2" onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                    <i class="fas fa-plus"></i>
-                  </button>
-                </div>
-                <!-- Quantity -->
-    
-                <!-- Price -->
-                <p class="text-start text-md-center">
-                  <strong>${product.product.pricesale} đ</strong>
-                </p>
-                <!-- Price -->
-              </div>
-            </div>
-            <hr class="my-4" />
-        `;
-    }
-    
-
-    // Function to render product HTML in the container
-    function renderProductHTML(productData) {
-        var productContainer = document.getElementById('productContainer');
-        productData.forEach(function(product) {
-            productContainer.innerHTML += generateProductHTML(product);
-        });
-    }
-
-    // Call the function to render product HTML
-    // renderProductHTML(a);
-
-    document.addEventListener('DOMContentLoaded', function () {
-      var cart_id = "{{ cart.cart_id }}";
-      console.log("🚀 ~ cart_id:", cart_id);
-  
-      // Fetch cart details and use the data
-      fetchCartDetails(cart_id)
-          .then(data => {
-              console.log("🚀 ~ fetchCartDetails(cart_id):", data);
-              renderProductHTML(data);
-
-              let totalAmount = 0;
-
-              data.forEach(item => {
-                  const quantity = item.quantity;
-                  const product = item.product;
-
-                  // Use sale price if available, otherwise use regular price
-                  const price = parseFloat(product.pricesale) || parseFloat(product.price);
-
-                  totalAmount += quantity * price;
-              });
-
-              var totalAmountDiv = document.getElementById('total-amount');
-              var totalAmountProduct = document.getElementById('total-amount-product');
-              totalAmountDiv.innerHTML += totalAmount + ' đ';
-              totalAmountProduct.innerHTML += totalAmount + ' đ';
-
-              // Continue with other tasks as needed
-              // fetchCart();
-          })
-          .catch(error => {
-              // Handle the error if necessary
-              console.error('Error fetching cart details:', error);
-          });
-    });
-
-    </script>
     <!-- Option 1: Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 

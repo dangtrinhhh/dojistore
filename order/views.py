@@ -66,6 +66,7 @@ def add_to_cart(request):
 #_______________________________________API__________________________________
 
 from rest_framework import generics
+from rest_framework.response import Response
 from .models import Carts, Cart_Details, Orders, Order_Details
 from .serializers import CartSerializer, CartDetailSerializer, OrderSerializer, OrderDetailSerializer
 
@@ -81,9 +82,13 @@ class CartDetailListCreateView(generics.ListCreateAPIView):
     queryset = Cart_Details.objects.all()
     serializer_class = CartDetailSerializer
 
-class CartDetailDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Cart_Details.objects.all()
+class CartDetailDetailView(generics.ListAPIView):
+    # generics.RetrieveUpdateDestroyAPIView
     serializer_class = CartDetailSerializer
+    def get_queryset(self):
+        cart_id = self.kwargs['pk']
+        return Cart_Details.objects.filter(cart__cart_id=cart_id)
+    # queryset = Cart_Details.objects.all()
 
 class OrderListCreateView(generics.ListCreateAPIView):
     queryset = Orders.objects.all()

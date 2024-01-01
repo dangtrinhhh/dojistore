@@ -209,7 +209,7 @@ function fetchCart() {
     })
         .then(response => response.json())
         .then(data => {
-            console.log('Dữ liệu giỏ hàng:', data);
+            // console.log('Dữ liệu giỏ hàng:', data);
             // Xử lý dữ liệu giỏ hàng nếu cần
         })
         .catch(error => {
@@ -219,16 +219,18 @@ function fetchCart() {
 
 // Hàm fetch chi tiết giỏ hàng
 function fetchCartDetails(cartId) {
-    fetch(`/api/cart-details/${cartId}`, {
+    return fetch(`/api/cart-details/${cartId}`, {
         method: 'GET',
     })
         .then(response => response.json())
         .then(data => {
-            console.log('Dữ liệu chi tiết giỏ hàng:', data);
+            // console.log('Dữ liệu chi tiết giỏ hàng:', data);
             // Xử lý dữ liệu chi tiết giỏ hàng nếu cần
+            return data;
         })
         .catch(error => {
             console.error('Lỗi khi lấy dữ liệu chi tiết giỏ hàng:', error);
+            throw error; // Rethrow the error to be handled by the caller
         });
 }
 
@@ -239,7 +241,7 @@ function fetchOrders() {
     })
         .then(response => response.json())
         .then(data => {
-            console.log('Dữ liệu đơn hàng:', data);
+            // console.log('Dữ liệu đơn hàng:', data);
             // Xử lý dữ liệu đơn hàng nếu cần
         })
         .catch(error => {
@@ -254,7 +256,7 @@ function fetchOrderDetails(orderId) {
     })
         .then(response => response.json())
         .then(data => {
-            console.log('Dữ liệu chi tiết đơn hàng:', data);
+            // console.log('Dữ liệu chi tiết đơn hàng:', data);
             // Xử lý dữ liệu chi tiết đơn hàng nếu cần
         })
         .catch(error => {

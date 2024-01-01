@@ -334,6 +334,16 @@ def cart(request):
         cart, created = Carts.objects.get_or_create(user=user_profile)
     return render(request, 'cart.html', {'cart': cart})
 
+def orderHistory(request):
+    return render(request, 'orderHistory.html', {})
+
+def orderDetails(request):
+    return render(request, 'orderDetails.html', {})
+
+def payment(request):
+    return render(request, 'payment.html', {})
+
+
 def loading(request):
     return render(request, 'loading.html', {})
 
