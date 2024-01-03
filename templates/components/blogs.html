@@ -1,0 +1,78 @@
+{% load static%}
+<!-- Blog Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+      <div
+        class="section-header text-center mx-auto mb-5 wow fadeInUp"
+        data-wow-delay="0.1s"
+        style="max-width: 500px;"
+      >
+        <h1 class="display-5 text-lora mb-3">Bài viết mới nhất</h1>
+        <p>
+          Xem ngay các bài viết mới nhất để cập nhật các tin tức cầu lông nóng hổi nè các lông thủ ơi.
+        </p>
+      </div>
+      <div class="row g-4">
+        {% for blog in blogs %}
+        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+          <div class="blog-item border box-shadow-custom">
+            <div class="position-relative bg-light overflow-hidden">
+              <img
+                class="card-img-top w-100"
+                src="{{ blog.image.url }}"
+                alt="Blog Image"
+              />
+              <div
+                class="carrot-bgcolor rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3"
+              >
+                New
+              </div>
+            </div>
+            <!-- <img class="card-img-top w-100" src="{{ blog.image.url }}" alt="Blog Image"> -->
+            <div class="bg-light p-4">
+              <a
+                class="d-block blog-title h5 lh-base text-decoration-none fw-bold text-dark mb-4"
+                href="/blogs/{{ blog.id }}"
+                >{{ blog.title|safe }}</a
+              >
+              <!-- <p class="blog-content text-truncate mb-2">
+                {{ blog.content|safe }}
+              </p> -->
+              <div class="text-muted border-top pt-4">
+                <small class="me-3"><i class="fa fa-user greentea-color me-2"></i>Admin</small>
+                <small class="me-3"><i class="fa fa-calendar greentea-color me-2"></i>{{blog.created_at.day }}/{{ blog.created_at.month }}/{{blog.created_at.year }}</small>
+              </div>
+            </div>
+            {% if user.is_staff %}
+            <div class="d-flex border-top">
+              <small class="w-50 text-center border-end py-2">
+                <a
+                  class="text-body text-decoration-none"
+                  href="/blogs/edit/{{ blog.id }}"
+                >
+                  <i class="fa fa-pen greentea-color me-2"></i>Edit
+                </a>
+              </small>
+              <small class="w-50 text-center py-2">
+                <a
+                  class="text-body text-decoration-none"
+                  href="/blogs/delete/{{ blog.id }}"
+                >
+                  <i class="fa fa-trash carrot-color me-2"></i>Delete
+                </a>
+              </small>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="col-12 text-center wow fadeInUp mt-5" data-wow-delay="0.1s">
+        <a class="btn btn-primary rounded-pill py-3 px-5" href="/blogs"
+          >Read more</a
+        >
+      </div>
+    </div>
+  </div>
+
+<!-- Blog End -->

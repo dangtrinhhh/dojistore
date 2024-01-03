@@ -195,10 +195,12 @@ nav li {
     height: 200px !important;
     border-radius: 50% !important;
     border: 5px solid var(--greentea-color) !important;
+    overflow: hidden;
+    object-fit: cover;
 }
 
 .bg-footer {
-    background-color: #009688;
+    background-color: #202020;
 }
 
 .truncate-wrapper {
@@ -214,8 +216,10 @@ nav li {
 }
 
 .product-type-title-2 {
-    color: #000000;
-    background-color: #b2b4f3;
+    font-weight: bold;
+    /* color: #F65005; */
+    color: #fff;
+    background-color: #1221aa;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
 }
 
@@ -227,8 +231,12 @@ nav li {
     background-color: #fff;
 }
 
-.box-shadow {
+.box-shadow-custom {
     box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+}
+
+.product-type-filter {
+    min-height: 100%;
 }
 
 @media (max-width: 800px) {

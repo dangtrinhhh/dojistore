@@ -1,0 +1,121 @@
+{% load static %}
+<!-- Product Start -->
+<div class="product-sections container-xxl py-5 my-5">
+    <div class="container">
+      <div class="row g-0 gx-5 align-items-end">
+        <div class="col-lg-6">
+          <div
+            class="section-header text-start mb-5 wow fadeInUp"
+            data-wow-delay="0.1s"
+            style="max-width: 500px;"
+          >
+            <h1 class="text-lora display-5 mb-3">Sản phẩm mới</h1>
+            <p>
+              Khám phá khó sản phẩm mới đa dạng đang được cập nhật liên tục tại đây nè mấy ní 😉
+            </p>
+          </div>
+        </div>
+        <div
+          class="col-lg-6 text-start text-lg-end wow slideInRight"
+          data-wow-delay="0.1s"
+        >
+          <ul class="nav nav-pills d-inline-flex justify-content-end mb-5">
+            {% for name in product_types %}
+              <li class="nav-item me-2">
+                <a
+                  class="btn btn-outline-primary border-2 {% if forloop.first %}active{% endif %}"
+                  data-bs-toggle="pill"
+                  href="#tab-{{ forloop.counter }}"
+                >{{ name }}</a>
+              </li>
+            {% endfor %}
+          </ul>            
+        </div>
+      </div>
+      <div class="tab-content">
+        {% for product_type_info in products_with_images %}
+          <div id="tab-{{ forloop.counter }}" class="tab-pane fade show p-0 {% if forloop.first %}active{% endif %}">
+            <div class="row g-4">
+              {% for product_info in product_type_info.products_and_images %}
+                {% for image_info in product_info.images %}
+                  <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp my-4" data-wow-delay="0.1s">
+                    <div class="product-item rounded-3 border box-shadow-custom">
+                      <div class="position-relative bg-light overflow-hidden">
+                        {% if image_info.url %}
+                          <img src="{{ image_info.url.url }}" class="card-img-top w-100" alt="Product Image">
+                        {% else %}
+                          <img class="card-img-top w-100" src="{% static 'img/product-1.jpg' %}" alt="Product Image">
+                        {% endif %}
+                        <div class="carrot-bgcolor rounded text-white position-absolute start-0 top-0 m-2 py-1 px-1">
+                          New
+                        </div>
+                      </div>
+                      <div class="text-center p-4">
+                        <a class="d-block h5 text-decoration-none text-dark text-lora mb-2 text-start text-truncate" href="/products/{{ product_info.product.product_id }}">
+                          {{ product_info.product.name|default:" " }}
+                        </a>
+                        <div class="product-details d-flex align-items-center justify-content-start">
+                          <div>
+                            <div class="text-body text-decoration-line-through text-truncate text-start p-0">
+                              {{ product_info.product.price|default:" " }} VND
+                            </div>
+                            <div class="text-danger fw-bold h5 text-truncate text-start my-3">
+                              {{ product_info.product.pricesale|default:" " }} VND
+                            </div>
+                          </div>
+                          {% if product_info.product.pricesale < product_info.product.price %}
+                            <img class="bigsale-icon mx-auto" src="{% static 'img/bigsale.gif'%}" alt="bigsale">
+                          {% endif %}
+                        </div>
+                      </div>
+                      {% if user.is_staff %}
+                      <div class="d-flex border-top">
+                        <small class="w-50 text-center border-end py-2">
+                          <a
+                            class="text-body text-decoration-none"
+                            href="/products/edit/{{ product_info.product.product_id }}"
+                          >
+                            <i class="fa fa-pen greentea-color me-2"></i>Edit
+                          </a>
+                        </small>
+                        <small class="w-50 text-center py-2">
+                          <a
+                            class="text-body text-decoration-none"
+                            href="/products/delete/{{ product_info.product.product_id }}"
+                          >
+                            <i class="fa fa-trash carrot-color me-2"></i>Delete
+                          </a>
+                        </small>
+                      </div>
+                      {% else %}
+                      <div class="d-flex border-top">
+                        <small class="w-50 text-center border-end py-2">
+                            <button type="button" class="btn btn-transparent btn-sm">
+                              <a class="text-body text-decoration-none view-detail" href="/products/{{ product_info.product.product_id }}">
+                                <i class="fa fa-eye greentea-color me-2"></i>View detail
+                              </a>
+                            </button>
+                        </small>
+                        <small class="w-50 text-center py-2">
+                            <button type="button" class="btn btn-transparent btn-sm">
+                              <a class="text-body text-decoration-none pe-auto add-to-cart" data-product-id="{{ product_info.product.product_id }}" onclick="updateCartItemCount('{{ product_info.product.product_id }}', 1)">
+                                <i class="fa fa-shopping-bag greentea-color me-2"></i>Add to cart
+                              </a>
+                            </button>
+                        </small>
+                      </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                {% endfor %}
+              {% endfor %}
+              <div class="col-12 text-center wow fadeInUp" data-wow-delay="0.1s">
+                <a class="btn btn-primary rounded-pill py-3 px-5" href="/products">Browse More Products</a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+<!-- Product End -->

@@ -1,5 +1,5 @@
 :root {
-    --greentea-color: #3CB815;
+    --greentea-color: #1221aa;
     --carrot-color: #F65005;
 }
 
@@ -46,6 +46,11 @@
 .text-lora {
     font-family: "Lora",serif;
     font-weight: 700;
+}
+
+.text-grey-color {
+    color: #d2cccc !important;
+    font-family: "Mulish",sans-serif!important;
 }
 
 .carousel-caption a {
@@ -233,7 +238,7 @@
 }
 
 .bg-footer {
-    background-color: #71a372;
+    background-color: #202020;
 }
 
 .gradient-custom {
