@@ -100,13 +100,24 @@ WSGI_APPLICATION = 'dojistore.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dojistore',
-        'USER': 'postgres',
-        'PASSWORD': '@Trinhdilam9.',
-        'HOST': 'localhost', # db
+        'NAME': 'doubletbad',
+        'USER': 'doubletbad',
+        'PASSWORD': '@Double2T.',
+        'HOST': 'db',
         'PORT': '5432',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'dojistore',
+#         'USER': 'postgres',
+#         'PASSWORD': '@Trinhdilam9.',
+#         'HOST': 'localhost', # db
+#         'PORT': '5432',
+#     }
+# }
 
 # DATABASES = {
 #   'default': {

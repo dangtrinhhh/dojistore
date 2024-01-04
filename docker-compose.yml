@@ -13,13 +13,13 @@ services:
     environment:
       - DJANGO_DB_HOST=db
       - DJANGO_DB_PORT=5432
-      - DJANGO_DB_NAME=dojistore
-      - DJANGO_DB_USER=postgres
-      - DJANGO_DB_PASSWORD=@Trinhdilam9.
+      - DJANGO_DB_NAME=doubletbad
+      - DJANGO_DB_USER=doubletbad
+      - DJANGO_DB_PASSWORD=@Double2T.
 
   db:
     image: postgres
     environment:
-      - POSTGRES_DB=dojistore
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=@Trinhdilam9.
+      - POSTGRES_DB=doubletbad
+      - POSTGRES_USER=doubletbad
+      - POSTGRES_PASSWORD=@Double2T.
