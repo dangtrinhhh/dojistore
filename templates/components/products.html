@@ -1,5 +1,10 @@
 {% load static %}
 <!-- Product Start -->
+<script>
+  function convertToVND(money) {
+      return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(money);
+  }
+</script>
 <div class="product-sections container-xxl py-5 my-5">
     <div class="container">
       <div class="row g-0 gx-5 align-items-end">
@@ -56,11 +61,11 @@
                         </a>
                         <div class="product-details d-flex align-items-center justify-content-start">
                           <div>
-                            <div class="text-body text-decoration-line-through text-truncate text-start p-0">
-                              {{ product_info.product.price|default:" " }} VND
+                            <div class="text-body text-decoration-line-through text-truncate text-start p-0 convert-to-vnd">
+                              {{ product_info.product.price|default:" " }}
                             </div>
-                            <div class="text-danger fw-bold h5 text-truncate text-start my-3">
-                              {{ product_info.product.pricesale|default:" " }} VND
+                            <div class="text-danger fw-bold h5 text-truncate text-start my-3 convert-to-vnd">
+                                {{ product_info.product.pricesale|default:" " }}
                             </div>
                           </div>
                           {% if product_info.product.pricesale < product_info.product.price %}
@@ -117,5 +122,16 @@
         {% endfor %}
       </div>
     </div>
+    <script>
+      // Gọi hàm convertToVND ở đây
+      document.addEventListener("DOMContentLoaded", function() {
+          var priceElements = document.querySelectorAll('.convert-to-vnd');
+          priceElements.forEach(function(element) {
+              var priceValue = element.innerHTML.trim();
+              var convertedValue = convertToVND(parseFloat(priceValue));
+              element.innerHTML = convertedValue;
+          });
+      });
+    </script>
   </div>
 <!-- Product End -->
