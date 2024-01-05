@@ -1,0 +1,62 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'style.css' %}">
+<div id="modal" class="modal js-modal">
+    <div class="modal-container js-modal-container">
+      <div class="modal-close">
+        <i class="ti-close"></i>
+      </div>
+
+      <header class="modal-header-custom">Welcome to DoubleT Bad</header>
+
+      <div class="modal-body">
+        <!-- For: only use with id -->
+        <form method="POST">
+          {% csrf_token %}
+          <label class="modal-label">
+            <i class="ti-user"></i>
+            Username
+          </label>
+          <input
+            type="text"
+            name="username"
+            class="modal-input"
+            placeholder="Your username"
+            required=""
+            autocomplete="username"
+          />
+
+          <label class="modal-label">
+            <i class="ti-shopping-cart"></i>
+            Password
+          </label>
+          <input
+            type="password"
+            name="password"
+            class="modal-input"
+            placeholder="Your password"
+            required=""
+            autocomplete="current-password"
+          />
+
+          {% for message in messages %}
+          <h3 style="color: red">{{ message}}</h3>
+          {% endfor %}
+
+          <input
+            type="submit"
+            name="login"
+            value="Login"
+            class="buy-tickets"
+          />
+        </form>
+      </div>
+      <div class="d-flex justify-content-between">
+        <div class="mx-4 my-2">
+          <a class="btn-register cursor-pointer" style="color: #000; font-size: 13px; text-decoration: none;">Register</a>
+        </div>
+        <div class="mx-4 my-2">
+          <a style="color: #000; font-size: 13px; text-decoration: none;" href="/accounts/password/reset/">Forgot password ?</a>
+        </div>
+      </div>
+    </div>
+</div>

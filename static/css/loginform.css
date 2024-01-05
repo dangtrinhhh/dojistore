@@ -23,7 +23,7 @@
 }
 
 .modal-header {
-    background: #009688;
+    background: #1221aa;
     height: 100px;
     display: flex;
     align-items: center;
@@ -52,7 +52,9 @@
 }
 
 .modal-body {
-    padding: 16px;
+    padding-top: 16px;
+    padding-left: 16px;
+    padding-right: 16px;
 }
 
 .modal-label {
@@ -71,7 +73,7 @@
 }
 
 .buy-tickets {
-    background: #009688;
+    background: #1221aa;
     border: none;
     width: 100%;
     color: #fff;
@@ -101,7 +103,11 @@
 }
 
 .modal-footer a {
-    color: #2196F3;
+    /* color: #2196F3; */
+    color:#000;
+    font-size: 13px !important;
+    text-decoration: none;
+
 }
 
 @keyframes modalFadeIn {

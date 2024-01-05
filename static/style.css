@@ -37,20 +37,19 @@ nav li {
 
 .modal-container {
     background: #ffffff;
-    width: 900px;
+    width: 500px;
     max-width: calc(100% - 32px);
-    min-height: 300px;
     position: relative;
     animation: modalFadeIn ease 0.5s;
 }
 
 .modal-header-custom {
-    background: #009688;
-    height: 100px;
+    background: #1221aa;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 30px;
+    font-size: 20px;
     color: #fff;
 }
 
@@ -74,33 +73,31 @@ nav li {
 }
 
 .modal-body {
-    padding: 16px;
+    padding: 1rem 1rem 0 1rem;
 }
 
 .modal-label {
     display: block;
-    margin-bottom: 12px;
     font-size: 15px;
 }
 
 .modal-input {
     border: 1px solid #ccc;
     width: calc(100%);
-    padding: 10px 0;
     padding-left: 7px;
     font-size: 15px;
-    margin-bottom: 24px;
+    margin-bottom: 10px;
 }
 
 .buy-tickets {
-    background: #009688;
+    background: #1221aa;
     border: none;
     width: 100%;
     color: #fff;
     text-transform: none;
-    padding: 10px;
+    padding: 5px;
     cursor: pointer;
-    font-size: 15px;
+    font-size: 13px;
 }
 
 .buy-tickets:hover {
@@ -109,9 +106,8 @@ nav li {
 }
 
 .modal-footer {
-    padding: 16px;
     text-align: right;
-    padding-bottom: 40px;
+    font-size: 13px !important;
 }
 
 /* .modal-register {
@@ -123,7 +119,10 @@ nav li {
 } */
 
 .modal-footer a {
-    color: #2196F3;
+    /* color: #2196F3; */
+    color:#000;
+    font-size: 13px !important;
+    text-decoration: none;
 }
 
 .modal-footer a:hover {

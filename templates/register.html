@@ -17,66 +17,7 @@
     {% include 'components/messageAlert.html' with messages=messages %}
     <!-- Messages End -->
     
-    <div id="modal2" class="modal">
-        <div class="modal-container js-modal-container2">
-            <div class="modal-close2">
-                <i class="ti-close"></i>
-            </div>
-
-            <header class="modal-header">
-                Chào mừng đến với DoubleT Bad
-            </header>
-
-            <div class="modal-body">
-                <!-- For: only use with id -->
-                <form method="POST" action="register">
-                    {% csrf_token %}
-                    <label for="ticket-quantity" class="modal-label">
-                        <i class="ti-email"></i>
-                        Email
-                    </label>
-                    <input type="email" name="email" class="modal-input" placeholder="Your username" required=""  autocomplete="username">
-
-                    <label class="modal-label">
-                        <i class="ti-user"></i>
-                        Tên tài khoản
-                    </label>
-                    <input type="text" name="username" class="modal-input" placeholder="Your username" required=""  autocomplete="username">
-
-                    <label class="modal-label">
-                        <i class="ti-shopping-cart"></i>
-                        Mật khẩu
-                    </label>
-                    <input type="password" name="password" class="modal-input" placeholder="Your password" required="" autocomplete="current-password">
-
-                    <label class="modal-label">
-                        <i class="ti-shopping-cart"></i>
-                        Xác nhận mật khẩu
-                    </label>
-                    <input type="password" name="password2" class="modal-input" placeholder="Confirm your password" required="" autocomplete="current-password">
-
-                    {% for message in messages %}
-                    <h3 style="color: red">{{ message}}</h3>
-                    {% endfor %}
-
-                    <input type="submit" value="Đăng nhập" class="buy-tickets">
-                </form>
-            </div>
-
-            <footer class="modal-footer">
-                <div class="modal-register">
-                    <p>
-                        <a href="/login">Đăng nhập</a>
-                    </p>
-                </div>
-                <div class="modal-help">
-                    <p>
-                        <a href="/accounts/password/reset/">Quên mật khẩu ?</a>
-                    </p>
-                </div>
-            </footer>
-        </div>
-    </div>
+    {% include 'components/registerForm.html' %}
 
     <script src="{% static '' %}"></script>
 </body>
