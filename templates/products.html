@@ -50,7 +50,63 @@
             <!-- Breadcrumb End -->
         </div>
     </div>
-    
+
+    <div class="col-lg-6 col-md-8 col-sm-10 mx-auto wow fadeInUp my-4" data-wow-delay="0.1s">
+      <div class="filter-container p-3">
+          <h3 style="color: #1221aa;">Tìm kiếm sản phẩm</h3>
+  
+          <!-- Search Input and Selects in Horizontal Form -->
+          <form class="mb-3">
+              <div class="row g-2">
+                  <!-- Search Input -->
+                  <div class="col-12">
+                      <input type="text" class="form-control" placeholder="Tìm kiếm">
+                  </div>
+                  <!-- Select Dropdowns -->
+                  <div class="col-md-6">
+                      <label for="productType" class="form-label">Loại Sản phẩm</label>
+                      <select class="form-select" id="productType">
+                          <option value="" selected disabled>Chọn loại sản phẩm</option>
+                          {% for type in product_types%}
+                          <option value="brand1">{{ type.name }}</option>
+                          {% endfor %}
+                      </select>
+                  </div>
+                  <div class="col-md-6">
+                      <label for="brand" class="form-label">Thương hiệu</label>
+                      <select class="form-select" id="brand">
+                          <option value="" selected disabled>Chọn thương hiệu</option>
+                          <option value="brand1">Thương hiệu 1</option>
+                          <option value="brand2">Thương hiệu 2</option>
+                          <option value="brand3">Thương hiệu 3</option>
+                      </select>
+                  </div>
+                  <div class="col-md-6">
+                      <label for="priceRange" class="form-label">Giá cả</label>
+                      <select class="form-select" id="priceRange">
+                          <option value="" selected disabled>Chọn khoảng giá</option>
+                          <option value="0-1000"> < 1.000.000 đ</option>
+                          <option value="1000-2000">1.000.000 - 2.000.000 đ</option>
+                          <option value="2000-5000">2.000.000 - 5.000.000 đ</option>
+                          <option value="5000"> > 5.000.000 đ</option>
+                      </select>
+                  </div>
+                  <div class="col-md-6">
+                      <label for="level" class="form-label">Trình độ</label>
+                      <select class="form-select" id="level">
+                          <option value="" selected disabled>Chọn trình độ</option>
+                          <option value="beginner">Người mới bắt đầu</option>
+                          <option value="intermediate">Trung bình</option>
+                          <option value="advanced">Nâng cao</option>
+                      </select>
+                  </div>
+              </div>
+              <button type="submit">Xác nhận</button>
+          </form>
+      </div>
+  </div>
+  
+  
     <!-- Product Start -->
     {% include 'components/products.html' with products_with_images=products_with_images product_types=product_types %}
     <!-- Product End -->

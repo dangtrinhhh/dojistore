@@ -44,7 +44,7 @@
             <div class="card mb-4">
               <div class="card-body">
                 <p><strong>Expected shipping delivery</strong></p>
-                <p class="mb-0">12.10.2020 - 14.10.2020</p>
+                <p class="mb-0">12.10.2024 - 14.10.2024</p>
               </div>
             </div>
             <div class="card mb-4 mb-lg-0">
@@ -105,11 +105,15 @@
 
     <!-- Cart End -->
 
-    {% include 'footer.html' %}
+    {% include 'components/footer.html' %}
 
     <!-- Optional JavaScript; choose one of the two! -->
     <script src="{% static 'js/main.js' %}"></script>
     <script>
+      function convertToVND(money) {
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(money);
+      }
+
        // Function to generate HTML code based on product data
        function generateProductHTML(product) {
         return `
@@ -159,8 +163,8 @@
                 <!-- Quantity -->
     
                 <!-- Price -->
-                <p class="text-start text-md-center">
-                  <strong>${product.product.pricesale} đ</strong>
+                <p class="text-start text-md-center convert-to-vnd">
+                  <strong>${convertToVND(parseFloat(product.product.pricesale))}</strong>
                 </p>
                 <!-- Price -->
               </div>
@@ -205,8 +209,8 @@
 
               var totalAmountDiv = document.getElementById('total-amount');
               var totalAmountProduct = document.getElementById('total-amount-product');
-              totalAmountDiv.innerHTML += totalAmount + ' đ';
-              totalAmountProduct.innerHTML += totalAmount + ' đ';
+              totalAmountDiv.innerHTML += convertToVND(parseFloat(totalAmount));
+              totalAmountProduct.innerHTML += convertToVND(parseFloat(totalAmount));
 
               // Continue with other tasks as needed
               // fetchCart();
@@ -215,6 +219,13 @@
               // Handle the error if necessary
               console.error('Error fetching cart details:', error);
           });
+      
+      var priceElements = document.querySelectorAll('.convert-to-vnd');
+      priceElements.forEach(function(element) {
+          var priceValue = element.innerHTML.trim();
+          var convertedValue = convertToVND(parseFloat(priceValue));
+          element.innerHTML = convertedValue;
+      });
     });
 
     </script>

@@ -7,6 +7,7 @@ from django.conf.urls import handler500
 from .views import server_error_view
 from django.shortcuts import render
 from django.urls import re_path
+from .views import ProductWithTypeAPIView
 
 
 # trong urls.py
@@ -46,6 +47,9 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('handler404/', handler404),
     # path('accounts/reset/fail', CustomPasswordResetView.as_view(), name='password_reset'),
+    
+    # ____________________________________API_____________________________________
+    path('api/product-with-type/', ProductWithTypeAPIView.as_view(), name='api-product-with-type'),
 ]
 
 # handler404 = handler404

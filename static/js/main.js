@@ -262,4 +262,27 @@ function fetchOrderDetails(orderId) {
         .catch(error => {
             console.error('Lỗi khi lấy dữ liệu chi tiết đơn hàng:', error);
         });
-}  
+} 
+
+function getAllProductsWithImages() {
+    return fetch('/api/products/', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Process the retrieved data with images as needed
+        console.log('All products with images:', data);
+        return data;
+    })
+    .catch(error => {
+        console.error('Error fetching all products with images:', error);
+    });
+}

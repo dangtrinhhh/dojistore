@@ -101,6 +101,34 @@
   
     <!-- Optional JavaScript; choose one of the two! -->
     <script src="{% static 'js/main.js' %}"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function getAllProductsWithImages() {
+            return fetch('/api/product-with-type/', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Process the retrieved data with images as needed
+                console.log('All products with images:', data);
+                return data;
+            })
+            .catch(error => {
+                console.error('Error fetching all products with images:', error);
+            });
+        }
+
+        getAllProductsWithImages();
+      });
+    </script>
     <!-- Option 1: Bootstrap Bundle with Popper -->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"

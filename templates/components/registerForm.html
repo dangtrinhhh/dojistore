@@ -10,7 +10,7 @@
 
       <div class="modal-body">
         <!-- For: only use with id -->
-        <form method="POST">
+        <form method="POST" action="{% url 'register' %}">
           {% csrf_token %}
           <label for="ticket-quantity" class="modal-label">
             <i class="ti-email"></i>

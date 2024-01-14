@@ -117,7 +117,7 @@ def aboutUs(request):
         cart, created = Carts.objects.get_or_create(user=user_profile)
         
     product_types = Product_Types.objects.all()
-    products_with_images = getProductOrderedType() 
+    products_with_images = getProductOrderedType(8) 
     blogs = Blogs.objects.all().order_by('-created_at')
     return render(request, 'aboutUs.html', {'product_types': product_types, 'products_with_images': products_with_images, 'blogs': blogs, 'cart': cart})
 

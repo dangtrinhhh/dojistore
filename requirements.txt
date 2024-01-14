@@ -18,3 +18,4 @@ virtualenvwrapper-win==1.2.7
 django-allauth==0.58.2
 djangorestframework==3.14.0
 django-ckeditor==6.7.0
+django-filter==23.5

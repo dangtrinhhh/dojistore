@@ -11,6 +11,8 @@ from allauth.account.views import PasswordResetView
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from allauth.account.utils import filter_users_by_email
+import numpy as np
+from django_filters.rest_framework import DjangoFilterBackend
 
 class CustomPasswordResetView(PasswordResetView):
     def form_valid(self, form):
@@ -25,9 +27,7 @@ class CustomPasswordResetView(PasswordResetView):
         # Proceed with the password reset process
         return super().form_valid(form)
 
-from django.db.models import F, Value, CharField
-
-def getProductOrderedType():
+def getProductOrderedType(num_products=None):
     # Lấy danh sách tất cả các loại sản phẩm
     product_types = Product_Types.objects.all()
 
@@ -36,7 +36,12 @@ def getProductOrderedType():
 
     # Lặp qua từng loại sản phẩm và lấy danh sách sản phẩm tương ứng
     for product_type in product_types:
-        products = Products.objects.filter(product_type_id=product_type.product_type_id)
+        # Lấy danh sách sản phẩm, sắp xếp theo created_at
+        products = Products.objects.filter(product_type_id=product_type.product_type_id).order_by('-created_at')
+
+        # Nếu num_products được cung cấp, chỉ lấy số lượng sản phẩm mong muốn
+        if num_products is not None:
+            products = products[:num_products]
 
         # Tạo một danh sách hình ảnh cho từng sản phẩm
         products_and_images = []
@@ -56,6 +61,7 @@ def getProductOrderedType():
             'product_type': product_type,
             'products_and_images': products_and_images
         })
+
     return products_with_images
 
 # Create your views here.
@@ -69,7 +75,7 @@ def index(request):
     # print(request.META.get("REMOTE_ADDR"))
     
     product_types = Product_Types.objects.all()
-    products_with_images = getProductOrderedType() 
+    products_with_images = getProductOrderedType(8)
     blogs = Blogs.objects.all().order_by('-created_at')[:6]
     
     if request.method == "POST":
@@ -328,11 +334,13 @@ def productDetails(request, slug):
 
 def cart(request):
     user = request.user  # Đây là user đăng nhập, nếu có
+    blogs = Blogs.objects.all().order_by('-created_at')[:6]
+    
     cart = None
     if user.is_authenticated:
         user_profile, created = Users.objects.get_or_create(user=user)
         cart, created = Carts.objects.get_or_create(user=user_profile)
-    return render(request, 'cart.html', {'cart': cart})
+    return render(request, 'cart.html', {'cart': cart, 'blogs': blogs})
 
 def orderHistory(request):
     return render(request, 'orderHistory.html', {})
@@ -355,4 +363,44 @@ def server_error_view(request):
 
 def handler404(request, exception):
     return render(request, '404.html', status=404)
+
+# _____________________API_________________________
+
+# views.py
+from rest_framework import generics
+from rest_framework.response import Response
+from .models import Products, Product_Types
+from .serializers import ProductTypeSerializer, ProductSerializer, ProductWithTypeSerializer, ProductImageSerializer
+
+class ProductWithTypeAPIView(generics.ListAPIView):
+    serializer_class = ProductWithTypeSerializer
+
+    def get_queryset(self):
+        product_types = Product_Types.objects.all()
+        data = []
+
+        for product_type in product_types:
+            products = Products.objects.filter(product_type_id=product_type.product_type_id)
+            serialized_products = ProductSerializer(products, many=True).data
+
+            data.append({
+                'type': ProductTypeSerializer(product_type).data,
+                'products': serialized_products
+            })
+
+        return data
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+
+        # Loop through each product and add images
+        for product_data in serializer.data:
+            products = product_data['products']
+            for product in products:
+                product_obj = Products.objects.get(product_id=product['product_id'])
+                images_serializer = ProductImageSerializer(product_obj.product_images.all(), many=True)
+                product['images'] = images_serializer.data
+
+        return Response(serializer.data)
 

@@ -1,5 +1,24 @@
     {% load static %}
     <!-- Messages Start -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        // Lặp qua tất cả các alert và thêm sự kiện khi chúng được đóng
+        var alerts = document.querySelectorAll('.alert-dismissible');
+        alerts.forEach(function (alert) {
+          alert.addEventListener('closed.bs.alert', function () {
+            alert.style.display = 'none'; // Ẩn alert sau khi được đóng
+          });
+        });
+    
+        // Lặp qua tất cả các alert và thiết lập thời gian tồn tại
+        alerts.forEach(function (alert) {
+          setTimeout(function () {
+            alert.classList.remove('d-flex');
+            alert.style.display = 'none';
+          }, 3000);
+        });
+      });
+    </script>
     {% if messages %}
     <div id="alerts-section">
       <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -28,6 +47,7 @@
       <div
         class="alert alert-primary d-flex align-items-center alert-dismissible fade show"
         role="alert"
+        data-bs-autohide="false"
       >
         <svg
           class="bi flex-shrink-0 me-2"

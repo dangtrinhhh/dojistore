@@ -37,13 +37,6 @@ class Products(models.Model):
     def __str__(self):
         return self.name
 
-# class Product_Images(models.Model):
-#     product_image_id = models.AutoField(primary_key=True)
-#     product = models.ForeignKey(Products, on_delete=models.CASCADE)
-#     url = models.ImageField(upload_to='images/products', null=True, blank=True, max_length=50000)
-
-#     def __str__(self):
-#         return f"{self.product.name} - Image {self.product_image_id}"
 class Product_Images(models.Model):
     product_image_id = models.AutoField(primary_key=True)
     product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name='product_images')
