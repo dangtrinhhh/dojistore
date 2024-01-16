@@ -106,8 +106,10 @@
                         <div class="col-xl-6 col-lg-6 col-md-6 wow fadeInUp my-4 mx-auto" data-wow-delay="0.1s">
                             <div class="product-item rounded-3 border">
                                 <div class="position-relative bg-light overflow-hidden">
-                                    {% if product.image %}
-                                    <img id="product-image" class="card-img-top w-100" src="{{ product.image.url }}" alt="Product Image">
+                                    {% if product.images %}
+                                        {% for image in product.images %}
+                                            <img id="product-image" class="card-img-top w-100" src="{{ image.url.url }}" alt="Product Image">
+                                        {% endfor %}
                                     {% else %}
                                     <img id="product-image" class="card-img-top w-100" src="{% static 'img/product-1.jpg' %}" alt="Product Image">
                                     {% endif %}
@@ -117,11 +119,11 @@
                                     <a class="d-block h4 text-decoration-none text-dark text-lora mb-2 product-name" href="/products/{{ product.product_id }}">{{ product.name }}</a>
                                     <div class="product-details d-flex align-items-center justify-content-start">
                                         <div>
-                                            <div class="text-body text-decoration-line-through text-truncate text-start p-0 product-price">
-                                                {{ product.price }} VND
+                                            <div class="text-body text-decoration-line-through text-truncate text-start p-0 product-price convert-to-vnd">
+                                                {{ product.price }}
                                             </div>
-                                            <div class="text-danger fw-bold h3 text-truncate text-start my-3 product-pricesale">
-                                                {{ product.pricesale }} VND
+                                            <div class="text-danger fw-bold h5 text-truncate text-start my-3 product-pricesale convert-to-vnd">
+                                                {{ product.pricesale }}
                                             </div>
                                         </div>
                                         <img class="bigsale-icon mx-auto" src="{% static 'img/bigsale.gif'%}" alt="bigsale">
@@ -160,6 +162,13 @@
                 break;
             }
         }
+
+        var priceElements = document.querySelectorAll('.convert-to-vnd');
+        priceElements.forEach(function(element) {
+            var priceValue = element.innerHTML.trim();
+            var convertedValue = convertToVND(parseFloat(priceValue));
+            element.innerHTML = convertedValue;
+        });
     </script>
     <!-- Option 2: Separate Popper and Bootstrap JS -->
     <!--

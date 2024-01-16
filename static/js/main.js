@@ -57,6 +57,10 @@ modalContainer2.addEventListener('click', function (event) {
     event.stopPropagation()
 })
 
+function convertToVND(money) {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(money);
+}
+
 // Product Handle Function
 
 function updateProductName(newName) {
@@ -69,14 +73,14 @@ function updateProductName(newName) {
 function updateProductPrice(newPrice) {
     const productPriceElement = document.querySelector('.product-price');
     if (productPriceElement) {
-        productPriceElement.textContent = newPrice + " VND";
+        productPriceElement.innerHTML = convertToVND(parseFloat(newPrice));
     }
 }
 
 function updateProductPriceSale(newPriceSale) {
     const productPriceSaleElement = document.querySelector('.product-pricesale');
     if (productPriceSaleElement) {
-        productPriceSaleElement.textContent = newPriceSale + " VND";
+        productPriceSaleElement.innerHTML = convertToVND(parseFloat(newPriceSale));
     }
 }
 
@@ -286,3 +290,222 @@ function getAllProductsWithImages() {
         console.error('Error fetching all products with images:', error);
     });
 }
+
+async function getAllProductsWithImages() {
+    try {
+      const response = await fetch('/api/product-with-type/', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('All products with images:', data);
+      return data;
+    } catch (error) {
+      console.error('Error fetching all products with images:', error);
+    }
+  }
+  
+  function renderProductTypes(productTypes) {
+    const productTypeList = document.getElementById('product-type-list');
+    
+    productTypes.forEach((type,index) => {
+      const listItem = document.createElement('li');
+      listItem.classList.add('nav-item', 'me-2');
+  
+      const link = document.createElement('a');
+      index == 0 ? link.classList.add('btn', 'btn-outline-primary', 'border-2', 'active') : link.classList.add('btn', 'btn-outline-primary', 'border-2');
+      
+      link.setAttribute('data-bs-toggle', 'pill');
+      link.setAttribute('href', `#tab-${type.type.product_type_id}`);
+      link.textContent = type.type.name;
+  
+      listItem.appendChild(link);
+      productTypeList.appendChild(listItem);
+    })
+  }
+  
+  function renderProducts(productsWithImages) {
+    const productContainerList = document.getElementById('product-container-list');
+    
+    productsWithImages.forEach((productTypeInfo, index) => {
+      const tabPane = document.createElement('div');
+      index == 0 ? tabPane.classList.add('tab-pane', 'fade', 'show', 'p-0', 'active') : tabPane.classList.add('tab-pane', 'fade', 'show', 'p-0');
+      tabPane.setAttribute('id', `tab-${productTypeInfo.type.product_type_id}`);
+  
+      if (productTypeInfo.type.product_type_id === 1) {
+        tabPane.classList.add('active');
+      }
+  
+      const row = document.createElement('div');
+      row.classList.add('row', 'g-4');
+  
+      productTypeInfo.products.forEach((productInfo, index2) => {
+        const col = document.createElement('div');
+        col.classList.add('col-xl-3', 'col-lg-4', 'col-md-6', 'wow', 'fadeInUp', 'my-4');
+        col.setAttribute('data-wow-delay', '0.1s');
+
+        const productItem = document.createElement('div');
+        productItem.classList.add('product-item', 'rounded-3', 'border', 'box-shadow-custom');
+
+        const positionRelative = document.createElement('div');
+        positionRelative.classList.add('position-relative', 'bg-light', 'overflow-hidden');
+        
+        const productImage = document.createElement('img');
+        for (const imageInfo of productInfo.images) {
+        productImage.classList.add('card-img-top', 'w-100');
+        productImage.setAttribute('alt', 'Product Image');
+        if (imageInfo) {
+            productImage.setAttribute('src', imageInfo.url);
+        } else {
+            productImage.setAttribute('src', '/static/img/product-1.jpg'); // Đường dẫn mặc định cho hình ảnh sản phẩm
+        }
+        }
+
+        const carrotBgcolor = document.createElement('div');
+        carrotBgcolor.classList.add('carrot-bgcolor', 'rounded', 'text-white', 'position-absolute', 'start-0', 'top-0', 'm-2', 'py-1', 'px-1');
+        carrotBgcolor.textContent = 'New';
+
+        positionRelative.appendChild(productImage);
+        positionRelative.appendChild(carrotBgcolor);
+
+        const textCenter = document.createElement('div');
+        textCenter.classList.add('text-center', 'p-4');
+
+        const productLink = document.createElement('a');
+        productLink.classList.add('d-block', 'h5', 'text-decoration-none', 'text-dark', 'text-lora', 'mb-2', 'text-start', 'text-truncate');
+        productLink.setAttribute('href', `/products/${productInfo.product_id}`);
+        productLink.textContent = productInfo.name || ' ';
+
+        // Move the declaration here
+        const textDetails = document.createElement('div');
+        textDetails.classList.add('text-details');
+
+        const productDetails = document.createElement('div');
+        productDetails.classList.add('product-details', 'd-flex', 'align-items-center', 'justify-content-start');
+
+        const textBody1 = document.createElement('div');
+        textBody1.classList.add('text-body', 'text-decoration-line-through', 'text-truncate', 'text-start', 'p-0', 'convert-to-vnd');
+        textBody1.textContent = productInfo.price || ' ';
+
+        const textDanger = document.createElement('div');
+        textDanger.classList.add('text-danger', 'fw-bold', 'h5', 'text-truncate', 'text-start', 'my-3', 'convert-to-vnd');
+        textDanger.textContent = productInfo.pricesale || ' ';
+
+        textDetails.appendChild(textBody1);
+        textDetails.appendChild(textDanger);
+
+        productDetails.appendChild(textDetails);
+
+        if (productInfo.pricesale < productInfo.price) {
+        const bigSaleIcon = document.createElement('img');
+        bigSaleIcon.classList.add('bigsale-icon', 'mx-auto');
+        bigSaleIcon.setAttribute('src', '/static/img/bigsale.gif'); // Đường dẫn mặc định cho biểu tượng giảm giá lớn
+        bigSaleIcon.setAttribute('alt', 'bigsale');
+        productDetails.appendChild(bigSaleIcon);
+        }
+
+        textCenter.appendChild(productLink);
+        textCenter.appendChild(productDetails);
+
+        productItem.appendChild(positionRelative);
+        productItem.appendChild(textCenter);
+
+        if (is_staff) {
+        const borderTop1 = document.createElement('div');
+        borderTop1.classList.add('border-top', 'd-flex');
+
+        const small1 = document.createElement('small');
+        small1.classList.add('w-50', 'text-center', 'border-end', 'py-2');
+
+        const editLink = document.createElement('a');
+        editLink.classList.add('text-body', 'text-decoration-none');
+        editLink.setAttribute('href', `/products/edit/${productInfo.product_id}`);
+        editLink.innerHTML = '<i class="fa fa-pen greentea-color me-2"></i>Edit';
+
+        small1.appendChild(editLink);
+
+        const small2 = document.createElement('small');
+        small2.classList.add('w-50', 'text-center', 'py-2');
+
+        const deleteLink = document.createElement('a');
+        deleteLink.classList.add('text-body', 'text-decoration-none');
+        deleteLink.setAttribute('href', `/products/delete/${productInfo.product_id}`);
+        deleteLink.innerHTML = '<i class="fa fa-trash carrot-color me-2"></i>Delete';
+
+        small2.appendChild(deleteLink);
+
+        borderTop1.appendChild(small1);
+        borderTop1.appendChild(small2);
+
+        productItem.appendChild(borderTop1);
+        } else {
+        const borderTop2 = document.createElement('div');
+        borderTop2.classList.add('border-top', 'd-flex');
+
+        const small3 = document.createElement('small');
+        small3.classList.add('w-50', 'text-center', 'border-end', 'py-2');
+
+        const viewDetailButton = document.createElement('button');
+        viewDetailButton.setAttribute('type', 'button');
+        viewDetailButton.classList.add('btn', 'btn-transparent', 'btn-sm');
+
+        const viewDetailLink = document.createElement('a');
+        viewDetailLink.classList.add('text-body', 'text-decoration-none', 'view-detail');
+        viewDetailLink.setAttribute('href', `/products/${productInfo.product_id}`);
+        viewDetailLink.innerHTML = '<i class="fa fa-eye greentea-color me-2"></i>View detail';
+
+        viewDetailButton.appendChild(viewDetailLink);
+        small3.appendChild(viewDetailButton);
+
+        const small4 = document.createElement('small');
+        small4.classList.add('w-50', 'text-center', 'py-2');
+
+        const addToCartButton = document.createElement('button');
+        addToCartButton.setAttribute('type', 'button');
+        addToCartButton.classList.add('btn', 'btn-transparent', 'btn-sm');
+
+        const addToCartLink = document.createElement('a');
+        addToCartLink.classList.add('text-body', 'text-decoration-none', 'pe-auto', 'add-to-cart');
+        addToCartLink.setAttribute('data-product-id', productInfo.product_id);
+        addToCartLink.setAttribute('onclick', `updateCartItemCount('${productInfo.product_id}', 1)`);
+        addToCartLink.innerHTML = '<i class="fa fa-shopping-bag greentea-color me-2"></i>Add to cart';
+
+        addToCartButton.appendChild(addToCartLink);
+        small4.appendChild(addToCartButton);
+
+        borderTop2.appendChild(small3);
+        borderTop2.appendChild(small4);
+
+        productItem.appendChild(borderTop2);
+        }
+
+        col.appendChild(productItem);
+        row.appendChild(col);
+    
+      });
+  
+      // const col12 = document.createElement('div');
+      // col12.classList.add('col-12', 'text-center', 'wow', 'fadeInUp');
+      // col12.setAttribute('data-wow-delay', '0.1s');
+  
+      // const browseMoreLink = document.createElement('a');
+      // browseMoreLink.classList.add('btn', 'btn-primary', 'rounded-pill', 'py-3', 'px-5');
+      // browseMoreLink.setAttribute('href', '/products');
+      // browseMoreLink.textContent = 'Browse More Products';
+  
+      // col12.appendChild(browseMoreLink);
+      // row.appendChild(col12);
+  
+      tabPane.appendChild(row);
+      productContainerList.appendChild(tabPane);
+    });
+  }
+  
+  

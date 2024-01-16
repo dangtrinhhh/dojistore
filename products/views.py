@@ -61,7 +61,7 @@ def getProductOrderedType(num_products=None):
             'product_type': product_type,
             'products_and_images': products_and_images
         })
-
+    print(products_with_images)
     return products_with_images
 
 # Create your views here.
@@ -75,7 +75,7 @@ def index(request):
     # print(request.META.get("REMOTE_ADDR"))
     
     product_types = Product_Types.objects.all()
-    products_with_images = getProductOrderedType(8)
+    products_with_images = getProductOrderedType()
     blogs = Blogs.objects.all().order_by('-created_at')[:6]
     
     if request.method == "POST":
@@ -115,7 +115,7 @@ def index(request):
                 messages.info(request, 'Passwords donot match')
                 return redirect('register')
     else:
-        return render(request, 'index.html', {'product_types': product_types, 'products_with_images': products_with_images, 'blogs': blogs, 'cart': cart})
+        return render(request, 'index.html', {'product_types': product_types, 'products_with_images': products_with_images, 'blogs': blogs, 'cart': cart, 'is_staff': user.is_staff})
 
 def register(request):
     nextUrl = request.POST.get('next')
@@ -245,7 +245,7 @@ def addproduct(request):
         return redirect("/")
     
 def editproduct(request, slug):
-    user = request.user  # Đây là user đăng nhập, nếu có
+    user = request.user
     cart = None
     if user.is_authenticated:
         user_profile, created = Users.objects.get_or_create(user=user)
@@ -261,21 +261,32 @@ def editproduct(request, slug):
             setNewest = request.POST.get('setToNewest', '')
             
             product = Products.objects.get(product_id=slug)
+            
             if newName != '':
                 product.name = newName
             if newTypeProduct != '':
-                product.typeProduct = newTypeProduct
+                # Assuming product type is a foreign key in Products model
+                product.typeProduct.name = newTypeProduct
+                product.typeProduct.save()
             if newPrice != '':
                 product.price = newPrice
             if newPriceSale != '':
                 product.pricesale = newPriceSale
             if newDescription != '':
                 product.description = newDescription
-            if len(request.FILES) != 0:
-                product.image = request.FILES['image']
             if setNewest == 'on':
                 product.created_at = datetime.now()
             product.last_updated = datetime.now()
+
+            # Process uploaded image
+            if 'image' in request.FILES:
+                # Delete existing product images
+                product.product_images.all().delete()
+                
+                # Save the new image
+                image = request.FILES['image']
+                product_image = Product_Images(product=product, url=image)
+                product_image.save()
             
             try:
                 product.save()
@@ -287,11 +298,13 @@ def editproduct(request, slug):
 
         else:
             product = Products.objects.get(product_id=slug)
+            images = Product_Images.objects.filter(product=product)
+            product.images = images
             return render(request, 'editproduct.html', {'product': product, 'cart': cart})
     else:
         messages.info(request, "You don't have permission to access this page.")
         return redirect("/")
-
+    
 def deleteproduct(request, slug):
     product = Products.objects.get(product_id=slug)
     user = request.user
@@ -318,7 +331,7 @@ def products(request):
     product_types = Product_Types.objects.all()
     products_with_images = getProductOrderedType() 
     blogs = Blogs.objects.all().order_by('-created_at')[:6]
-    return render(request, 'products.html', {'product_types': product_types, 'products_with_images': products_with_images, 'blogs': blogs, 'cart': cart})
+    return render(request, 'products.html', {'product_types': product_types, 'products_with_images': products_with_images, 'blogs': blogs, 'cart': cart, 'is_staff': user.is_staff})
     
 def productDetails(request, slug):
     user = request.user  # Đây là user đăng nhập, nếu có
