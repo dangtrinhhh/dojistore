@@ -22,24 +22,16 @@
     <!-- Navbar End -->
 
     <!-- Chatbot Button Start -->
-    <button class="cart-btn btn-outline-primary border-2">
+    <!-- <button class="cart-btn btn-outline-primary border-2">
       <a class="shopping-bag-icon m-auto" href="/cart">
           <i class="fa fa-comments greentea-color"></i>
       </a>
-    </button>
+    </button> -->
     <!-- Chatbot Button End -->
 
     <!-- Messages Start -->
     {% include 'components/messageAlert.html' with messages=messages %}
     <!-- Messages End -->
-
-    <!-- Shopping Cart Button Start -->
-    <button class="cart-btn btn-outline-primary border-2">
-        <a class="shopping-bag-icon m-auto" href="/cart">
-            <i class="fa fa-shopping-bag greentea-color"></i>
-        </a>
-    </button>
-    <!-- Shopping Cart Button End -->
     
     <!-- Blog Details Start -->
     <div class="container-xxl py-5 my-auto">
@@ -52,7 +44,7 @@
                                 <div class="row justify-content-center">
                                     <div class="">
                                         <div class="card">
-                                            <h1 class="fw-bold h1 m-3">Write a blog</h1>
+                                            <h1 class="fw-bold h1 m-3">Viết blog</h1>
                                             <div class="card-body">
                                                 <form action="" method="POST" enctype="multipart/form-data">
                                                     {% csrf_token %}
@@ -73,7 +65,7 @@
                                                             <input type="file" id="blog-images" name="image" multiple accept="image/*" required onchange="updateBlogImage(this)">
                                                         </label>
                                                     </div> -->
-                                                    <button type="submit" class="btn btn-primary">Save</button>
+                                                    <button type="submit" class="btn btn-primary">Lưu</button>
                                                 </form>
                                             </div>
                                         </div>
@@ -92,7 +84,7 @@
                 </div> -->
                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
                   <div class="p-4">
-                      <div class="text-center h4">Your blog will display like this:</div>
+                      <div class="text-center h4">Bài viết của bạn sẽ trông như thế này</div>
                       <div class="wow fadeInUp my-4 mx-auto" data-wow-delay="0.1s">
                           <div class="wow fadeInUp" data-wow-delay="0.1s">
                               <div class="border">

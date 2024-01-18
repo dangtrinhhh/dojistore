@@ -15,7 +15,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/cart.css' %}">
     <link rel="stylesheet" href="{% static '/font/themify-icons-font/themify-icons.css' %}">
     <link rel="stylesheet" href="{% static 'font/fontawesome/css/all.css' %}">
-    <title>DoubleT Bad | Homepage</title>
+    <title>DoubleT Bad | Giỏ hàng</title>
   </head>
   <body>
     <!-- Navbar Start -->
@@ -132,13 +132,13 @@
               <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
                 <!-- Data -->
                 <p><strong>${product.product.name}</strong></p>
-                <p>Total sold: ${product.product.quantity_sold}</p>
-                <p>Current stock: ${product.product.quantity}</p>
+                <p>Đã bán: ${product.product.quantity_sold}</p>
+                <p>Còn lại: ${product.product.quantity}</p>
     
-                <button type="button" class="btn btn-primary btn-sm me-1 mb-2" data-mdb-toggle="tooltip" title="Remove item">
+                <button type="button" class="btn btn-primary btn-sm me-1 mb-2" data-mdb-toggle="tooltip" title="Xóa">
                   <i class="fas fa-trash"></i>
                 </button>
-                <button type="button" class="btn btn-danger btn-sm mb-2" data-mdb-toggle="tooltip" title="Move to the wish list">
+                <button type="button" class="btn btn-danger btn-sm mb-2" data-mdb-toggle="tooltip" title="Thích">
                   <i class="fas fa-heart"></i>
                 </button>
                 <!-- Data -->
@@ -187,7 +187,7 @@
 
     document.addEventListener('DOMContentLoaded', function () {
       var cart_id = "{{ cart.cart_id }}";
-      console.log("🚀 ~ cart_id:", cart_id);
+      // console.log("🚀 ~ cart_id:", cart_id);
   
       // Fetch cart details and use the data
       fetchCartDetails(cart_id)

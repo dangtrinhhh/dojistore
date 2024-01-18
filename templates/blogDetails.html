@@ -22,11 +22,11 @@
     <!-- Navbar End -->
 
     <!-- Shopping Cart Button Start -->
-    <button class="cart-btn btn-outline-primary border-2">
+    <!-- <button class="cart-btn btn-outline-primary border-2">
         <a class="shopping-bag-icon m-auto" href="/cart">
             <i class="fa fa-shopping-bag greentea-color"></i>
         </a>
-    </button>
+    </button> -->
     <!-- Shopping Cart Button End -->
 
     <!-- Modal Start -->
@@ -39,19 +39,19 @@
 
     <!-- Blogs Details Start -->
     <div class="container-xxl py-5 my-auto">
-        <div class="container">
+        <div class="col-xl-10 col-lg-8 col-md-12 mx-auto bg-white-custom container">
             <div class="row g-5 align-items-center">
-                <div class="wow fadeIn" data-wow-delay="0.1s">
+                <div class="col-xl-10 col-lg-8 col-md-12 mx-auto wow fadeIn" data-wow-delay="0.1s">
                     <div class="about-img position-relative overflow-hidden pe-0">
                         {% if blog.image %}
                             <img src="{{ blog.image.url }}" class="img-fluid w-100" alt="Product Image">
                         {% else %}
                             <img class="img-fluid w-100" src="{% static 'img/product-1.jpg' %}" alt="Product Image">
                         {% endif %}
-                        <div class="carrot-bgcolor rounded text-white position-absolute start-0 top-0 m-5 py-2 px-4">New</div>
+                        <div class="carrot-bgcolor rounded text-white position-absolute start-0 top-0 m-5 py-2 px-4">Mới</div>
                     </div>
                 </div>
-                <div class="wow fadeIn" data-wow-delay="0.5s">
+                <div class="col-xl-10 col-lg-8 col-md-12 mx-auto wow fadeIn" data-wow-delay="0.5s">
                     <div class="p-4">
                         <a class="d-block h1 text-decoration-none text-dark text-lora mb-2" href="/blogs/{{ blog.id }}">{{ blog.title|safe }}</a>
                         <p>{{ blog.content| safe }}</p>

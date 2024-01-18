@@ -6,7 +6,7 @@
         <i class="ti-close"></i>
       </div>
 
-      <header class="modal-header-custom">Welcome to DoubleT Bad</header>
+      <header class="modal-header-custom">Chào mừng đến với DoubleT Bad</header>
 
       <div class="modal-body">
         <!-- For: only use with id -->
@@ -14,26 +14,26 @@
           {% csrf_token %}
           <label class="modal-label">
             <i class="ti-user"></i>
-            Username
+            Tên đăng nhập
           </label>
           <input
             type="text"
             name="username"
             class="modal-input"
-            placeholder="Your username"
+            placeholder="Nhập tên đăng nhập"
             required=""
             autocomplete="username"
           />
 
           <label class="modal-label">
             <i class="ti-shopping-cart"></i>
-            Password
+            Mật khẩu
           </label>
           <input
             type="password"
             name="password"
             class="modal-input"
-            placeholder="Your password"
+            placeholder="Nhập mật khẩu của bạn"
             required=""
             autocomplete="current-password"
           />
@@ -45,17 +45,17 @@
           <input
             type="submit"
             name="login"
-            value="Login"
+            value="Đăng nhập"
             class="buy-tickets"
           />
         </form>
       </div>
       <div class="d-flex justify-content-between">
         <div class="mx-4 my-2">
-          <a class="btn-register cursor-pointer" style="color: #000; font-size: 13px; text-decoration: none;">Register</a>
+          <a class="btn-register cursor-pointer" style="color: #000; font-size: 13px; text-decoration: none;">Đăng ký</a>
         </div>
         <div class="mx-4 my-2">
-          <a style="color: #000; font-size: 13px; text-decoration: none;" href="/accounts/password/reset/">Forgot password ?</a>
+          <a style="color: #000; font-size: 13px; text-decoration: none;" href="/accounts/password/reset/">Quên mật khẩu ?</a>
         </div>
       </div>
     </div>

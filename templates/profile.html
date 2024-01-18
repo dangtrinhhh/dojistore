@@ -23,7 +23,7 @@
     />
     <link rel="stylesheet" href="{% static 'font/fontawesome/css/all.css' %}" />
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
-    <title>DoubleT Bad | Homepage</title>
+    <title>DoubleT Bad | Thông tin cá nhân</title>
   </head>
 
   <body>
@@ -48,14 +48,14 @@
                     <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
                       alt="Avatar" class="img-fluid my-5" style="width: 100px;" />
                     <h5>{{ user.username }}</h5>
-                    <p>Web Designer</p>
+                    <p>Kỹ sư phần mềm</p>
                     <i class="far fa-edit mb-5"></i>
                   </div>
                   <div class="col-md-8">
                     <form action="updateprofile" method="POST">
                       {% csrf_token %}
                       <div class="card-body p-4">
-                        <h5>Information</h5>
+                        <h5>Thông tin</h5>
                         <hr class="mt-0 mb-4">
                         <div class="row pt-1">
                           <div class="col-6 mb-3">
@@ -63,28 +63,28 @@
                             <p class="text-muted">{{ user.email }}</p>
                           </div>
                           <div class="col-6 mb-3">
-                            <h5>Phone</h5>
+                            <h5>Số điện thoại</h5>
                             <input class="input-padding" type="text" name="phoneNumber" id="new-phone-number" value="{{ user_profile.phone }}" placeholder="New Phone Number">
                           </div>
                         </div>
                         <div class="row pt-1">
                           <div class="mh-ps col-6 mb-3 mw-ps">
-                            <h5>Password</h5>
+                            <h5>Mật khẩu</h5>
                             {% comment %} <p class="text-muted">{{ user.password }}</p> {% endcomment %}
                             <div class="password-toggle">
-                                <input type="password" id="current-password" placeholder="Current Password" value="current_password" readonly>
+                                <input type="password" id="current-password" placeholder="Mật khẩu hiện tại" value="current_password" readonly>
                                 <i id="toggle-password" class="fa fa-pen" onclick="togglePasswordFields"></i>
                             </div>
                             <div id="password-fields">
-                              <input type="password" name="password" id="new-password" placeholder="New Password">
-                              <input type="password" name="password2" id="confirm-password" placeholder="Confirm New Password">
+                              <input type="password" name="password" id="new-password" placeholder="Mật khẩu mới">
+                              <input type="password" name="password2" id="confirm-password" placeholder="Xác nhận mật khẩu">
                             </div>
                           </div>
                           <div class="col-6 mb-3">
-                            <h5>Address</h5>
-                            <input class="input-padding" type="text" name="address" id="new-address" value="{{ user_profile.address }}" placeholder="New Address">
+                            <h5>Địa chỉ</h5>
+                            <input class="input-padding" type="text" name="address" id="new-address" value="{{ user_profile.address }}" placeholder="Địa chỉ">
                           </div>
-                          <input class="py-1" type="submit" value="Save changes" name="save">
+                          <input class="py-1" type="submit" value="Lưu" name="save">
                         </div>
                       </div>
                     </form>

@@ -15,7 +15,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/cart.css' %}">
     <link rel="stylesheet" href="{% static '/font/themify-icons-font/themify-icons.css' %}">
     <link rel="stylesheet" href="{% static 'font/fontawesome/css/all.css' %}">
-    <title>DoubleT Bad | Homepage</title>
+    <title>DoubleT Bad | Chi tiết đơn hàng</title>
   </head>
   <body>
     <!-- Navbar Start -->
@@ -23,11 +23,11 @@
     <!-- Navbar End -->
 
     <!-- Chatbot Button Start -->
-    <button class="cart-btn btn-outline-primary border-2">
+    <!-- <button class="cart-btn btn-outline-primary border-2">
       <a class="shopping-bag-icon m-auto" href="/cart">
           <i class="fa fa-comments greentea-color"></i>
       </a>
-    </button>
+    </button> -->
     <!-- Chatbot Button End -->
 
     <!-- Modal Start -->
@@ -48,10 +48,10 @@
       
                   <div class="d-flex justify-content-between align-items-center mb-5">
                     <div>
-                      <h5 class="mb-0">INVOICE <span class="text-primary font-weight-bold">#Y34XDHR</span></h5>
+                      <h5 class="mb-0">Hóa đơn <span class="text-primary font-weight-bold">#Y34XDHR</span></h5>
                     </div>
                     <div class="text-end">
-                      <p class="mb-0">Expected Arrival <span>01/12/19</span></p>
+                      <p class="mb-0">Ngày gia dự kiến <span>01/12/19</span></p>
                       <p class="mb-0">USPS <span class="font-weight-bold">234094567242423422898</span></p>
                     </div>
                   </div>
@@ -67,29 +67,29 @@
                     <div class="d-lg-flex align-items-center">
                       <i class="fas fa-clipboard-list fa-3x me-lg-4 mb-3 mb-lg-0"></i>
                       <div>
-                        <p class="fw-bold mb-1">Order</p>
-                        <p class="fw-bold mb-0">Processed</p>
+                        <p class="fw-bold mb-1">Đơn hàng</p>
+                        <p class="fw-bold mb-0">Đã xử lý</p>
                       </div>
                     </div>
                     <div class="d-lg-flex align-items-center">
                       <i class="fas fa-box-open fa-3x me-lg-4 mb-3 mb-lg-0"></i>
                       <div>
-                        <p class="fw-bold mb-1">Order</p>
-                        <p class="fw-bold mb-0">Shipped</p>
+                        <p class="fw-bold mb-1">Đơn hàng</p>
+                        <p class="fw-bold mb-0">Đã gửi</p>
                       </div>
                     </div>
                     <div class="d-lg-flex align-items-center">
                       <i class="fas fa-shipping-fast fa-3x me-lg-4 mb-3 mb-lg-0"></i>
                       <div>
-                        <p class="fw-bold mb-1">Order</p>
-                        <p class="fw-bold mb-0">En Route</p>
+                        <p class="fw-bold mb-1">Đơn hàng</p>
+                        <p class="fw-bold mb-0">Đang vận chuyển</p>
                       </div>
                     </div>
                     <div class="d-lg-flex align-items-center">
                       <i class="fas fa-home fa-3x me-lg-4 mb-3 mb-lg-0"></i>
                       <div>
-                        <p class="fw-bold mb-1">Order</p>
-                        <p class="fw-bold mb-0">Arrived</p>
+                        <p class="fw-bold mb-1">Đơn hàng</p>
+                        <p class="fw-bold mb-0">Đã giao</p>
                       </div>
                     </div>
                   </div>
@@ -102,10 +102,9 @@
         </div>
     </section>
 
-    <div class="footer-section fw-bold">
-        <div class="footer-element"><p>Copyright © 2023, Powered by dodotrinh. All Rights Reserved</p></div>
-        <div class="footer-element"><p><i class="fas fa-map-marker-alt" style="margin-right: 15px;"></i>Saigon</p></div>
-    </div>
+    <!-- Footer Start -->
+    {% include 'components/footer.html' with blogs=blogs %}
+    <!-- Footer End -->
 
     <!-- Optional JavaScript; choose one of the two! -->
     <script src="{% static 'js/main.js' %}"></script>

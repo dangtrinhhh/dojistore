@@ -18,10 +18,10 @@ def writeblog(request):
                 form = BlogPostForm(request.POST, request.FILES)
                 if form.is_valid():
                     form.save()
-                    messages.success(request, "Add Blog Successfully")
+                    messages.success(request, "Thêm blog thành công")
                     return redirect("/writeblog")
             except MultiValueDictKeyError:
-                messages.error(request, f"Failed to add blog: {str(e)}")
+                messages.error(request, f"Thêm blog thất bại: {str(e)}")
                 pass
         else:
             form = BlogPostForm()
@@ -30,44 +30,36 @@ def writeblog(request):
         }
         return render(request, 'writeblog.html', context)
     else:
-        messages.info(request, "You don't have permission to access this page.")
+        messages.info(request, "Bạn không có quyền truy cập trang này.")
         return redirect("/")
     
 def editblog(request, slug):
-    user = request.user  # Đây là user đăng nhập, nếu có
+    user = request.user
     cart = None
     if user.is_authenticated:
         user_profile, created = Users.objects.get_or_create(user=user)
         cart, created = Carts.objects.get_or_create(user=user_profile)
     
     if user and user.is_superuser:
+        blog = Blogs.objects.get(id=slug)
         if request.method == 'POST':
-            newTitle = request.POST.get('title', '')
-            newContent = request.POST.get('content', '')
-            setNewest = request.POST.get('setToNewest', '')
-            
-            blog = Blogs.objects.get(id=slug)
-            if newTitle != '':
-                blog.title = newTitle
-            if newContent != '':
-                blog.content = newContent
-            if len(request.FILES) != 0:
-                blog.image = request.FILES['image']
-            if setNewest == 'on':
+            form = BlogPostForm(request.POST, request.FILES, instance=blog)
+            if form.is_valid():
+                setNewest = request.POST.get('setToNewest', '')
+                if setNewest == 'on':
+                    blog.created_at = datetime.now()
+                    
                 blog.last_updated = datetime.now()
-
-            try:
-                blog.save()
-                messages.success(request, "Update Blog Successfully")
+                form.save()
+                messages.success(request, "Cập nhật blog thành công")
                 return redirect("/")
-            except Exception as e:
-                messages.error(request, f"Error updating blog: {str(e)}")
-                return redirect("editblog", slug=slug)
+            else:
+                messages.error(request, "Lỗi cập nhật blog. Vui lòng kiểm tra lại thông tin.")
         else:
-            blog = Blogs.objects.get(id=slug)
-            return render(request, 'editblog.html', {'blog': blog, 'cart': cart})
+            form = BlogPostForm(instance=blog)
+        return render(request, 'editblog.html', {'form': form, 'blog': blog, 'cart': cart})
     else:
-        messages.info(request, "You don't have permission to access this page.")
+        messages.info(request, "Bạn không có quyền truy cập trang này.")
         return redirect("/")
 
 def deleteblog(request, slug):
@@ -78,13 +70,13 @@ def deleteblog(request, slug):
         
         try:
             blog.delete()
-            messages.success(request, "Delete Blog Successfully")
+            messages.success(request, "Xóa blog thành công")
             return redirect("/")
         except Exception as e:
-            messages.error(request, f"Failed to delete blog: {str(e)}")
+            messages.error(request, f"Lỗi xóa blog: {str(e)}")
             return redirect("/")
     else:
-        messages.info(request, "You don't have permission to access this page.")
+        messages.info(request, "Bạn không có quyền truy cập trang này.")
         return redirect("/")
 
   

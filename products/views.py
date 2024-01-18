@@ -21,7 +21,7 @@ class CustomPasswordResetView(PasswordResetView):
 
         if not users:
             # User not found, display an error message
-            messages.error(self.request, "This email address hasn't been signed up yet.")
+            messages.error(self.request, "Email này chưa được đăng ký.")
             return self.render_to_response(self.get_context_data(form=form))
 
         # Proceed with the password reset process
@@ -61,7 +61,6 @@ def getProductOrderedType(num_products=None):
             'product_type': product_type,
             'products_and_images': products_and_images
         })
-    print(products_with_images)
     return products_with_images
 
 # Create your views here.
@@ -83,7 +82,6 @@ def index(request):
         if email == '':
             username = request.POST['username']
             password = request.POST['password']
-            print(username + "/" + password)
             
             user = auth.authenticate(username=username, password=password)
 
@@ -342,7 +340,6 @@ def productDetails(request, slug):
         
     product = Products.objects.get(product_id=slug)
     product_images = Product_Images.objects.filter(product=product)
-    print(product_images)
     return render(request, 'productDetails.html', {'product': product, 'product_images': product_images, 'cart': cart})
 
 def cart(request):

@@ -26,17 +26,17 @@
     <!-- Messages End -->
 
     <!-- Shopping Cart Button Start -->
-    <button class="cart-btn btn-outline-primary border-2">
+    <!-- <button class="cart-btn btn-outline-primary border-2">
         <a class="shopping-bag-icon m-auto" href="/cart">
             <i class="fa fa-shopping-bag greentea-color"></i>
         </a>
-    </button>
+    </button> -->
     <!-- Shopping Cart Button End -->
 
     <!-- Blog Details Start -->
-    <div class="container-xxl py-5 my-auto">
+    <div class="container-xxl py-5" style="margin-top: 100px;">
         <div class="container">
-            <div class="row g-5 align-items-center">
+            <div class="row g-5">
                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
                     <div class="about-img position-relative overflow-hidden pe-0">
                         <section class="section w-100">
@@ -44,31 +44,39 @@
                                 <div class="row justify-content-center">
                                     <div class="">
                                         <div class="card">
-                                            <h1 class="fw-bold h1 m-3">Write a blog</h1>
+                                            <h1 class="fw-bold h1 m-3">Viết blog</h1>
                                             <div class="card-body">
+                                                <!-- <form action="" method="POST" enctype="multipart/form-data">
+                                                    {% csrf_token %}
+                                                    {{form.as_p}}
+                                                    {{form.media}}
+                                                    <button type="submit" class="btn btn-primary">Lưu</button>
+                                                </form> -->
                                                 <form action="" method="POST" enctype="multipart/form-data">
                                                     {% csrf_token %}
                                                     <div class="mb-3">
-                                                        <label for="" class="form-label">Title</label>
+                                                        <label for="" class="form-label">Tiêu đề</label>
                                                         <input type="text" Required name="title" value="{{ blog.title }}" class="form-control" oninput="updateBlogTitle(this.value)">
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label for="" class="form-label">Content:</label>
-                                                        <input type="text" Required name="content" value="{{ blog.content }}" class="form-control" oninput="updateBlogContent(this.value)">
+                                                        <label for="" class="form-label">Nội dung:</label>
+                                                        <!-- <input type="text" Required name="content" value="{{ blog.content }}" class="form-control" oninput="updateBlogContent(this.value)"> -->
+                                                        {{ form.content }}
+                                                        {{ form.media }}
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label for="blog-images">Images:</label>
+                                                        <label for="blog-images">Hình ảnh:</label>
                                                         <label class="custom-file-upload">
-                                                            Browse Images
+                                                            Chọn hình ảnh
                                                             <input type="file" id="blog-images" name="image" value="{{ blog.image }}" multiple accept="image/*" onchange="updateBlogImage(this)">
                                                         </label>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label>
-                                                            <input type="checkbox" name="setToNewest"> Set to Newest
+                                                            <input type="checkbox" name="setToNewest"> Đặt thành mới nhất
                                                         </label>
                                                     </div>
-                                                    <button type="submit" class="btn btn-primary">Save</button>
+                                                    <button type="submit" class="btn btn-primary">Lưu</button>
                                                 </form>
                                             </div>
                                         </div>
@@ -80,7 +88,7 @@
                 </div>
                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
                     <div class="p-4">
-                        <div class="text-center h4">Your blog will display like this:</div>
+                        <div class="text-center h4">Bài viết của bạn sẽ trông như thế này</div>
                         <div class="wow fadeInUp my-4 mx-auto" data-wow-delay="0.1s">
                             <div class="wow fadeInUp" data-wow-delay="0.1s">
                                 <div class="border">

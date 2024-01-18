@@ -19,24 +19,24 @@ data-wow-delay="0.1s"
 </button>
 <div class="collapse navbar-collapse" id="navbarCollapse">
   <div class="navbar-nav ms-auto p-4 p-lg-0">
-    <a href="/" class="nav-item nav-link active">Home</a>
+    <a href="/" class="nav-item nav-link active">Trang chủ</a>
     {% if user.is_staff %}
-    <a href="/products" class="nav-item nav-link">Products</a>
-    <a href="/addproduct" class="nav-item nav-link">Add Products</a>
+    <a href="/products" class="nav-item nav-link">Sản phẩm</a>
+    <a href="/addproduct" class="nav-item nav-link">Thêm sản phẩm</a>
     <a href="/blogs" class="nav-item nav-link">Blogs</a>
-    <a href="/writeblog" class="nav-item nav-link">Write Blogs</a>
+    <a href="/writeblog" class="nav-item nav-link">Viết Blogs</a>
     {% else %}
-    <a href="/products" class="nav-item nav-link">Products</a>
+    <a href="/products" class="nav-item nav-link">Sản phẩm</a>
     <div class="nav-item dropdown">
       <a
         href="#"
         class="nav-link dropdown-toggle"
         data-bs-toggle="dropdown"
-        >Explore</a
+        >Khám phá</a
       >
       <div class="dropdown-menu m-0">
-        <a href="/aboutUs" class="nav-item nav-link">About Us</a>
-        <a href="/contact" class="nav-item nav-link">Contact Us</a>
+        <a href="/aboutUs" class="nav-item nav-link">Về chúng tôi</a>
+        <a href="/contact" class="nav-item nav-link">Liên hệ</a>
         <a href="/blogs" class="nav-item nav-link">Blogs</a>
       </div>
     </div>
@@ -79,13 +79,13 @@ data-wow-delay="0.1s"
               aria-labelledby="navbarDropdownMenuLink"
             >
               <li>
-                <a class="dropdown-item" href="/profile">My profile</a>
+                <a class="dropdown-item" href="/profile">Thông tin cá nhân</a>
               </li>
               <li>
-                <a class="dropdown-item" href="#">Settings</a>
+                <a class="dropdown-item" href="#">Cài đặt</a>
               </li>
               <li>
-                <a class="dropdown-item" href="logout">Logout</a>
+                <a class="dropdown-item" href="logout">Đăng xuất</a>
               </li>
             </ul>
           </li>
@@ -93,8 +93,8 @@ data-wow-delay="0.1s"
       </div>
     </nav>
     {% else %}
-    <a class="nav-item nav-link btn-login">Login</a>
-    <a class="nav-item nav-link btn-register">Register</a>
+    <a class="nav-item nav-link btn-login">Đăng nhập</a>
+    <a class="nav-item nav-link btn-register">Đăng ký</a>
     {% endif %}
   </div>
 </div>

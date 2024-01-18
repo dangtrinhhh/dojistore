@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/addProduct.css' %}">
     <link rel="stylesheet" href="{% static '/font/themify-icons-font/themify-icons.css' %}">
     <link rel="stylesheet" href="{% static 'font/fontawesome/css/all.css' %}">
-    <title>DoubleT Bad | Product Details</title>
+    <title>DoubleT Bad | Chi tiết sản phẩm</title>
   </head>
   <body>
     <!-- Navbar Start -->
@@ -22,24 +22,16 @@
     <!-- Navbar End -->
 
     <!-- Chatbot Button Start -->
-    <button class="cart-btn btn-outline-primary border-2">
+    <!-- <button class="cart-btn btn-outline-primary border-2">
       <a class="shopping-bag-icon m-auto" href="/cart">
           <i class="fa fa-comments greentea-color"></i>
       </a>
-    </button>
+    </button> -->
     <!-- Chatbot Button End -->
 
     <!-- Messages Start -->
     {% include 'components/messageAlert.html' with messages=messages %}
     <!-- Messages End -->
-
-    <!-- Shopping Cart Button Start -->
-    <button class="cart-btn btn-outline-primary border-2">
-        <a class="shopping-bag-icon m-auto" href="/cart">
-            <i class="fa fa-shopping-bag greentea-color"></i>
-        </a>
-    </button>
-    <!-- Shopping Cart Button End -->
 
     <!-- Product Details Start -->
     <div class="container-xxl py-5 my-auto">
@@ -52,16 +44,16 @@
                                 <div class="row justify-content-center">
                                     <div class="">
                                         <div class="card">
-                                            <h1 class="fw-bold h1 m-3">Add Product</h1>
+                                            <h1 class="fw-bold h1 m-3">Thêm sản phẩm</h1>
                                             <div class="card-body">
                                                 <form action="" method="POST" enctype="multipart/form-data">
                                                     {% csrf_token %}
                                                     <div class="mb-3">
-                                                        <label for="" class="form-label">Name</label>
+                                                        <label for="" class="form-label">Tên sản phẩm</label>
                                                         <input type="text" Required name="name" class="form-control" oninput="updateProductName(this.value)">
                                                     </div>
                                                     <select class="form-select form-control mb-3" Required name="typeProduct" aria-label="Default select example">
-                                                        <option selected>Select Product Type</option>
+                                                        <option selected>Chọn loại sản phẩm</option>
                                                         {% for unique_name in unique_names %}
                                                           <option value="{{ unique_name }}">{{ unique_name }}</option>
                                                         {% endfor %}
@@ -70,25 +62,25 @@
                                                         <option value="other">Others</option> -->
                                                     </select>
                                                     <div class="mb-3">
-                                                        <label for="" class="form-label">Price:</label>
+                                                        <label for="" class="form-label">Giá gốc:</label>
                                                         <input type="text" Required name="price" class="form-control" oninput="updateSaleIcon()">
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label for="" class="form-label">Price After Sale:</label>
+                                                        <label for="" class="form-label">Giá giảm:</label>
                                                         <input type="text" name="pricesale" class="form-control" oninput="updateSaleIcon()">
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label for="" class="form-label">Descritpion</label>
+                                                        <label for="" class="form-label">Mô tả</label>
                                                         <input type="text" Required name="description" class="form-control">
                                                     </div>
                                                     <div>
-                                                        <label for="product-images">Images:</label>
+                                                        <label for="product-images">Hình ảnh:</label>
                                                         <label class="custom-file-upload">
-                                                            Browse Images
+                                                            Chọn ảnh
                                                             <input type="file" id="product-images" name="image" multiple accept="image/*" required onchange="updateProductImage(this)">
                                                         </label>
                                                     </div>
-                                                    <button type="submit" class="btn btn-primary">Save</button>
+                                                    <button type="submit" class="btn btn-primary">Lưu</button>
                                                 </form>
                                             </div>
                                         </div>
