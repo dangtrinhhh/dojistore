@@ -30,7 +30,7 @@
       {% include 'components/navbar.html' %}
 
       <div class="row g-0 p-0" style="margin-top: 100px;">
-        <div class="col-lg-12 p-0 m-0 px-2">
+        <div class="col-lg-12 p-0 m-0">
           <div id="">
           </div>
           {% include 'components/carousel.html' %}
@@ -170,7 +170,7 @@
           })
         }
         
-        function renderProducts(productsWithImages) {
+        function renderProducts(productsWithImages, isStaff) {
           const productContainerList = document.getElementById('product-container-list');
           
           productsWithImages.forEach((productTypeInfo, index) => {
@@ -257,7 +257,7 @@
                 productItem.appendChild(positionRelative);
                 productItem.appendChild(textCenter);
         
-                if (is_staff) {
+                if (isStaff === 'True') {
                   const borderTop1 = document.createElement('div');
                   borderTop1.classList.add('border-top', 'd-flex');
         
@@ -267,7 +267,7 @@
                   const editLink = document.createElement('a');
                   editLink.classList.add('text-body', 'text-decoration-none');
                   editLink.setAttribute('href', `/products/edit/${productInfo.product_id}`);
-                  editLink.innerHTML = '<i class="fa fa-pen greentea-color me-2"></i>Edit';
+                  editLink.innerHTML = '<i class="fa fa-pen greentea-color me-2"></i>Sửa';
         
                   small1.appendChild(editLink);
         
@@ -277,7 +277,7 @@
                   const deleteLink = document.createElement('a');
                   deleteLink.classList.add('text-body', 'text-decoration-none');
                   deleteLink.setAttribute('href', `/products/delete/${productInfo.product_id}`);
-                  deleteLink.innerHTML = '<i class="fa fa-trash carrot-color me-2"></i>Delete';
+                  deleteLink.innerHTML = '<i class="fa fa-trash carrot-color me-2"></i>Xóa';
         
                   small2.appendChild(deleteLink);
         
@@ -299,7 +299,7 @@
                   const viewDetailLink = document.createElement('a');
                   viewDetailLink.classList.add('text-body', 'text-decoration-none', 'view-detail');
                   viewDetailLink.setAttribute('href', `/products/${productInfo.product_id}`);
-                  viewDetailLink.innerHTML = '<i class="fa fa-eye greentea-color me-2"></i>View detail';
+                  viewDetailLink.innerHTML = '<i class="fa fa-eye greentea-color me-2"></i>Xem chi tiết';
         
                   viewDetailButton.appendChild(viewDetailLink);
                   small3.appendChild(viewDetailButton);
@@ -315,7 +315,7 @@
                   addToCartLink.classList.add('text-body', 'text-decoration-none', 'pe-auto', 'add-to-cart');
                   addToCartLink.setAttribute('data-product-id', productInfo.product_id);
                   addToCartLink.setAttribute('onclick', `updateCartItemCount('${productInfo.product_id}', 1)`);
-                  addToCartLink.innerHTML = '<i class="fa fa-shopping-bag greentea-color me-2"></i>Add to cart';
+                  addToCartLink.innerHTML = '<i class="fa fa-shopping-bag greentea-color me-2"></i>Thêm vào giỏ';
         
                   addToCartButton.appendChild(addToCartLink);
                   small4.appendChild(addToCartButton);
@@ -353,7 +353,7 @@
     
         // Render products to HTML
         renderProductTypes(productsData);
-        renderProducts(productsData);
+        renderProducts(productsData, is_staff);
       
         var priceElements = document.querySelectorAll('.convert-to-vnd');
         priceElements.forEach(function(element) {
