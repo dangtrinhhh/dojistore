@@ -7,6 +7,7 @@ from rest_framework.decorators import api_view
 from .models import Carts, Cart_Details
 from .serializers import CartSerializer, CartDetailSerializer
 from decimal import Decimal
+from django.db.models import F
 
 #_________________________________API________________________________
 
@@ -37,6 +38,39 @@ def add_to_cart(request):
     # Serialize giỏ hàng để trả về thông tin mới nhất
     cart_serializer = CartSerializer(cart)
     return Response(cart_serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['PUT'])
+def update_cart_item_quantity(request, cart_detail_id):
+    try:
+        cart_detail = Cart_Details.objects.select_related('cart').get(pk=cart_detail_id)
+    except Cart_Details.DoesNotExist:
+        return Response({"message": "Cart detail not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    new_quantity = request.data.get('quantity')
+
+    if new_quantity is None:
+        return Response({"message": "Quantity parameter is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Update total_quantity in cart
+    cart_detail.cart.total_quantity += (int(new_quantity) - int(cart_detail.quantity))
+    print(cart_detail.cart.total_quantity)
+    cart_detail.cart.save()
+
+    # Update total_amount in cart
+    product = cart_detail.product
+    price = product.price
+    if product.pricesale:
+        price = product.pricesale
+    cart_detail.cart.total_amount += (int(new_quantity) - int(cart_detail.quantity)) * int(price)
+    cart_detail.cart.save()
+
+    # Update the quantity
+    cart_detail.quantity = new_quantity
+    cart_detail.save()
+
+    # Serialize the updated cart detail
+    serializer = CartDetailSerializer(cart_detail)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 #_________________________________________________________________
 
@@ -90,7 +124,7 @@ class CartDetailDetailView(generics.ListAPIView):
         return Cart_Details.objects.filter(cart__cart_id=cart_id)
     # queryset = Cart_Details.objects.all()
 
-class OrderListCreateView(generics.ListCreateAPIView):
+class OrderListCreateView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Orders.objects.all()
     serializer_class = OrderSerializer
 
@@ -98,7 +132,7 @@ class OrderDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Orders.objects.all()
     serializer_class = OrderSerializer
 
-class OrderDetailListCreateView(generics.ListCreateAPIView):
+class OrderDetailListCreateView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Order_Details.objects.all()
     serializer_class = OrderDetailSerializer
 

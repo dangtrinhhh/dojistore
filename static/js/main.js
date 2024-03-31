@@ -5,7 +5,7 @@ const modalContainer = document.querySelector('.js-modal-container')
 const closeBtn2 = document.querySelector('.modal-close2')
 const modalContainer2 = document.querySelector('.js-modal-container2')
 const modal = document.querySelector('.js-modal')
-const modal2 = document.querySelector('#modal2')
+const modal2 = document.querySelector('.js-modal2')
 const loginBtns = document.querySelectorAll('.btn-login')
 const registerBtns = document.querySelectorAll('.btn-register')
 
@@ -45,9 +45,9 @@ function hideBuyTickets2() {
 closeBtn.addEventListener('click', hideBuyTickets)
 closeBtn2.addEventListener('click', hideBuyTickets2)
 
-modal.addEventListener('click', hideBuyTickets)
+// modal.addEventListener('click', hideBuyTickets)
 
-modal2.addEventListener('click', hideBuyTickets)
+// modal2.addEventListener('click', hideBuyTickets)
 
 modalContainer.addEventListener('click', function (event) {
     event.stopPropagation()

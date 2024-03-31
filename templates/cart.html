@@ -37,19 +37,19 @@
           <div class="col-md-8">
             <div class="card mb-4">
               <div class="card-header py-3">
-                <h5 class="mb-0">Cart - {{ cart.total_quantity }} items</h5>
+                <h5 class="mb-0">Giỏ hàng - {{ cart.total_quantity }} Sản phẩm</h5>
               </div>
               <div id="productContainer" class="card-body"></div>
             </div>
             <div class="card mb-4">
               <div class="card-body">
-                <p><strong>Expected shipping delivery</strong></p>
+                <p><strong>Thời gian giao dự kiến</strong></p>
                 <p class="mb-0">12.10.2024 - 14.10.2024</p>
               </div>
             </div>
             <div class="card mb-4 mb-lg-0">
               <div class="card-body">
-                <p><strong>We accept</strong></p>
+                <p><strong>Chấp nhận thanh toán</strong></p>
                 <img class="me-2" width="45px"
                   src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/visa.svg"
                   alt="Visa" />
@@ -68,25 +68,25 @@
           <div class="col-md-4">
             <div class="card mb-4">
               <div class="card-header py-3">
-                <h5 class="mb-0">Summary</h5>
+                <h5 class="mb-0">Chi tiết</h5>
               </div>
               <div class="card-body">
                 <ul class="list-group list-group-flush">
                   <li
                     class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-                    Products
+                    Sản phẩm
                     <span id="total-amount-product"></span>
                   </li>
                   <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                    Shipping
+                    Phí Ship
                     <span>Gratis</span>
                   </li>
                   <li
                     class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
                     <div>
-                      <strong>Total amount</strong>
+                      <strong>Tổng cộng</strong>
                       <strong>
-                        <p class="mb-0">(including VAT)</p>
+                        <p class="mb-0">(đã bao gồm thuế VAT)</p>
                       </strong>
                     </div>
                     <span><strong id="total-amount"></strong></span>
@@ -94,7 +94,7 @@
                 </ul>
     
                 <button type="button" class="btn btn-primary btn-lg btn-block">
-                  Go to checkout
+                  Thanh toán
                 </button>
               </div>
             </div>
@@ -116,8 +116,9 @@
 
        // Function to generate HTML code based on product data
        function generateProductHTML(product) {
+        console.log("🚀 ~ product:", product.product.product_id)
         return `
-            <div class="row">
+            <div class="row product_id-${product.product.product_id}">
               <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
                 <!-- Image -->
                 <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
@@ -147,16 +148,16 @@
               <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
                 <!-- Quantity -->
                 <div class="d-flex mb-4" style="max-width: 300px">
-                  <button class="btn btn-primary px-3 me-2" onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                  <button class="btn btn-primary px-3 me-2 btn-minus">
                     <i class="fas fa-minus"></i>
                   </button>
     
                   <div class="form-outline">
-                    <input id="form1" min="0" name="quantity" value="${product.quantity}" type="number" class="form-control" />
-                    <label class="form-label" for="form1">Quantity</label>
+                    <input id="form1" min="0" name="quantity" value="${product.quantity}" type="number" class="form-control product-quantity" data-cart-product-id="${product.cart_details_id}" />
+                    <label class="form-label" for="form1">Số lượng</label>
                   </div>
     
-                  <button class="btn btn-primary px-3 ms-2" onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                  <button class="btn btn-primary px-3 ms-2 btn-plus">
                     <i class="fas fa-plus"></i>
                   </button>
                 </div>
@@ -212,6 +213,35 @@
               totalAmountDiv.innerHTML += convertToVND(parseFloat(totalAmount));
               totalAmountProduct.innerHTML += convertToVND(parseFloat(totalAmount));
 
+              // Lắng nghe sự kiện click của các nút tăng/giảm và cập nhật giá trị của ô input
+              document.querySelectorAll('.btn-plus').forEach(btnPlus => {
+                btnPlus.addEventListener('click', event => {
+                    const input = event.target.parentNode.querySelector('input[type=number]');
+                    if (input) {
+                        input.stepUp();
+                        input.dispatchEvent(new Event('input')); // Gửi sự kiện input để cập nhật giá trị
+                    }
+                });
+              });
+
+              document.querySelectorAll('.btn-minus').forEach(btnMinus => {
+                  btnMinus.addEventListener('click', event => {
+                      const input = event.target.parentNode.querySelector('input[type=number]');
+                      if (input) {
+                          input.stepDown();
+                          input.dispatchEvent(new Event('input')); // Gửi sự kiện input để cập nhật giá trị
+                      }
+                  });
+              });
+            
+              // Lắng nghe sự kiện input của ô input và gọi hàm cập nhật số lượng
+              document.querySelectorAll('.product-quantity').forEach(input => {
+                input.addEventListener('input', event => {
+                    const cartProductId = event.target.dataset.cartProductId;
+                    const quantity = event.target.value;
+                    updateCartItemQuantity(cartProductId, quantity);
+                });
+              });
               // Continue with other tasks as needed
               // fetchCart();
           })
@@ -228,6 +258,55 @@
       });
     });
 
+    // Hàm để gọi API cập nhật số lượng
+    function updateCartItemQuantity(cartDetailId, newQuantity) {
+        // Tạo một đối tượng chứa dữ liệu cần gửi
+        const data = {
+            quantity: newQuantity
+        };
+        console.log("🚀 ~ data:", data)
+
+        // Gửi request PUT đến endpoint update-cart-item-quantity/<cart_detail_id>/
+        fetch(`/api/update-cart-item-quantity/${cartDetailId}/`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')  // Lấy CSRF token từ cookie
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to update cart item quantity');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Xử lý dữ liệu trả về nếu cần
+            console.log('Cart item quantity updated:', data);
+            // Ví dụ: Cập nhật giao diện người dùng để hiển thị số lượng mới
+        })
+        .catch(error => {
+            console.error('Error updating cart item quantity:', error);
+            // Xử lý lỗi nếu cần
+        });
+    }
+
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+              const cookie = cookies[i].trim();
+              // Kiểm tra xem cookie có tên là name= không
+              if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+              }
+          }
+      }
+      return cookieValue;
+    }
     </script>
     <!-- Option 1: Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>

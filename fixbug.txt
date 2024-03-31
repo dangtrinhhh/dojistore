@@ -1,0 +1,2 @@
+1. azd : The term 'azd' is not recognized as the name of a cmdlet
+Install-Module -Name Az -Scope CurrentUser -Repository PSGallery -Force
