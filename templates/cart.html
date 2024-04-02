@@ -108,8 +108,11 @@
     {% include 'components/footer.html' %}
 
     <!-- Optional JavaScript; choose one of the two! -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="{% static 'js/main.js' %}"></script>
     <script>
+      let products = []
+
       function convertToVND(money) {
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(money);
       }
@@ -118,59 +121,61 @@
        function generateProductHTML(product) {
         console.log("🚀 ~ product:", product.product.product_id)
         return `
-            <div class="row product_id-${product.product.product_id}">
-              <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
-                <!-- Image -->
-                <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
-                  <img src="${product.product.images[0].url}" class="w-100" />
-                  <a href="#!">
-                    <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
-                  </a>
-                </div>
-                <!-- Image -->
-              </div>
-    
-              <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
-                <!-- Data -->
-                <p><strong>${product.product.name}</strong></p>
-                <p>Đã bán: ${product.product.quantity_sold}</p>
-                <p>Còn lại: ${product.product.quantity}</p>
-    
-                <button type="button" class="btn btn-primary btn-sm me-1 mb-2" data-mdb-toggle="tooltip" title="Xóa">
-                  <i class="fas fa-trash"></i>
-                </button>
-                <button type="button" class="btn btn-danger btn-sm mb-2" data-mdb-toggle="tooltip" title="Thích">
-                  <i class="fas fa-heart"></i>
-                </button>
-                <!-- Data -->
-              </div>
-    
-              <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
-                <!-- Quantity -->
-                <div class="d-flex mb-4" style="max-width: 300px">
-                  <button class="btn btn-primary px-3 me-2 btn-minus">
-                    <i class="fas fa-minus"></i>
-                  </button>
-    
-                  <div class="form-outline">
-                    <input id="form1" min="0" name="quantity" value="${product.quantity}" type="number" class="form-control product-quantity" data-cart-product-id="${product.cart_details_id}" />
-                    <label class="form-label" for="form1">Số lượng</label>
+            <div class="product_id-${product.product.product_id}">
+              <div class="row">
+                <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
+                  <!-- Image -->
+                  <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
+                    <img src="${product.product.images[0].url}" class="w-100" />
+                    <a href="#!">
+                      <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
+                    </a>
                   </div>
-    
-                  <button class="btn btn-primary px-3 ms-2 btn-plus">
-                    <i class="fas fa-plus"></i>
-                  </button>
+                  <!-- Image -->
                 </div>
-                <!-- Quantity -->
-    
-                <!-- Price -->
-                <p class="text-start text-md-center convert-to-vnd">
-                  <strong>${convertToVND(parseFloat(product.product.pricesale))}</strong>
-                </p>
-                <!-- Price -->
+      
+                <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
+                  <!-- Data -->
+                  <p><strong>${product.product.name}</strong></p>
+                  <p>Đã bán: ${product.product.quantity_sold}</p>
+                  <p>Còn lại: ${product.product.quantity}</p>
+      
+                  <button type="button" class="btn btn-primary btn-sm me-1 mb-2" data-mdb-toggle="tooltip" title="Xóa">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                  <button type="button" class="btn btn-danger btn-sm mb-2" data-mdb-toggle="tooltip" title="Thích">
+                    <i class="fas fa-heart"></i>
+                  </button>
+                  <!-- Data -->
+                </div>
+      
+                <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                  <!-- Quantity -->
+                  <div class="d-flex mb-4" style="max-width: 300px">
+                    <button class="btn btn-primary px-3 me-2 btn-minus">
+                      <i class="fas fa-minus"></i>
+                    </button>
+      
+                    <div class="form-outline">
+                      <input id="form1" min="0" name="quantity" value="${product.quantity}" type="number" class="form-control product-quantity" data-cart-product-id="${product.cart_details_id}" />
+                      <label class="form-label" for="form1">Số lượng</label>
+                    </div>
+      
+                    <button class="btn btn-primary px-3 ms-2 btn-plus">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </div>
+                  <!-- Quantity -->
+      
+                  <!-- Price -->
+                  <p class="text-start text-md-center convert-to-vnd">
+                    <strong>${convertToVND(parseFloat(product.product.pricesale))}</strong>
+                  </p>
+                  <!-- Price -->
+                </div>
               </div>
+              <hr class="my-4" />
             </div>
-            <hr class="my-4" />
         `;
     }
     
@@ -188,25 +193,16 @@
 
     document.addEventListener('DOMContentLoaded', function () {
       var cart_id = "{{ cart.cart_id }}";
-      // console.log("🚀 ~ cart_id:", cart_id);
+      console.log("🚀 ~ cart_id:", cart_id);
   
       // Fetch cart details and use the data
       fetchCartDetails(cart_id)
           .then(data => {
               console.log("🚀 ~ fetchCartDetails(cart_id):", data);
+              products = data;
               renderProductHTML(data);
-
-              let totalAmount = 0;
-
-              data.forEach(item => {
-                  const quantity = item.quantity;
-                  const product = item.product;
-
-                  // Use sale price if available, otherwise use regular price
-                  const price = parseFloat(product.pricesale) || parseFloat(product.price);
-
-                  totalAmount += quantity * price;
-              });
+              
+              let totalAmount = countTotalBill(data);
 
               var totalAmountDiv = document.getElementById('total-amount');
               var totalAmountProduct = document.getElementById('total-amount-product');
@@ -284,7 +280,53 @@
         .then(data => {
             // Xử lý dữ liệu trả về nếu cần
             console.log('Cart item quantity updated:', data);
-            // Ví dụ: Cập nhật giao diện người dùng để hiển thị số lượng mới
+            if (data && data.quantity === 0) {
+              // Remove if quantity equal to 0
+              fetch(`/api/delete-cart-item/${cartDetailId}/`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken') // Lấy CSRF token từ cookie
+                }
+              })
+              .then(response => {
+                  if (!response.ok) {
+                      throw new Error('Failed to delete cart item');
+                  }
+                  // Xóa thành công, có thể thực hiện các hành động cần thiết (ví dụ: cập nhật giao diện người dùng)
+              })
+              .catch(error => {
+                  console.error('Error deleting cart item:', error);
+                  // Xử lý lỗi nếu cần
+              });
+              // Remove if quantity equal to 0
+              const foundProductIndex = products.findIndex(item => item.product && item.product.product_id == data.product.product_id);
+              if (foundProductIndex !== -1) {
+                  products[foundProductIndex].quantity = data.quantity;
+                  console.log("🚀 ~ products:", products);
+              }
+          
+              $(`.product_id-${data.product.product_id}`).remove();
+          } else {
+              const foundProduct = products.find(item => item.product && item.product.product_id == data.product.product_id);
+              if (foundProduct) {
+                  foundProduct.quantity = data.quantity;
+                  console.log("🚀 ~ products:", products);
+              }
+          }
+          
+          // Ví dụ: Cập nhật giao diện người dùng để hiển thị số lượng mới
+          let totalAmount = countTotalBill(products);
+          
+          var totalAmountDiv = document.getElementById('total-amount');
+          var totalAmountProduct = document.getElementById('total-amount-product');
+          totalAmountDiv.innerHTML = convertToVND(parseFloat(totalAmount));
+          totalAmountProduct.innerHTML = convertToVND(parseFloat(totalAmount));
+          
+          let totalQuantity = countTotalItems(products);
+          var totalQuantityProduct = document.getElementById('cart-item-count');
+          totalQuantityProduct.innerHTML = totalQuantity;
+          
         })
         .catch(error => {
             console.error('Error updating cart item quantity:', error);

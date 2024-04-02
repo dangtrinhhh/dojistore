@@ -179,6 +179,35 @@ function togglePasswordFields() {
 //     });
 
 // }
+
+function countTotalBill(data) {
+    let totalAmount = 0;
+
+    data.forEach(item => {
+        const quantity = item?.quantity;
+        const product = item?.product;
+
+        // Use sale price if available, otherwise use regular price
+        const price = parseFloat(product?.pricesale) || parseFloat(product?.price);
+
+        totalAmount += quantity * price;
+    });
+
+    return totalAmount;
+}
+
+function countTotalItems(data) {
+    let totalAmount = 0;
+
+    data.forEach(item => {
+        const quantity = item?.quantity;
+
+        totalAmount += quantity;
+    });
+
+    return totalAmount;
+}
+
 // Hàm cập nhật số lượng sản phẩm trong giỏ hàng
 function updateCartItemCount(product_id, quantity) {
     // Lấy giá trị của CSRF token từ trang web

@@ -72,6 +72,28 @@ def update_cart_item_quantity(request, cart_detail_id):
     serializer = CartDetailSerializer(cart_detail)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+@api_view(['DELETE'])
+def delete_cart_item(request, cart_detail_id):
+    try:
+        cart_detail = Cart_Details.objects.select_related('cart').get(pk=cart_detail_id)
+    except Cart_Details.DoesNotExist:
+        return Response({"message": "Cart detail not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    # Lấy sản phẩm và số lượng trước khi xóa
+    product = cart_detail.product
+    quantity = cart_detail.quantity
+
+    # Xóa cart detail
+    cart_detail.delete()
+
+    # Cập nhật total_quantity và total_amount của cart
+    cart = cart_detail.cart
+    cart.total_quantity -= int(quantity)
+    price = product.price if not product.pricesale else product.pricesale
+    cart.total_amount -= int(quantity) * int(price)
+    cart.save()
+
+    return Response({"message": "Cart item deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
 #_________________________________________________________________
 
 # Create your views here.
