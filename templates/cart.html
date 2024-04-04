@@ -37,7 +37,7 @@
           <div class="col-md-8">
             <div class="card mb-4">
               <div class="card-header py-3">
-                <h5 class="mb-0">Giỏ hàng - {{ cart.total_quantity }} Sản phẩm</h5>
+                <h5 class="total-item-cart-quantity mb-0">Giỏ hàng - {{ cart.total_quantity }} Sản phẩm</h5>
               </div>
               <div id="productContainer" class="card-body"></div>
             </div>
@@ -325,8 +325,10 @@
           
           let totalQuantity = countTotalItems(products);
           var totalQuantityProduct = document.getElementById('cart-item-count');
+          var totalItems = document.querySelector('.total-item-cart-quantity');
+
           totalQuantityProduct.innerHTML = totalQuantity;
-          
+          totalItems.innerHTML = `Giỏ hàng - ${totalQuantity} Sản phẩm`
         })
         .catch(error => {
             console.error('Error updating cart item quantity:', error);

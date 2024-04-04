@@ -7,7 +7,7 @@ class Carts(models.Model):
     cart_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
     total_quantity = models.IntegerField(default=0)
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    total_amount = models.DecimalField(max_digits=1000, decimal_places=2, default=0.00)
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(default=datetime.now, blank=True)
 
@@ -23,7 +23,7 @@ class Orders(models.Model):
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
     order_code = models.CharField(max_length=50, unique=True)
     payment_method = models.CharField(max_length=50)
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    total_amount = models.DecimalField(max_digits=1000, decimal_places=2, default=0.00)
     note = models.TextField(blank=True, null=True)
     status = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)

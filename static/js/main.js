@@ -210,6 +210,20 @@ function countTotalItems(data) {
 
 // Hàm cập nhật số lượng sản phẩm trong giỏ hàng
 function updateCartItemCount(product_id, quantity) {
+    console.log('11111111111111111111111111')
+    document.getElementById("messageContainer").innerHTML = '';
+    var message = $('<div id="messageContainer2" class="alert alert-success d-flex align-items-center alert-dismissible fade show" role="alert" data-bs-autohide="false"></div>')
+                .append('<svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill" /></svg>')
+                .append('<div>Thêm vào giỏ hàng thành công!</div>')
+                .append('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>');
+    // Thêm phần tử thông báo mới vào messageContainer
+    $("#messageContainer").html(message);
+
+    setTimeout(function() {
+        $("#messageContainer2").removeClass('show').addClass('fade');
+        $("#messageContainer").html('');
+    }, 3000);
+
     // Lấy giá trị của CSRF token từ trang web
     const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
 
