@@ -25,8 +25,10 @@ SECRET_KEY = 'django-insecure-$zljqo972i=qjpzcjx%old9dy$utpl$jkbxb)tq%mh2tplkdam
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'c056-2405-4802-90a4-50f0-64ee-63ac-8d18-fd9.ngrok-free.app']
 ALLOWED_HOSTS = ['*']
 # ALLOWED_HOSTS = [".awsapprunner.com"]
+CSRF_TRUSTED_ORIGINS = ['https://c056-2405-4802-90a4-50f0-64ee-63ac-8d18-fd9.ngrok-free.app']
 
 # Application definition
 
@@ -45,6 +47,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -57,7 +60,15 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'products.middleware.StoreIPMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+# CORS_ALLOWED_ORIGINS = [
+#     'http://127.0.0.1:5500',
+#     'http://127.0.0.1:3001',
+# ]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 LOGGING = {
     'version': 1,

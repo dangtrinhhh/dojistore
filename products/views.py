@@ -361,6 +361,9 @@ def orderDetails(request):
 def payment(request):
     return render(request, 'payment.html', {})
 
+def paymentSuccess(request):
+    return render(request, 'paymentSuccess.html', {})
+
 
 def loading(request):
     return render(request, 'loading.html', {})

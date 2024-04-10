@@ -43,6 +43,7 @@ urlpatterns = [
     path('order/history', views.orderHistory, name='orderHistory'),
     path('order/details', views.orderDetails, name='orderDetails'),
     path('order/payment', views.payment, name='payment'),
+    path('order/payment/success', views.paymentSuccess, name='paymentSuccess'),
     path('accounts/password/reset/', CustomPasswordResetView.as_view(), name='account_reset_password'),
     path('accounts/', include('allauth.urls')),
     path('handler404/', handler404),

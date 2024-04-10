@@ -1,0 +1,316 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="icon" href="{% static 'img/logo.png' %}" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/products.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/cart.css' %}">
+    <link rel="stylesheet" href="{% static '/font/themify-icons-font/themify-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'font/fontawesome/css/all.css' %}">
+    <title>DoubleT Bad | Thanh toán thành công</title>
+</head>
+
+<body>
+    <!-- Navbar Start -->
+    {% include 'components/navbar.html' %}
+    <!-- Navbar End -->
+
+    <!-- Modal Start -->
+
+    {% include 'components/loginForm.html' %}
+
+    {% include 'components/registerForm.html' %}
+
+    <!-- Modal End -->
+
+    <!-- Payment Successful Start -->
+    <div class="container" style="width: 100vw; height: 100vh;">
+        <div class="d-flex justify-content-center align-items-center h-100">
+            <div class="row mt-5">
+                <div class="col-lg-12 col-md-6">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <img style="width: 100px; height: 100px;" src="{% static 'img/payment/payment-success.png' %}" alt="">
+                            <h1 class="card-title mb-4">Payment Successful</h1>
+                            <p class="card-text">Thank you for your payment.</p>
+                            <p class="card-text">Your transaction has been completed successfully.</p>
+                            <a href="/" class="btn btn-primary mt-3">Return to Home</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Successful End -->
+
+    {% include 'components/footer.html' %}
+
+    <!-- Optional JavaScript; choose one of the two! -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <script>
+        let products = []
+
+        function convertToVND(money) {
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(money);
+        }
+
+        // Function to generate HTML code based on product data
+        function generateProductHTML(product) {
+            console.log("🚀 ~ product:", product.product.product_id)
+            return `
+            <div class="product_id-${product.product.product_id}">
+              <div class="row">
+                <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
+                  <!-- Image -->
+                  <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
+                    <img src="${product.product.images[0].url}" class="w-100" />
+                    <a href="#!">
+                      <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
+                    </a>
+                  </div>
+                  <!-- Image -->
+                </div>
+      
+                <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
+                  <!-- Data -->
+                  <p><strong>${product.product.name}</strong></p>
+                  <p>Đã bán: ${product.product.quantity_sold}</p>
+                  <p>Còn lại: ${product.product.quantity}</p>
+      
+                  <button type="button" class="btn btn-primary btn-sm me-1 mb-2" data-mdb-toggle="tooltip" title="Xóa">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                  <button type="button" class="btn btn-danger btn-sm mb-2" data-mdb-toggle="tooltip" title="Thích">
+                    <i class="fas fa-heart"></i>
+                  </button>
+                  <!-- Data -->
+                </div>
+      
+                <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                  <!-- Quantity -->
+                  <div class="d-flex mb-4" style="max-width: 300px">
+                    <button class="btn btn-primary px-3 me-2 btn-minus">
+                      <i class="fas fa-minus"></i>
+                    </button>
+      
+                    <div class="form-outline">
+                      <input id="form1" min="0" name="quantity" value="${product.quantity}" type="number" class="form-control product-quantity" data-cart-product-id="${product.cart_details_id}" />
+                      <label class="form-label" for="form1">Số lượng</label>
+                    </div>
+      
+                    <button class="btn btn-primary px-3 ms-2 btn-plus">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </div>
+                  <!-- Quantity -->
+      
+                  <!-- Price -->
+                  <p class="text-start text-md-center convert-to-vnd">
+                    <strong>${convertToVND(parseFloat(product.product.pricesale))}</strong>
+                  </p>
+                  <!-- Price -->
+                </div>
+              </div>
+              <hr class="my-4" />
+            </div>
+        `;
+        }
+
+
+        // Function to render product HTML in the container
+        function renderProductHTML(productData) {
+            var productContainer = document.getElementById('productContainer');
+            productData.forEach(function (product) {
+                productContainer.innerHTML += generateProductHTML(product);
+            });
+        }
+
+        // Call the function to render product HTML
+        // renderProductHTML(a);
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var cart_id = "{{ cart.cart_id }}";
+            console.log("🚀 ~ cart_id:", cart_id);
+
+            // Fetch cart details and use the data
+            fetchCartDetails(cart_id)
+                .then(data => {
+                    console.log("🚀 ~ fetchCartDetails(cart_id):", data);
+                    products = data;
+                    renderProductHTML(data);
+
+                    let totalAmount = countTotalBill(data);
+
+                    var totalAmountDiv = document.getElementById('total-amount');
+                    var totalAmountProduct = document.getElementById('total-amount-product');
+                    totalAmountDiv.innerHTML += convertToVND(parseFloat(totalAmount));
+                    totalAmountProduct.innerHTML += convertToVND(parseFloat(totalAmount));
+
+                    // Lắng nghe sự kiện click của các nút tăng/giảm và cập nhật giá trị của ô input
+                    document.querySelectorAll('.btn-plus').forEach(btnPlus => {
+                        btnPlus.addEventListener('click', event => {
+                            const input = event.target.parentNode.querySelector('input[type=number]');
+                            if (input) {
+                                input.stepUp();
+                                input.dispatchEvent(new Event('input')); // Gửi sự kiện input để cập nhật giá trị
+                            }
+                        });
+                    });
+
+                    document.querySelectorAll('.btn-minus').forEach(btnMinus => {
+                        btnMinus.addEventListener('click', event => {
+                            const input = event.target.parentNode.querySelector('input[type=number]');
+                            if (input) {
+                                input.stepDown();
+                                input.dispatchEvent(new Event('input')); // Gửi sự kiện input để cập nhật giá trị
+                            }
+                        });
+                    });
+
+                    // Lắng nghe sự kiện input của ô input và gọi hàm cập nhật số lượng
+                    document.querySelectorAll('.product-quantity').forEach(input => {
+                        input.addEventListener('input', event => {
+                            const cartProductId = event.target.dataset.cartProductId;
+                            const quantity = event.target.value;
+                            updateCartItemQuantity(cartProductId, quantity);
+                        });
+                    });
+                    // Continue with other tasks as needed
+                    // fetchCart();
+                })
+                .catch(error => {
+                    // Handle the error if necessary
+                    console.error('Error fetching cart details:', error);
+                });
+
+            var priceElements = document.querySelectorAll('.convert-to-vnd');
+            priceElements.forEach(function (element) {
+                var priceValue = element.innerHTML.trim();
+                var convertedValue = convertToVND(parseFloat(priceValue));
+                element.innerHTML = convertedValue;
+            });
+        });
+
+        // Hàm để gọi API cập nhật số lượng
+        function updateCartItemQuantity(cartDetailId, newQuantity) {
+            // Tạo một đối tượng chứa dữ liệu cần gửi
+            const data = {
+                quantity: newQuantity
+            };
+            console.log("🚀 ~ data:", data)
+
+            // Gửi request PUT đến endpoint update-cart-item-quantity/<cart_detail_id>/
+            fetch(`/api/update-cart-item-quantity/${cartDetailId}/`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')  // Lấy CSRF token từ cookie
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to update cart item quantity');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Xử lý dữ liệu trả về nếu cần
+                    console.log('Cart item quantity updated:', data);
+                    if (data && data.quantity === 0) {
+                        // Remove if quantity equal to 0
+                        fetch(`/api/delete-cart-item/${cartDetailId}/`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': getCookie('csrftoken') // Lấy CSRF token từ cookie
+                            }
+                        })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Failed to delete cart item');
+                                }
+                                // Xóa thành công, có thể thực hiện các hành động cần thiết (ví dụ: cập nhật giao diện người dùng)
+                            })
+                            .catch(error => {
+                                console.error('Error deleting cart item:', error);
+                                // Xử lý lỗi nếu cần
+                            });
+                        // Remove if quantity equal to 0
+                        const foundProductIndex = products.findIndex(item => item.product && item.product.product_id == data.product.product_id);
+                        if (foundProductIndex !== -1) {
+                            products[foundProductIndex].quantity = data.quantity;
+                            console.log("🚀 ~ products:", products);
+                        }
+
+                        $(`.product_id-${data.product.product_id}`).remove();
+                    } else {
+                        const foundProduct = products.find(item => item.product && item.product.product_id == data.product.product_id);
+                        if (foundProduct) {
+                            foundProduct.quantity = data.quantity;
+                            console.log("🚀 ~ products:", products);
+                        }
+                    }
+
+                    // Ví dụ: Cập nhật giao diện người dùng để hiển thị số lượng mới
+                    let totalAmount = countTotalBill(products);
+
+                    var totalAmountDiv = document.getElementById('total-amount');
+                    var totalAmountProduct = document.getElementById('total-amount-product');
+                    totalAmountDiv.innerHTML = convertToVND(parseFloat(totalAmount));
+                    totalAmountProduct.innerHTML = convertToVND(parseFloat(totalAmount));
+
+                    let totalQuantity = countTotalItems(products);
+                    var totalQuantityProduct = document.getElementById('cart-item-count');
+                    var totalItems = document.querySelector('.total-item-cart-quantity');
+
+                    totalQuantityProduct.innerHTML = totalQuantity;
+                    totalItems.innerHTML = `Giỏ hàng - ${totalQuantity} Sản phẩm`
+                })
+                .catch(error => {
+                    console.error('Error updating cart item quantity:', error);
+                    // Xử lý lỗi nếu cần
+                });
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Kiểm tra xem cookie có tên là name= không
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    -->
+</body>
+
+</html>

@@ -551,4 +551,124 @@ async function getAllProductsWithImages() {
     });
   }
   
+
+ZALOPAY_KEY_1='sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn'
+ZALOPAY_APP_ID=2554
+ZALOPAY_CALLBACK_URL='https://c056-2405-4802-90a4-50f0-64ee-63ac-8d18-fd9.ngrok-free.app/api/payment-status/'
+
+const generateAppTransId = (orderId, createdAt) => {
+  return `${createdAt.format('YYMMDD')}_${orderId}`
+};
+
+const generateCreatedAt = () => {
+  return moment().utcOffset(420);
+};
+
+const generateEmbedData = (provider) => {
+  const preferredPaymentMethod = [];
+//   switch (provider) {
+//     case ZalopaySupportedProvider.DOMESTIC_CARD:
+//       preferredPaymentMethod.push('domestic_card', 'account');
+//       break;
+//     case ZalopaySupportedProvider.WALLET:
+//       preferredPaymentMethod.push('zalopay_wallet');
+//       break;
+//     case ZalopaySupportedProvider.VIETQR:
+//       preferredPaymentMethod.push('vietqr');
+//       break;
+//     case ZalopaySupportedProvider.INTERNATIONAL_CARD:
+//       preferredPaymentMethod.push('international_card');
+//       break;
+//     case ZalopaySupportedProvider.ZALOPAY_GATEWAY:
+//     default:
+//       break;
+//   }
+  const embedData = {
+    preferred_payment_method: preferredPaymentMethod,
+    redirecturl: 'https://c056-2405-4802-90a4-50f0-64ee-63ac-8d18-fd9.ngrok-free.app/order/payment/success'
+  };
+  return JSON.stringify(embedData);
+};
+
+const generateItemData = (items) => {
+  return JSON.stringify(items || []);
+};
+
+const generateMacForOrderCreation = (payload) => {
+  const payloadData = [
+    payload.app_id.toString(),
+    payload.app_trans_id,
+    payload.app_user,
+    payload.amount.toString(),
+    payload.app_time.toString(),
+    payload.embed_data,
+    payload.item
+  ].filter(value => value !== undefined && value !== null && value !== "");
   
+  return hashMacByKey1(payloadData.join('|'));
+};
+
+
+// const generateMacForOrderCreation = (payload) => {
+//   const payloadData = remove(Array.of(payload.app_id.toString(),
+//     payload.app_trans_id,
+//     payload.app_user,
+//     payload.amount.toString(),
+//     payload.app_time.toString(),
+//     payload.embed_data,
+//     payload.item), value => value);
+//   return hashMacByKey1(join(payloadData, '|'));
+// };
+
+const hashMacByKey1 = (data) => {
+  return hashMac(ZALOPAY_KEY_1, data);
+};
+
+const hashMac = (key, data) => {
+    const hmac = CryptoJS.HmacSHA256(data, key);
+    const mac = hmac.toString(CryptoJS.enc.Hex);
+    return mac;
+};
+
+// Create Order ZaloPay:
+function createOrder({
+    customerFullName,
+    totalAmount,
+    order,
+    providerId,
+    items,
+  }) {
+    const createdTime = generateCreatedAt();
+    console.log("🚀 ~ createdTime:", createdTime)
+    const payload = {
+      key1: ZALOPAY_KEY_1,
+      app_id: parseInt(ZALOPAY_APP_ID),
+      app_user: customerFullName,
+      app_time: createdTime.valueOf(),
+      app_trans_id: generateAppTransId(order.id, createdTime),
+      amount: totalAmount,
+      bank_code: "",
+      embed_data: generateEmbedData(providerId),
+      item: generateItemData(items),
+      description: `DoubleTBad - Thanh toán đơn hàng #${order.displayId}`,
+      callback_url: ZALOPAY_CALLBACK_URL,
+    };
+    payload.mac = generateMacForOrderCreation(payload);
+    console.log("🚀 ~ payload:", payload)
+
+    fetch('https://sb-openapi.zalopay.vn/v2/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Processed image:', data);
+        setResponseData(data);
+      })
+      .catch(error => {
+        console.error('Error when processing image:', error);
+      })
+  }

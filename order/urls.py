@@ -22,4 +22,8 @@ urlpatterns = [
     path('order-details/<int:pk>/', OrderDetailDetailView.as_view(), name='order-detail-detail'),
     path('update-cart-item-quantity/<int:cart_detail_id>/', views.update_cart_item_quantity, name='update-cart-item-quantity'),
     path('delete-cart-item/<int:cart_detail_id>/', views.delete_cart_item, name='delete-cart-item'),
+    
+    path('get-csrf-token/', views.get_csrf_token, name='get_csrf_token'),
+    path('payment-status/', views.payment_status, name='payment_status'),
+    path('process-payment/', views.process_payment, name='process_payment'),
 ]

@@ -1,126 +1,136 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="icon" href="{% static 'img/logo.png' %}" type="image/x-icon" />
-    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/products.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/cart.css' %}">
-    <link rel="stylesheet" href="{% static '/font/themify-icons-font/themify-icons.css' %}">
-    <link rel="stylesheet" href="{% static 'font/fontawesome/css/all.css' %}">
-    <title>DoubleT Bad | Giỏ hàng</title>
-  </head>
-  <body>
-    <!-- Navbar Start -->
-    {% include 'components/navbar.html' %}
-    <!-- Navbar End -->
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Modal Start -->
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="icon" href="{% static 'img/logo.png' %}" type="image/x-icon" />
+  <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/products.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/cart.css' %}">
+  <link rel="stylesheet" href="{% static '/font/themify-icons-font/themify-icons.css' %}">
+  <link rel="stylesheet" href="{% static 'font/fontawesome/css/all.css' %}">
+  <title>DoubleT Bad | Giỏ hàng</title>
+</head>
 
-    {% include 'components/loginForm.html' %}
+<body>
+  <!-- Navbar Start -->
+  {% include 'components/navbar.html' %}
+  <!-- Navbar End -->
 
-    {% include 'components/registerForm.html' %}
+  <!-- Modal Start -->
 
-    <!-- Modal End -->
-    
-    <!-- Cart Start -->
-    <section class="h-100 gradient-custom mt-5">
-      <div class="container py-5">
-        <div class="row d-flex justify-content-center my-4">
-          <div class="col-md-8">
-            <div class="card mb-4">
-              <div class="card-header py-3">
-                <h5 class="total-item-cart-quantity mb-0">Giỏ hàng - {{ cart.total_quantity }} Sản phẩm</h5>
-              </div>
-              <div id="productContainer" class="card-body"></div>
+  {% include 'components/loginForm.html' %}
+
+  {% include 'components/registerForm.html' %}
+
+  <!-- Modal End -->
+
+  <!-- Cart Start -->
+  <section class="h-100 gradient-custom mt-5">
+    <div class="container py-5">
+      <div class="row d-flex justify-content-center my-4">
+        <div class="col-md-8">
+          <div class="card mb-4">
+            <div class="card-header py-3">
+              <h5 class="total-item-cart-quantity mb-0">Giỏ hàng - {{ cart.total_quantity }} Sản phẩm</h5>
             </div>
-            <div class="card mb-4">
-              <div class="card-body">
-                <p><strong>Thời gian giao dự kiến</strong></p>
-                <p class="mb-0">12.10.2024 - 14.10.2024</p>
-              </div>
-            </div>
-            <div class="card mb-4 mb-lg-0">
-              <div class="card-body">
-                <p><strong>Chấp nhận thanh toán</strong></p>
-                <img class="me-2" width="45px"
-                  src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/visa.svg"
-                  alt="Visa" />
-                <img class="me-2" width="45px"
-                  src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/amex.svg"
-                  alt="American Express" />
-                <img class="me-2" width="45px"
-                  src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/mastercard.svg"
-                  alt="Mastercard" />
-                <img class="me-2" width="45px"
-                  src="https://vcci-hcm.org.vn/wp-content/uploads/2022/12/1.png"
-                  alt="ZaloPay acceptance mark" />
-              </div>
+            <div id="productContainer" class="card-body"></div>
+          </div>
+          <div class="card mb-4">
+            <div class="card-body">
+              <p><strong>Thời gian giao dự kiến</strong></p>
+              <p class="mb-0">12.10.2024 - 14.10.2024</p>
             </div>
           </div>
-          <div class="col-md-4">
-            <div class="card mb-4">
-              <div class="card-header py-3">
-                <h5 class="mb-0">Chi tiết</h5>
-              </div>
-              <div class="card-body">
-                <ul class="list-group list-group-flush">
-                  <li
-                    class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-                    Sản phẩm
-                    <span id="total-amount-product"></span>
-                  </li>
-                  <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                    Phí Ship
-                    <span>Gratis</span>
-                  </li>
-                  <li
-                    class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
-                    <div>
-                      <strong>Tổng cộng</strong>
-                      <strong>
-                        <p class="mb-0">(đã bao gồm thuế VAT)</p>
-                      </strong>
-                    </div>
-                    <span><strong id="total-amount"></strong></span>
-                  </li>
-                </ul>
-    
-                <button type="button" class="btn btn-primary btn-lg btn-block">
-                  Thanh toán
-                </button>
-              </div>
+          <div class="card mb-4 mb-lg-0">
+            <div class="card-body">
+              <p><strong>Chấp nhận thanh toán</strong></p>
+              <img class="me-2" width="45px"
+                src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/visa.svg"
+                alt="Visa" />
+              <img class="me-2" width="45px"
+                src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/amex.svg"
+                alt="American Express" />
+              <img class="me-2" width="45px"
+                src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/mastercard.svg"
+                alt="Mastercard" />
+              <img class="me-2" width="45px" src="https://vcci-hcm.org.vn/wp-content/uploads/2022/12/1.png"
+                alt="ZaloPay acceptance mark" />
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card mb-4">
+            <div class="card-header py-3">
+              <h5 class="mb-0">Chi tiết</h5>
+            </div>
+            <div class="card-body">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                  Sản phẩm
+                  <span id="total-amount-product"></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                  Phí Ship
+                  <span>Gratis</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                  <div>
+                    <strong>Tổng cộng</strong>
+                    <strong>
+                      <p class="mb-0">(đã bao gồm thuế VAT)</p>
+                    </strong>
+                  </div>
+                  <span><strong id="total-amount"></strong></span>
+                </li>
+              </ul>
+
+              <button type="button" class="btn btn-primary btn-lg btn-block" onclick="processPayment()">
+                Thanh toán
+              </button>
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Cart End -->
+  <!-- Cart End -->
 
-    {% include 'components/footer.html' %}
+  {% include 'components/footer.html' %}
 
-    <!-- Optional JavaScript; choose one of the two! -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="{% static 'js/main.js' %}"></script>
-    <script>
-      let products = []
+  <!-- Optional JavaScript; choose one of the two! -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/core.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/enc-base64.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/enc-utf8.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/hmac.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/md5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/sha256.js"></script>
+  <script src="https://momentjs.com/downloads/moment.js"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+  <script>
 
-      function convertToVND(money) {
-        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(money);
-      }
+    let products = []
 
-       // Function to generate HTML code based on product data
-       function generateProductHTML(product) {
-        console.log("🚀 ~ product:", product.product.product_id)
-        return `
+    function convertToVND(money) {
+      return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(money);
+    }
+
+    // Function to generate HTML code based on product data
+    function generateProductHTML(product) {
+      console.log("🚀 ~ product:", product.product.product_id)
+      return `
             <div class="product_id-${product.product.product_id}">
               <div class="row">
                 <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
@@ -178,14 +188,33 @@
             </div>
         `;
     }
-    
+
 
     // Function to render product HTML in the container
     function renderProductHTML(productData) {
-        var productContainer = document.getElementById('productContainer');
-        productData.forEach(function(product) {
-            productContainer.innerHTML += generateProductHTML(product);
-        });
+      var productContainer = document.getElementById('productContainer');
+      productData.forEach(function (product) {
+        productContainer.innerHTML += generateProductHTML(product);
+      });
+    }
+
+    function processPayment() {
+      fetch('/api/process-payment/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify('payload'),
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Processed payment:', data);
+          window.location.href = data.order_url;
+        })
+        .catch(error => {
+          console.error('Error when processing image:', error);
+        })
     }
 
     // Call the function to render product HTML
@@ -194,135 +223,135 @@
     document.addEventListener('DOMContentLoaded', function () {
       var cart_id = "{{ cart.cart_id }}";
       console.log("🚀 ~ cart_id:", cart_id);
-  
+
       // Fetch cart details and use the data
       fetchCartDetails(cart_id)
-          .then(data => {
-              console.log("🚀 ~ fetchCartDetails(cart_id):", data);
-              products = data;
-              renderProductHTML(data);
-              
-              let totalAmount = countTotalBill(data);
+        .then(data => {
+          console.log("🚀 ~ fetchCartDetails(cart_id):", data);
+          products = data;
+          renderProductHTML(data);
 
-              var totalAmountDiv = document.getElementById('total-amount');
-              var totalAmountProduct = document.getElementById('total-amount-product');
-              totalAmountDiv.innerHTML += convertToVND(parseFloat(totalAmount));
-              totalAmountProduct.innerHTML += convertToVND(parseFloat(totalAmount));
+          let totalAmount = countTotalBill(data);
 
-              // Lắng nghe sự kiện click của các nút tăng/giảm và cập nhật giá trị của ô input
-              document.querySelectorAll('.btn-plus').forEach(btnPlus => {
-                btnPlus.addEventListener('click', event => {
-                    const input = event.target.parentNode.querySelector('input[type=number]');
-                    if (input) {
-                        input.stepUp();
-                        input.dispatchEvent(new Event('input')); // Gửi sự kiện input để cập nhật giá trị
-                    }
-                });
-              });
+          var totalAmountDiv = document.getElementById('total-amount');
+          var totalAmountProduct = document.getElementById('total-amount-product');
+          totalAmountDiv.innerHTML += convertToVND(parseFloat(totalAmount));
+          totalAmountProduct.innerHTML += convertToVND(parseFloat(totalAmount));
 
-              document.querySelectorAll('.btn-minus').forEach(btnMinus => {
-                  btnMinus.addEventListener('click', event => {
-                      const input = event.target.parentNode.querySelector('input[type=number]');
-                      if (input) {
-                          input.stepDown();
-                          input.dispatchEvent(new Event('input')); // Gửi sự kiện input để cập nhật giá trị
-                      }
-                  });
-              });
-            
-              // Lắng nghe sự kiện input của ô input và gọi hàm cập nhật số lượng
-              document.querySelectorAll('.product-quantity').forEach(input => {
-                input.addEventListener('input', event => {
-                    const cartProductId = event.target.dataset.cartProductId;
-                    const quantity = event.target.value;
-                    updateCartItemQuantity(cartProductId, quantity);
-                });
-              });
-              // Continue with other tasks as needed
-              // fetchCart();
-          })
-          .catch(error => {
-              // Handle the error if necessary
-              console.error('Error fetching cart details:', error);
+          // Lắng nghe sự kiện click của các nút tăng/giảm và cập nhật giá trị của ô input
+          document.querySelectorAll('.btn-plus').forEach(btnPlus => {
+            btnPlus.addEventListener('click', event => {
+              const input = event.target.parentNode.querySelector('input[type=number]');
+              if (input) {
+                input.stepUp();
+                input.dispatchEvent(new Event('input')); // Gửi sự kiện input để cập nhật giá trị
+              }
+            });
           });
-      
+
+          document.querySelectorAll('.btn-minus').forEach(btnMinus => {
+            btnMinus.addEventListener('click', event => {
+              const input = event.target.parentNode.querySelector('input[type=number]');
+              if (input) {
+                input.stepDown();
+                input.dispatchEvent(new Event('input')); // Gửi sự kiện input để cập nhật giá trị
+              }
+            });
+          });
+
+          // Lắng nghe sự kiện input của ô input và gọi hàm cập nhật số lượng
+          document.querySelectorAll('.product-quantity').forEach(input => {
+            input.addEventListener('input', event => {
+              const cartProductId = event.target.dataset.cartProductId;
+              const quantity = event.target.value;
+              updateCartItemQuantity(cartProductId, quantity);
+            });
+          });
+          // Continue with other tasks as needed
+          // fetchCart();
+        })
+        .catch(error => {
+          // Handle the error if necessary
+          console.error('Error fetching cart details:', error);
+        });
+
       var priceElements = document.querySelectorAll('.convert-to-vnd');
-      priceElements.forEach(function(element) {
-          var priceValue = element.innerHTML.trim();
-          var convertedValue = convertToVND(parseFloat(priceValue));
-          element.innerHTML = convertedValue;
+      priceElements.forEach(function (element) {
+        var priceValue = element.innerHTML.trim();
+        var convertedValue = convertToVND(parseFloat(priceValue));
+        element.innerHTML = convertedValue;
       });
     });
 
     // Hàm để gọi API cập nhật số lượng
     function updateCartItemQuantity(cartDetailId, newQuantity) {
-        // Tạo một đối tượng chứa dữ liệu cần gửi
-        const data = {
-            quantity: newQuantity
-        };
-        console.log("🚀 ~ data:", data)
+      // Tạo một đối tượng chứa dữ liệu cần gửi
+      const data = {
+        quantity: newQuantity
+      };
+      console.log("🚀 ~ data:", data)
 
-        // Gửi request PUT đến endpoint update-cart-item-quantity/<cart_detail_id>/
-        fetch(`/api/update-cart-item-quantity/${cartDetailId}/`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')  // Lấy CSRF token từ cookie
-            },
-            body: JSON.stringify(data)
-        })
+      // Gửi request PUT đến endpoint update-cart-item-quantity/<cart_detail_id>/
+      fetch(`/api/update-cart-item-quantity/${cartDetailId}/`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken')  // Lấy CSRF token từ cookie
+        },
+        body: JSON.stringify(data)
+      })
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to update cart item quantity');
-            }
-            return response.json();
+          if (!response.ok) {
+            throw new Error('Failed to update cart item quantity');
+          }
+          return response.json();
         })
         .then(data => {
-            // Xử lý dữ liệu trả về nếu cần
-            console.log('Cart item quantity updated:', data);
-            if (data && data.quantity === 0) {
-              // Remove if quantity equal to 0
-              fetch(`/api/delete-cart-item/${cartDetailId}/`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken') // Lấy CSRF token từ cookie
-                }
-              })
+          // Xử lý dữ liệu trả về nếu cần
+          console.log('Cart item quantity updated:', data);
+          if (data && data.quantity === 0) {
+            // Remove if quantity equal to 0
+            fetch(`/api/delete-cart-item/${cartDetailId}/`, {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken') // Lấy CSRF token từ cookie
+              }
+            })
               .then(response => {
-                  if (!response.ok) {
-                      throw new Error('Failed to delete cart item');
-                  }
-                  // Xóa thành công, có thể thực hiện các hành động cần thiết (ví dụ: cập nhật giao diện người dùng)
+                if (!response.ok) {
+                  throw new Error('Failed to delete cart item');
+                }
+                // Xóa thành công, có thể thực hiện các hành động cần thiết (ví dụ: cập nhật giao diện người dùng)
               })
               .catch(error => {
-                  console.error('Error deleting cart item:', error);
-                  // Xử lý lỗi nếu cần
+                console.error('Error deleting cart item:', error);
+                // Xử lý lỗi nếu cần
               });
-              // Remove if quantity equal to 0
-              const foundProductIndex = products.findIndex(item => item.product && item.product.product_id == data.product.product_id);
-              if (foundProductIndex !== -1) {
-                  products[foundProductIndex].quantity = data.quantity;
-                  console.log("🚀 ~ products:", products);
-              }
-          
-              $(`.product_id-${data.product.product_id}`).remove();
+            // Remove if quantity equal to 0
+            const foundProductIndex = products.findIndex(item => item.product && item.product.product_id == data.product.product_id);
+            if (foundProductIndex !== -1) {
+              products[foundProductIndex].quantity = data.quantity;
+              console.log("🚀 ~ products:", products);
+            }
+
+            $(`.product_id-${data.product.product_id}`).remove();
           } else {
-              const foundProduct = products.find(item => item.product && item.product.product_id == data.product.product_id);
-              if (foundProduct) {
-                  foundProduct.quantity = data.quantity;
-                  console.log("🚀 ~ products:", products);
-              }
+            const foundProduct = products.find(item => item.product && item.product.product_id == data.product.product_id);
+            if (foundProduct) {
+              foundProduct.quantity = data.quantity;
+              console.log("🚀 ~ products:", products);
+            }
           }
-          
+
           // Ví dụ: Cập nhật giao diện người dùng để hiển thị số lượng mới
           let totalAmount = countTotalBill(products);
-          
+
           var totalAmountDiv = document.getElementById('total-amount');
           var totalAmountProduct = document.getElementById('total-amount-product');
           totalAmountDiv.innerHTML = convertToVND(parseFloat(totalAmount));
           totalAmountProduct.innerHTML = convertToVND(parseFloat(totalAmount));
-          
+
           let totalQuantity = countTotalItems(products);
           var totalQuantityProduct = document.getElementById('cart-item-count');
           var totalItems = document.querySelector('.total-item-cart-quantity');
@@ -331,34 +360,37 @@
           totalItems.innerHTML = `Giỏ hàng - ${totalQuantity} Sản phẩm`
         })
         .catch(error => {
-            console.error('Error updating cart item quantity:', error);
-            // Xử lý lỗi nếu cần
+          console.error('Error updating cart item quantity:', error);
+          // Xử lý lỗi nếu cần
         });
     }
 
     function getCookie(name) {
       let cookieValue = null;
       if (document.cookie && document.cookie !== '') {
-          const cookies = document.cookie.split(';');
-          for (let i = 0; i < cookies.length; i++) {
-              const cookie = cookies[i].trim();
-              // Kiểm tra xem cookie có tên là name= không
-              if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                  break;
-              }
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          // Kiểm tra xem cookie có tên là name= không
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
           }
+        }
       }
       return cookieValue;
     }
-    </script>
-    <!-- Option 1: Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  </script>
+  <!-- Option 1: Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
 
-    <!-- Option 2: Separate Popper and Bootstrap JS -->
-    <!--
+  <!-- Option 2: Separate Popper and Bootstrap JS -->
+  <!--
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
     -->
-  </body>
+</body>
+
 </html>

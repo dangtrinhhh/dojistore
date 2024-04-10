@@ -151,6 +151,8 @@
     <!-- Optional JavaScript; choose one of the two! -->
     <script src="{% static 'js/main.js' %}"></script>
     <script>
+      const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+    
       document.addEventListener('DOMContentLoaded', async function () {
         const is_staff = "{{ is_staff }}";
         
