@@ -28,7 +28,7 @@ DEBUG = True
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'c056-2405-4802-90a4-50f0-64ee-63ac-8d18-fd9.ngrok-free.app']
 ALLOWED_HOSTS = ['*']
 # ALLOWED_HOSTS = [".awsapprunner.com"]
-CSRF_TRUSTED_ORIGINS = ['https://c056-2405-4802-90a4-50f0-64ee-63ac-8d18-fd9.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS = ['https://7166-2405-4802-90a4-50f0-edb2-3867-9f02-35a7.ngrok-free.app/']
 
 # Application definition
 

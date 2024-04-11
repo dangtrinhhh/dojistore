@@ -274,7 +274,7 @@ def process_payment(request):
         "embed_data": json.dumps({}),
         "item": json.dumps([{}]),
         "amount": 50000,
-        "description": "DoubleTBad - Thanh toán đơn hàng #"+str(transID),
+        "description": "DoubleTBad - Thanh toán đơn hàng #" + str(transID),
         "bank_code": "zalopayapp",
         "callback_url": ZALOPAY_CALLBACK_URL,
     }

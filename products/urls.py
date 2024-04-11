@@ -40,6 +40,7 @@ urlpatterns = [
     path('updateprofile', views.updateprofile, name='updateprofile'),
     path('loading', views.loading, name='loading'),
     path('cart', views.cart, name='cart'),
+    path('orders', views.orders, name='orders'),
     path('order/history', views.orderHistory, name='orderHistory'),
     path('order/details', views.orderDetails, name='orderDetails'),
     path('order/payment', views.payment, name='payment'),

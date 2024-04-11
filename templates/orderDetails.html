@@ -1,120 +1,210 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="icon" href="{% static 'img/logo.png' %}" type="image/x-icon" />
-    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/products.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/cart.css' %}">
-    <link rel="stylesheet" href="{% static '/font/themify-icons-font/themify-icons.css' %}">
-    <link rel="stylesheet" href="{% static 'font/fontawesome/css/all.css' %}">
-    <title>DoubleT Bad | Chi tiết đơn hàng</title>
-  </head>
-  <body>
-    <!-- Navbar Start -->
-    {% include 'components/navbar.html' %}
-    <!-- Navbar End -->
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Chatbot Button Start -->
-    <!-- <button class="cart-btn btn-outline-primary border-2">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="icon" href="{% static 'img/logo.png' %}" type="image/x-icon" />
+  <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/products.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/cart.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/orderDetails.css' %}">
+  <link rel="stylesheet" href="{% static '/font/themify-icons-font/themify-icons.css' %}">
+  <link rel="stylesheet" href="{% static 'font/fontawesome/css/all.css' %}">
+  <title>DoubleT Bad | Chi tiết đơn hàng</title>
+</head>
+
+<body>
+  <!-- Navbar Start -->
+  {% include 'components/navbar.html' %}
+  <!-- Navbar End -->
+
+  <!-- Chatbot Button Start -->
+  <!-- <button class="cart-btn btn-outline-primary border-2">
       <a class="shopping-bag-icon m-auto" href="/cart">
           <i class="fa fa-comments greentea-color"></i>
       </a>
     </button> -->
-    <!-- Chatbot Button End -->
+  <!-- Chatbot Button End -->
 
-    <!-- Modal Start -->
+  <!-- Modal Start -->
 
-    {% include 'components/loginForm.html' %}
+  {% include 'components/loginForm.html' %}
 
-    {% include 'components/registerForm.html' %}
+  {% include 'components/registerForm.html' %}
 
-    <!-- Modal End -->
-    
-    <section class="vh-100" style="background-color: #8c9eff;">
-        <div class="container py-5 h-100">
-          <div class="row d-flex justify-content-center align-items-center h-100">
-            <div class="col-12">
-              <div class="card card-stepper text-black" style="border-radius: 16px;">
-      
-                <div class="card-body p-5">
-      
-                  <div class="d-flex justify-content-between align-items-center mb-5">
-                    <div>
-                      <h5 class="mb-0">Hóa đơn <span class="text-primary font-weight-bold">#Y34XDHR</span></h5>
-                    </div>
-                    <div class="text-end">
-                      <p class="mb-0">Ngày gia dự kiến <span>01/12/19</span></p>
-                      <p class="mb-0">USPS <span class="font-weight-bold">234094567242423422898</span></p>
-                    </div>
-                  </div>
-      
-                  <ul id="progressbar-2" class="d-flex justify-content-between mx-0 mt-0 mb-5 px-0 pt-0 pb-2">
-                    <li class="step0 active text-center" id="step1"></li>
-                    <li class="step0 active text-center" id="step2"></li>
-                    <li class="step0 active text-center" id="step3"></li>
-                    <li class="step0 text-muted text-end" id="step4"></li>
-                  </ul>
-      
-                  <div class="d-flex justify-content-between">
-                    <div class="d-lg-flex align-items-center">
-                      <i class="fas fa-clipboard-list fa-3x me-lg-4 mb-3 mb-lg-0"></i>
-                      <div>
-                        <p class="fw-bold mb-1">Đơn hàng</p>
-                        <p class="fw-bold mb-0">Đã xử lý</p>
-                      </div>
-                    </div>
-                    <div class="d-lg-flex align-items-center">
-                      <i class="fas fa-box-open fa-3x me-lg-4 mb-3 mb-lg-0"></i>
-                      <div>
-                        <p class="fw-bold mb-1">Đơn hàng</p>
-                        <p class="fw-bold mb-0">Đã gửi</p>
-                      </div>
-                    </div>
-                    <div class="d-lg-flex align-items-center">
-                      <i class="fas fa-shipping-fast fa-3x me-lg-4 mb-3 mb-lg-0"></i>
-                      <div>
-                        <p class="fw-bold mb-1">Đơn hàng</p>
-                        <p class="fw-bold mb-0">Đang vận chuyển</p>
-                      </div>
-                    </div>
-                    <div class="d-lg-flex align-items-center">
-                      <i class="fas fa-home fa-3x me-lg-4 mb-3 mb-lg-0"></i>
-                      <div>
-                        <p class="fw-bold mb-1">Đơn hàng</p>
-                        <p class="fw-bold mb-0">Đã giao</p>
-                      </div>
-                    </div>
-                  </div>
-      
-                </div>
-      
+  <!-- Modal End -->
+
+  <section class="h-100 gradient-custom">
+    <div class="container container-section py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-lg-10 col-xl-8">
+          <div class="card" style="border-radius: 10px;">
+            <div class="card-header px-4 py-5">
+              <h5 class="text-muted mb-0">Cảm ơn vì đã đặt hàng, <span style="color: #3c6fdc;">{{ user.username }}</span>!</h5>
+            </div>
+            <div class="card-body p-4">
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <p class="lead fw-normal mb-0" style="color: #3c6fdc;">Đơn hàng</p>
+                <p class="small text-muted mb-0">Mã đơn hàng : 1KAU9-84UIL</p>
               </div>
+
+              <div id="product-section"></div>
+              <!-- <div class="card shadow-0 border mb-4">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-2">
+                      <img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Products/13.webp"
+                        class="img-fluid" alt="Phone">
+                    </div>
+                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                      <p class="text-muted mb-0">Samsung Galaxy</p>
+                    </div>
+                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                      <p class="text-muted mb-0 small">White</p>
+                    </div>
+                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                      <p class="text-muted mb-0 small">Capacity: 64GB</p>
+                    </div>
+                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                      <p class="text-muted mb-0 small">Qty: 1</p>
+                    </div>
+                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                      <p class="text-muted mb-0 small">$499</p>
+                    </div>
+                  </div>
+                  <hr class="mb-4" style="background-color: #e0e0e0; opacity: 1;">
+                  <div class="row d-flex align-items-center">
+                    <div class="col-md-2">
+                      <p class="text-muted mb-0 small">Đã nhận đơn</p>
+                    </div>
+                    <div class="col-md-10">
+                      <div class="progress" style="height: 6px; border-radius: 16px;">
+                        <div class="progress-bar" role="progressbar"
+                          style="width: 65%; border-radius: 16px; background-color: #3c6fdc;" aria-valuenow="65"
+                          aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                      <div class="d-flex justify-content-around mb-1">
+                        <p class="text-muted mt-1 mb-0 small ms-xl-5">Đang giao hàng</p>
+                        <p class="text-muted mt-1 mb-0 small ms-xl-5">Đã giao</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div> -->
+
+              <div class="d-flex justify-content-between pt-2">
+                <p class="fw-bold mb-0">Chi tiết đơn hàng</p>
+                <p class="text-muted mb-0"><span class="fw-bold me-4">Tổng cộng</span><span class="total-amount convert-to-vnd"></span></p>
+              </div>
+
+              <div class="d-flex justify-content-between pt-2">
+                <p class="text-muted mb-0">Mã đơn hàng : 788152</p>
+                <p class="text-muted mb-0"><span class="fw-bold me-4">Giảm giá</span> 0 ₫ </p>
+              </div>
+
+              <div class="d-flex justify-content-between">
+                <p class="text-muted mb-0">Ngày nhận đơn : 22 Dec,2023</p>
+                <p class="text-muted mb-0"><span class="fw-bold me-4">Phí giao hàng</span> Free</p>
+              </div>
+
+            </div>
+            <div class="card-footer border-0 px-4 py-5"
+              style="background-color: #3c6fdc; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+              <h5 class="d-flex align-items-center justify-content-end text-white text-uppercase mb-0">Total
+                paid: <span class="h2 mb-0 ms-2 total-amount"></span></h5>
             </div>
           </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <!-- Footer Start -->
-    {% include 'components/footer.html' with blogs=blogs %}
-    <!-- Footer End -->
+  <!-- Footer Start -->
+  {% include 'components/footer.html' with blogs=blogs %}
+  <!-- Footer End -->
 
-    <!-- Optional JavaScript; choose one of the two! -->
-    <script src="{% static 'js/main.js' %}"></script>
-    <!-- Option 1: Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <!-- Optional JavaScript; choose one of the two! -->
+  <script src="{% static 'js/main.js' %}"></script>
+  <!-- Option 1: Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
 
-    <!-- Option 2: Separate Popper and Bootstrap JS -->
-    <!--
+  <!-- Option 2: Separate Popper and Bootstrap JS -->
+  <!--
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
     -->
-  </body>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var cart_id = "{{ cart.cart_id }}";
+      console.log("🚀 ~ cart_id:", cart_id);
+
+      // Fetch cart details and use the data
+      fetchCartDetails(cart_id)
+        .then(data => {
+          console.log("🚀 ~ fetchCartDetails(cart_id):", data);
+          
+          // Show products
+          products = data;
+          const productsContainer = generateProductCards(products);
+          var productSection = document.getElementById('product-section');
+          productSection.appendChild(productsContainer);
+
+
+          let totalAmount = countTotalBill(data);
+
+          var totalAmountDiv = document.querySelectorAll('.total-amount');
+          // var totalAmountProduct = document.getElementById('total-amount-product');
+          totalAmountDiv.forEach(item => item.innerHTML += convertToVND(parseFloat(totalAmount)));
+          // totalAmountProduct.innerHTML += convertToVND(parseFloat(totalAmount));
+
+          // Lắng nghe sự kiện click của các nút tăng/giảm và cập nhật giá trị của ô input
+          document.querySelectorAll('.btn-plus').forEach(btnPlus => {
+            btnPlus.addEventListener('click', event => {
+              const input = event.target.parentNode.querySelector('input[type=number]');
+              if (input) {
+                input.stepUp();
+                input.dispatchEvent(new Event('input')); // Gửi sự kiện input để cập nhật giá trị
+              }
+            });
+          });
+
+          document.querySelectorAll('.btn-minus').forEach(btnMinus => {
+            btnMinus.addEventListener('click', event => {
+              const input = event.target.parentNode.querySelector('input[type=number]');
+              if (input) {
+                input.stepDown();
+                input.dispatchEvent(new Event('input')); // Gửi sự kiện input để cập nhật giá trị
+              }
+            });
+          });
+
+          // Lắng nghe sự kiện input của ô input và gọi hàm cập nhật số lượng
+          document.querySelectorAll('.product-quantity').forEach(input => {
+            input.addEventListener('input', event => {
+              const cartProductId = event.target.dataset.cartProductId;
+              const quantity = event.target.value;
+              updateCartItemQuantity(cartProductId, quantity);
+            });
+          });
+          // Continue with other tasks as needed
+          // fetchCart();
+        })
+        .catch(error => {
+          // Handle the error if necessary
+          console.error('Error fetching cart details:', error);
+        });
+    });
+  </script>
+</body>
+
 </html>

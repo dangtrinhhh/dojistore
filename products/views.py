@@ -352,11 +352,22 @@ def cart(request):
         cart, created = Carts.objects.get_or_create(user=user_profile)
     return render(request, 'cart.html', {'cart': cart, 'blogs': blogs})
 
+
+def orders(request):
+    return render(request, 'orders.html', {})
+
 def orderHistory(request):
     return render(request, 'orderHistory.html', {})
 
 def orderDetails(request):
-    return render(request, 'orderDetails.html', {})
+    user = request.user
+    print(user)
+    cart = None
+    if user.is_authenticated:
+        user_profile, created = Users.objects.get_or_create(user=user)
+        cart, created = Carts.objects.get_or_create(user=user_profile)
+
+    return render(request, 'orderDetails.html', {'user': user, 'cart': cart})
 
 def payment(request):
     return render(request, 'payment.html', {})
