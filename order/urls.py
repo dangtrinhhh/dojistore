@@ -15,6 +15,7 @@ urlpatterns = [
     path('cart-details/', CartDetailListCreateView.as_view(), name='cart-detail-list-create'),
     path('cart-details/<int:pk>/', CartDetailDetailView.as_view(), name='cart-detail-detail'),
 
+    path('create-order/', views.create_order, name='create-order'),
     path('orders/', OrderListCreateView.as_view(), name='order-list-create'),
     path('orders/<int:pk>/', OrderDetailView.as_view(), name='order-detail'),
 

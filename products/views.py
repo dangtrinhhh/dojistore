@@ -349,8 +349,10 @@ def cart(request):
     cart = None
     if user.is_authenticated:
         user_profile, created = Users.objects.get_or_create(user=user)
+        user = user_profile.user
         cart, created = Carts.objects.get_or_create(user=user_profile)
-    return render(request, 'cart.html', {'cart': cart, 'blogs': blogs})
+    print(user)
+    return render(request, 'cart.html', {'user': user, 'cart': cart, 'blogs': blogs})
 
 
 def orders(request):

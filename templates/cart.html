@@ -120,7 +120,7 @@
   <script src="https://momentjs.com/downloads/moment.js"></script>
   <script src="{% static 'js/main.js' %}"></script>
   <script>
-
+    const user = "{{ user }}";
     let products = []
 
     function convertToVND(money) {
@@ -199,6 +199,33 @@
     }
 
     function processPayment() {
+      const orderDetails = products.map(item => {
+        return {
+            product_id: item.product.product_id,
+            quantity: item.quantity,
+            price: item.product.pricesale
+        };
+      });
+
+      const currentDate = new Date();
+
+      const year = currentDate.getFullYear().toString();
+      const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+      const day = currentDate.getDate().toString().padStart(2, '0');
+
+      let username = user.toString().toUpperCase()
+      
+      let order = {
+        "payment_method": "Zalopay",
+        "total_amount": countTotalBill(products),
+        "note": "Please deliver before 5 PM",
+        "status": "pending",
+        "order_details": orderDetails,
+      }
+      // "order_code": `${year}${month}${day}${username}${user.id}`
+      
+      createOrderDoubleTBad(order);
+
       fetch('/api/process-payment/', {
         method: 'POST',
         headers: {
@@ -210,7 +237,7 @@
         .then(response => response.json())
         .then(data => {
           console.log('Processed payment:', data);
-          window.location.href = data.order_url;
+          // window.location.href = data.order_url;
         })
         .catch(error => {
           console.error('Error when processing image:', error);

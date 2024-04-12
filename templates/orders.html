@@ -33,26 +33,39 @@
 
     <!-- Modal End -->
 
-    <!-- Payment Successful Start -->
-    <div class="container" style="width: 100vw; height: 100vh;">
-        <div class="d-flex justify-content-center align-items-center h-100">
-            <div class="row mt-5">
-                <div class="col-lg-12 col-md-6">
-                    <div class="card">
-                        <div class="card-body text-center">
-                            <img style="width: 100px; height: 100px;" src="{% static 'img/payment/payment-success.png' %}" alt="">
-                            <h1 class="card-title mb-4">Thanh toán thành công</h1>
-                            <p class="card-text">Cảm ơn đã lựa chọn DoubleTBad.</p>
-                            <p class="card-text">Đơn hàng của bạn đang được xử lí.</p>
-                            <a href="/order/details" class="btn btn-primary mt-3">Xem chi tiết</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Orders Start -->
 
-    <!-- Payment Successful End -->
+    <table class="table" style="margin-top: 100px;">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">First</th>
+                <th scope="col">Last</th>
+                <th scope="col">Handle</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+            </tr>
+            <tr>
+                <th scope="row">2</th>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>@fat</td>
+            </tr>
+            <tr>
+                <th scope="row">3</th>
+                <td colspan="2">Larry the Bird</td>
+                <td>@twitter</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Orders End -->
 
     {% include 'components/footer.html' %}
 

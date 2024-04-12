@@ -281,6 +281,31 @@ function fetchCartDetails(cartId) {
         });
 }
 
+async function createOrderDoubleTBad(data) {
+    console.log("🚀 ~ data:", data)
+    try {
+        const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+        const response = await fetch('/api/create-order/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+            throw new Error('Error creating order');
+        }
+
+        const responseData = await response.json();
+        console.log('Order created:', responseData);
+        return responseData;
+    } catch (error) {
+        console.error('Error creating order:', error);
+    }
+}
+
 // Hàm fetch đơn hàng
 function fetchOrders() {
     fetch('/orders/', {
@@ -620,13 +645,15 @@ function generateProductCards(products) {
         cardBody.appendChild(row1);
 
         const hr = document.createElement('hr');
+
         if (index === products.length - 1) {
             hr.className = 'mb-4';
-            hr.style.backgroundColor = '#e0e0e0';
         }
+
+        hr.style.backgroundColor = '#e0e0e0';
         hr.style.opacity = '1';
         cardBody.appendChild(hr);
-        
+
         const row2 = document.createElement('div');
         row2.className = 'row d-flex align-items-center';
 
@@ -658,7 +685,7 @@ function generateProductCards(products) {
             progressBarInner.setAttribute('aria-valuemax', '100');
             progressBar.appendChild(progressBarInner);
             progressCol.appendChild(progressBar);
-    
+
             const progressDetails = document.createElement('div');
             progressDetails.className = 'd-flex justify-content-around mb-1';
             const outForDelivery = document.createElement('p');
@@ -795,10 +822,10 @@ function createOrder({
     })
         .then(response => response.json())
         .then(data => {
-            console.log('Processed image:', data);
+            console.log('Create Order:', data);
             setResponseData(data);
         })
         .catch(error => {
-            console.error('Error when processing image:', error);
+            console.error('Error when create order:', error);
         })
 }

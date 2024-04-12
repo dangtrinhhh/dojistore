@@ -94,6 +94,70 @@ def delete_cart_item(request, cart_detail_id):
     cart.save()
 
     return Response({"message": "Cart item deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['POST'])
+def create_order(request):
+    user = request.user
+    if request.method == 'POST':
+        order_data = request.data
+        order_data['user'] = user.id 
+
+        order = Orders()
+        # Gọi hàm generate_order_code từ instance
+        order_data['order_code'] = order.generate_order_code()
+
+        order_serializer = OrderSerializer(data=order_data)
+        if order_serializer.is_valid():
+            order = order_serializer.save()
+
+            # Lấy danh sách chi tiết đơn hàng từ dữ liệu yêu cầu
+            order_details_data = request.data.get('order_details', [])
+            if not isinstance(order_details_data, list):
+                return Response({'error': 'Invalid order details format'}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Tạo serializer cho từng chi tiết đơn hàng và lưu vào cơ sở dữ liệu
+            for detail_data in order_details_data:
+                # Lấy thông tin sản phẩm từ order_details
+                product_id = detail_data.get('product_id')
+                price = detail_data.get('price')
+
+                # Kiểm tra xem product_id có tồn tại không
+                if not product_id:
+                    return Response({'error': 'Product ID is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+                # Kiểm tra xem sản phẩm có tồn tại trong cơ sở dữ liệu không
+                try:
+                    product = Products.objects.get(pk=product_id)
+                except Products.DoesNotExist:
+                    return Response({'error': f'Product with ID {product_id} does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+
+                # Cập nhật detail_data với sản phẩm và order tương ứng
+                detail_data['product'] = product_id
+                detail_data['price'] = price
+                detail_data['order'] = order.pk
+
+                # Tạo serializer cho chi tiết đơn hàng và lưu vào cơ sở dữ liệu
+                detail_serializer = OrderDetailSerializer(data=detail_data)
+                if detail_serializer.is_valid():
+                    detail_serializer.save()
+                else:
+                    return Response(detail_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            return Response(order_serializer.data, status=status.HTTP_201_CREATED)
+    return Response(order_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def order_detail(request, order_id):
+    try:
+        order = Orders.objects.get(order_id=order_id)
+        order_serializer = OrderSerializer(order)
+        details = Order_Details.objects.filter(order=order)
+        details_serializer = OrderDetailSerializer(details, many=True)
+        return Response({'order': order_serializer.data, 'order_details': details_serializer.data})
+    except Orders.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
 #_________________________________________________________________
 
 # Create your views here.
@@ -215,49 +279,8 @@ def hash_mac(key, data):
     hmac.update(data.encode('utf-8'))
     return hmac.hexdigest()
 
-# Create Order ZaloPay
-def create_order(customer_full_name, total_amount, order, provider_id, items):
-    created_time = generate_created_at()
-    payload = {
-        'key1': ZALOPAY_KEY_1,
-        'app_id': ZALOPAY_APP_ID,
-        'app_user': customer_full_name,
-        'app_trans_id': str(generate_app_trans_id(order['id'], created_time)),
-        'app_time': int(time.mktime(created_time.timetuple())) * 1000,  # Convert to milliseconds
-        'amount': int(total_amount),
-        'bank_code': "",
-        'embed_data': generate_embed_data(provider_id),
-        'item': generate_item_data(items),
-        'description': 'DoubleTBad - Thanh toán đơn hàng #{}'.format(order["displayId"]),
-        'callback_url': ZALOPAY_CALLBACK_URL,
-    }
-    mac_string = str(payload['app_id']) + '|' + payload['app_trans_id'] + '|' + payload['app_user'] + '|' + str(payload['amount']) + '|' + str(payload['app_time']) + '|' + payload['embed_data'] + '|' + payload['item']
-    payload['mac'] = hash_mac_by_key1(mac_string)
-    # payload['mac'] = hash_mac_by_key1('|'.join(str(value) for value in payload.values() if value is not None))
-
-    print(payload)
-    # Send request
-    response = requests.post('https://sb-openapi.zalopay.vn/v2/create', json=payload)
-    if response.status_code == 200:
-        data = response.json()
-        print('Processed image:', data)
-        # Do something with the response data
-    else:
-        print('Error when processing image:', response.text)
-
 @api_view(['POST'])
 def process_payment(request):
-    # create_order('John Doe', 100000, {
-    #         'id': '123456',
-    #         'description': 'Order description',
-    #         'displayId': 'ADHBW23NHJSW4JK',
-    #         # Các thông tin khác về đơn hàng
-    #     }, '123', [
-    #         {'name': 'Item 1', 'quantity': 2, 'price': 50},
-    #         {'name': 'Item 2', 'quantity': 1, 'price': 30},
-    #         # Các mặt hàng khác trong đơn hàng
-    #     ]
-    # )
     config = {
         "app_id": 2553,
         "key1": "PcY4iZIKFCIdgZvA6ueMcMHHUbRLYjPL",
