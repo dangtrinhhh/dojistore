@@ -250,9 +250,10 @@ from time import time
 from datetime import datetime
 import json, hmac, hashlib, urllib.request, urllib.parse, random
 
+CALLBACK_URL='https://8a1d-2405-4802-90a4-50f0-e40d-1c7a-1846-bd8a.ngrok-free.app/'
 ZALOPAY_KEY_1 = "sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn"
 ZALOPAY_APP_ID = 2554
-ZALOPAY_CALLBACK_URL = "https://7166-2405-4802-90a4-50f0-edb2-3867-9f02-35a7.ngrok-free.app/api/payment-status/"
+ZALOPAY_CALLBACK_URL = f"{CALLBACK_URL}api/payment-status/"
 
 def generate_app_trans_id(order_id, created_at):
     return created_at.strftime('%y%m%d') + '_' + str(order_id)
@@ -264,7 +265,7 @@ def generate_embed_data(provider):
     preferred_payment_method = []
     embed_data = {
         'preferred_payment_method': preferred_payment_method,
-        'redirecturl': 'https://7166-2405-4802-90a4-50f0-edb2-3867-9f02-35a7.ngrok-free.app/order/payment/success'
+        'redirecturl': f"{CALLBACK_URL}order/payment/success/"
     }
     return json.dumps(embed_data)
 
@@ -294,9 +295,9 @@ def process_payment(request):
         "app_trans_id": "{:%y%m%d}_{}".format(datetime.today(), transID), # mã giao dich có định dạng yyMMdd_xxxx
         "app_user": "Dang Trinh",
         "app_time": int(round(time() * 1000)), # miliseconds
-        "embed_data": json.dumps({}),
+        "embed_data": generate_embed_data(''),
         "item": json.dumps([{}]),
-        "amount": 50000,
+        "amount": 100,
         "description": "DoubleTBad - Thanh toán đơn hàng #" + str(transID),
         "bank_code": "zalopayapp",
         "callback_url": ZALOPAY_CALLBACK_URL,
@@ -322,8 +323,16 @@ def process_payment(request):
 
 @api_view(['POST'])
 def payment_status(request):
-    result = request.data.items()
-    print("Result:" + result)
+    type = request.data.get('type')
+    print(f"{CALLBACK_URL}order/payment/success")
+    if (type == 1):
+        return redirect(f"{CALLBACK_URL}order/payment/success")
+    else:
+        return redirect(f"{CALLBACK_URL}order/payment/fail")
+    print("Result:" + str(type))
+
+    
+    # f"{CALLBACK_URL}order/payment/success"
     # Process result
 
     return Response(result, status=status.HTTP_200_OK)

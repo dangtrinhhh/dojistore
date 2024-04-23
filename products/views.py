@@ -375,8 +375,14 @@ def payment(request):
     return render(request, 'payment.html', {})
 
 def paymentSuccess(request):
+    if 'amount' in request.GET:
+        return render(request, 'paymentSuccess.html', {})
     return render(request, 'paymentSuccess.html', {})
 
+def paymentFailed(request):
+    if 'amount' in request.GET:
+        return render(request, 'paymentFailed.html', {})
+    return render(request, 'paymentFailed.html', {})
 
 def loading(request):
     return render(request, 'loading.html', {})
@@ -390,13 +396,180 @@ def server_error_view(request):
 def handler404(request, exception):
     return render(request, '404.html', status=404)
 
+
 # _____________________API_________________________
 
-# views.py
-from rest_framework import generics
 from rest_framework.response import Response
-from .models import Products, Product_Types
 from .serializers import ProductTypeSerializer, ProductSerializer, ProductWithTypeSerializer, ProductImageSerializer
+from rest_framework import generics
+from .serializers import ProductSerializer
+
+# ____________________Search_______________________
+from django.db.models import Q
+
+def convert_price_range_to_query(price_range):
+    if price_range == "<1000000":
+        return Q(pricesale__lt=1000000)
+    elif price_range == "1000000-2000000":
+        return Q(pricesale__gte=1000000, pricesale__lt=2000000)
+    elif price_range == "2000000-5000000":
+        return Q(pricesale__gte=2000000, pricesale__lt=5000000)
+    elif price_range == ">5000000":
+        return Q(pricesale__gte=5000000)
+    else:
+        return Q()
+    
+class ProductSearchView(generics.ListAPIView):
+    serializer_class = ProductWithTypeSerializer
+
+    def get_queryset(self):
+        # Lấy các thông số tìm kiếm từ request
+        name = self.request.query_params.get('keyword')
+        pricesale = self.request.query_params.get('price')
+        product_type_id = self.request.query_params.get('type')
+
+        # Bắt đầu với tất cả các sản phẩm
+        queryset = []
+
+        # Áp dụng điều kiện search
+        if product_type_id:
+            # Chỉ lấy loại sản phẩm khớp với product_type_id
+            product_type = Product_Types.objects.filter(product_type_id=product_type_id).first()
+            if product_type:
+                products = Products.objects.filter(product_type_id=product_type_id)
+
+                # Áp dụng điều kiện search cho name
+                if name:
+                    products = products.filter(Q(name__icontains=name) | Q(description__icontains=name))
+                if pricesale:
+                    if '-' in pricesale:
+                        min_price, max_price = map(int, pricesale.split('-'))
+                    else:
+                        if pricesale == '<1000000':
+                            min_price = 0
+                            max_price = 1000000
+                        elif pricesale == '>5000000':
+                            min_price = 5000000
+                            max_price = float('inf')
+
+                    # Tạo danh sách lọc
+                    filtered_products = []
+                    for product in products:
+                        # Chuyển đổi giá tiền từ chuỗi thành số
+                        product_pricesale = int(product.pricesale)
+                        if min_price <= product_pricesale < max_price:
+                            filtered_products.append(product)
+
+                    products = filtered_products
+
+                serialized_products = ProductSerializer(products, many=True).data
+
+                # Lấy các hình ảnh cho từng sản phẩm
+                for product in serialized_products:
+                    product_obj = Products.objects.get(product_id=product['product_id'])
+                    images_serializer = ProductImageSerializer(product_obj.product_images.all(), many=True)
+                    product['images'] = images_serializer.data
+
+                queryset.append({
+                    'type': ProductTypeSerializer(product_type).data,
+                    'products': serialized_products
+                })
+        else:
+            # Lấy tất cả các loại sản phẩm
+            product_types = Product_Types.objects.all()
+            for product_type in product_types:
+                products = Products.objects.filter(product_type_id=product_type.product_type_id)
+                # Áp dụng điều kiện search cho name
+                if name:
+                    products = products.filter(Q(name__icontains=name) | Q(description__icontains=name))
+
+                # Áp dụng điều kiện search cho pricesale
+                if pricesale:
+                    if '-' in pricesale:
+                        min_price, max_price = map(int, pricesale.split('-'))
+                    else:
+                        if pricesale == '<1000000':
+                            min_price = 0
+                            max_price = 1000000
+                        elif pricesale == '>5000000':
+                            min_price = 5000000
+                            max_price = float('inf')
+
+                    # Tạo danh sách lọc
+                    filtered_products = []
+                    for product in products:
+                        # Chuyển đổi giá tiền từ chuỗi thành số
+                        product_pricesale = int(product.pricesale)
+                        if min_price <= product_pricesale < max_price:
+                            filtered_products.append(product)
+
+                    products = filtered_products
+
+                serialized_products = ProductSerializer(products, many=True).data
+
+                # Lấy các hình ảnh cho từng sản phẩm
+                for product in serialized_products:
+                    product_obj = Products.objects.get(product_id=product['product_id'])
+                    images_serializer = ProductImageSerializer(product_obj.product_images.all(), many=True)
+                    product['images'] = images_serializer.data
+
+                queryset.append({
+                    'type': ProductTypeSerializer(product_type).data,
+                    'products': serialized_products
+                })
+
+        return queryset
+
+
+# class ProductSearchView(generics.ListAPIView):
+#     serializer_class = ProductWithTypeSerializer
+
+#     def get_queryset(self):
+#         # Lấy các thông số tìm kiếm từ request
+#         name = self.request.query_params.get('name')
+#         description = self.request.query_params.get('description')
+#         pricesale = self.request.query_params.get('price')
+#         product_type_id = self.request.query_params.get('type')
+
+#         # Bắt đầu với tất cả các sản phẩm
+#         queryset = Products.objects.all()
+
+#         # Áp dụng điều kiện search
+#         if name:
+#             name = name.lower()
+#             queryset = queryset.filter(name__icontains=name)
+#         if description:
+#             description = description.lower()
+#             queryset = queryset.filter(description__icontains=description)
+#         if pricesale:
+#             price_query = convert_price_range_to_query(pricesale)
+#             print(price_query)
+#             queryset = queryset.filter(price_query)
+#         if product_type_id:
+#             queryset = queryset.filter(product_type_id=product_type_id)
+
+#         # Tạo dữ liệu cho serializer
+#         data = []
+
+#         # Lặp qua từng loại sản phẩm và lấy danh sách sản phẩm
+#         product_types = Product_Types.objects.all()
+#         for product_type in product_types:
+#             products = queryset.filter(product_type_id=product_type.product_type_id)
+#             serialized_products = ProductSerializer(products, many=True).data
+
+#             # Lấy các hình ảnh cho từng sản phẩm
+#             for product in serialized_products:
+#                 product_obj = Products.objects.get(product_id=product['product_id'])
+#                 images_serializer = ProductImageSerializer(product_obj.product_images.all(), many=True)
+#                 product['images'] = images_serializer.data
+
+#             # Thêm dữ liệu vào danh sách chung
+#             data.append({
+#                 'type': ProductTypeSerializer(product_type).data,
+#                 'products': serialized_products
+#             })
+
+#         return data
 
 class ProductWithTypeAPIView(generics.ListAPIView):
     serializer_class = ProductWithTypeSerializer

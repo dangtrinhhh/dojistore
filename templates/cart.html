@@ -237,7 +237,7 @@
         .then(response => response.json())
         .then(data => {
           console.log('Processed payment:', data);
-          // window.location.href = data.order_url;
+          window.location.href = data.order_url;
         })
         .catch(error => {
           console.error('Error when processing image:', error);

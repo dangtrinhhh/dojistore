@@ -60,7 +60,7 @@
               <div class="row g-2">
                   <!-- Search Input -->
                   <div class="col-12">
-                      <input type="text" class="form-control" placeholder="Tìm kiếm">
+                      <input type="text" class="form-control search-textbox" placeholder="Nhập từ khóa để tìm kiếm">
                   </div>
                   <!-- Select Dropdowns -->
                   <div class="col-md-6">
@@ -68,11 +68,21 @@
                       <select class="form-select" id="productType">
                           <option value="" selected disabled>Chọn loại sản phẩm</option>
                           {% for type in product_types%}
-                          <option value="brand1">{{ type.name }}</option>
+                          <option value="{{ type.product_type_id }}">{{ type.name }}</option>
                           {% endfor %}
                       </select>
                   </div>
                   <div class="col-md-6">
+                    <label for="priceRange" class="form-label">Giá cả</label>
+                    <select class="form-select" id="priceRange">
+                      <option value="" selected disabled>Chọn khoảng giá</option>
+                      <option value="<1000000"> < 1.000.000 đ</option>
+                      <option value="1000000-2000000">1.000.000 - 2.000.000 đ</option>
+                      <option value="2000000-5000000">2.000.000 - 5.000.000 đ</option>
+                      <option value=">5000000"> > 5.000.000 đ</option>
+                    </select>
+                  </div>
+                  <!-- <div class="col-md-6">
                       <label for="brand" class="form-label">Thương hiệu</label>
                       <select class="form-select" id="brand">
                           <option value="" selected disabled>Chọn thương hiệu</option>
@@ -80,18 +90,8 @@
                           <option value="brand2">Thương hiệu 2</option>
                           <option value="brand3">Thương hiệu 3</option>
                       </select>
-                  </div>
-                  <div class="col-md-6">
-                      <label for="priceRange" class="form-label">Giá cả</label>
-                      <select class="form-select" id="priceRange">
-                          <option value="" selected disabled>Chọn khoảng giá</option>
-                          <option value="0-1000"> < 1.000.000 đ</option>
-                          <option value="1000-2000">1.000.000 - 2.000.000 đ</option>
-                          <option value="2000-5000">2.000.000 - 5.000.000 đ</option>
-                          <option value="5000"> > 5.000.000 đ</option>
-                      </select>
-                  </div>
-                  <div class="col-md-6">
+                  </div> -->
+                  <!-- <div class="col-md-6">
                       <label for="level" class="form-label">Trình độ</label>
                       <select class="form-select" id="level">
                           <option value="" selected disabled>Chọn trình độ</option>
@@ -99,10 +99,10 @@
                           <option value="intermediate">Trung bình</option>
                           <option value="advanced">Nâng cao</option>
                       </select>
-                  </div>
+                  </div> -->
               </div>
-              <button type="submit">Xác nhận</button>
-          </form>
+            </form>
+            <button onclick="handleSearchButton()">Xác nhận</button>
       </div>
   </div>
   
@@ -144,6 +144,25 @@
     <script src="{% static 'js/main.js' %}"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
+        async function handleSearchButton() {
+              const keyword = document.querySelector('.search-textbox').value;
+              const productType = document.querySelector('#productType').value;
+              const priceRange = document.querySelector('#priceRange').value;
+
+              try {
+                  const searchData = {
+                      keyword: keyword,
+                      type: productType,
+                      priceRange: priceRange
+                  };
+
+                  const searchResults = await searchProducts(searchData);
+                  // Xử lý dữ liệu kết quả tìm kiếm ở đây
+              } catch (error) {
+                  console.error('Error searching products:', error);
+              }
+        }
+        
         document.addEventListener('DOMContentLoaded', async function () {
           const is_staff = "{{ is_staff }}";  
           async function getAllProductsWithImages() {

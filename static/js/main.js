@@ -829,3 +829,27 @@ function createOrder({
             console.error('Error when create order:', error);
         })
 }
+
+
+// Handle search products
+async function searchProducts(query) {
+    try {
+        const response = await fetch(`/api/products/search/?keyword=${encodeURIComponent(query.keyword)}&price=${encodeURIComponent(query.priceRange)}&type=${encodeURIComponent(query.type)}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('Search results:', data);
+        return data;
+    } catch (error) {
+        console.error('Error searching products:', error);
+        throw error; // Re-throw the error to propagate it
+    }
+}

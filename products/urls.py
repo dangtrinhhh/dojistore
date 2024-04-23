@@ -7,7 +7,7 @@ from django.conf.urls import handler500
 from .views import server_error_view
 from django.shortcuts import render
 from django.urls import re_path
-from .views import ProductWithTypeAPIView
+from .views import ProductWithTypeAPIView, ProductSearchView
 
 
 # trong urls.py
@@ -44,7 +44,8 @@ urlpatterns = [
     path('order/history', views.orderHistory, name='orderHistory'),
     path('order/details', views.orderDetails, name='orderDetails'),
     path('order/payment', views.payment, name='payment'),
-    path('order/payment/success', views.paymentSuccess, name='paymentSuccess'),
+    path('order/payment/success/', views.paymentSuccess, name='paymentSuccess'),
+    path('order/payment/failed/', views.paymentFailed, name='paymentFailed'),
     path('accounts/password/reset/', CustomPasswordResetView.as_view(), name='account_reset_password'),
     path('accounts/', include('allauth.urls')),
     path('handler404/', handler404),
@@ -52,6 +53,7 @@ urlpatterns = [
     
     # ____________________________________API_____________________________________
     path('api/product-with-type/', ProductWithTypeAPIView.as_view(), name='api-product-with-type'),
+    path('api/products/search/', ProductSearchView.as_view(), name='api-product-search'),
 ]
 
 # handler404 = handler404
