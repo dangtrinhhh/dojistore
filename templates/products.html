@@ -1,88 +1,94 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="icon" href="{% static 'img/logo.png' %}" type="image/x-icon" />
-    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/products.css' %}">
-    <link rel="stylesheet" href="{% static '/font/themify-icons-font/themify-icons.css' %}">
-    <link rel="stylesheet" href="{% static 'font/fontawesome/css/all.css' %}">
-    <title>DoubleT Bad | Homepage</title>
-  </head>
-  <body>
-    <!-- Navbar Start -->
-    {% include 'components/navbar.html' %}
-    <!-- Navbar End -->
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Chatbot Button Start -->
-    <!-- <button class="cart-btn btn-outline-primary border-2">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="icon" href="{% static 'img/logo.png' %}" type="image/x-icon" />
+  <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/products.css' %}">
+  <link rel="stylesheet" href="{% static '/font/themify-icons-font/themify-icons.css' %}">
+  <link rel="stylesheet" href="{% static 'font/fontawesome/css/all.css' %}">
+  <title>DoubleT Bad | Homepage</title>
+</head>
+
+<body>
+  <!-- Navbar Start -->
+  {% include 'components/navbar.html' %}
+  <!-- Navbar End -->
+
+  <!-- Chatbot Button Start -->
+  <!-- <button class="cart-btn btn-outline-primary border-2">
       <a class="shopping-bag-icon m-auto" href="/cart">
           <i class="fa fa-comments greentea-color"></i>
       </a>
     </button> -->
-    <!-- Chatbot Button End -->
+  <!-- Chatbot Button End -->
 
-    <!-- Modal Start -->
+  <!-- Modal Start -->
 
-    {% include 'components/loginForm.html' %}
+  {% include 'components/loginForm.html' %}
 
-    {% include 'components/registerForm.html' %}
+  {% include 'components/registerForm.html' %}
 
-    <!-- Modal End -->
+  <!-- Modal End -->
 
-    <div class="bg-header my-5 py-5 d-flex">
-        <div class="section-header text-start mb-5 wow fadeInUp my-auto ml-200" data-wow-delay="0.1s">
-            <h1 class="text-lora display-3 text-dark mb-3">Products</h1>
-            <!-- Breadcrumb Start -->
-            <nav class="bg-transparent" aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                <li class="text-dark breadcrumb-item m-0"><a href="/" class="text-decoration-none text-dark hover-greentea-text hover-underlined-text fs-4">Home</a></li>
-                <li class="text-dark breadcrumb-item active m-0 fs-4 text-decoration-underline hover-cursor-pointer" aria-current="page">Products</li>
-                </ol>
-            </nav>
-            <!-- Breadcrumb End -->
-        </div>
+  <div class="bg-header my-5 py-5 d-flex">
+    <div class="section-header text-start mb-5 wow fadeInUp my-auto ml-200" data-wow-delay="0.1s">
+      <h1 class="text-lora display-3 text-dark mb-3">Products</h1>
+      <!-- Breadcrumb Start -->
+      <nav class="bg-transparent" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="text-dark breadcrumb-item m-0"><a href="/"
+              class="text-decoration-none text-dark hover-greentea-text hover-underlined-text fs-4">Home</a></li>
+          <li class="text-dark breadcrumb-item active m-0 fs-4 text-decoration-underline hover-cursor-pointer"
+            aria-current="page">Products</li>
+        </ol>
+      </nav>
+      <!-- Breadcrumb End -->
     </div>
+  </div>
 
-    <div class="col-lg-6 col-md-8 col-sm-10 mx-auto wow fadeInUp my-4" data-wow-delay="0.1s">
-      <div class="filter-container p-3">
-          <h3 style="color: #1221aa;">Tìm kiếm sản phẩm</h3>
-  
-          <!-- Search Input and Selects in Horizontal Form -->
-          <form class="mb-3">
-              <div class="row g-2">
-                  <!-- Search Input -->
-                  <div class="col-12">
-                      <input type="text" class="form-control search-textbox" placeholder="Nhập từ khóa để tìm kiếm">
-                  </div>
-                  <!-- Select Dropdowns -->
-                  <div class="col-md-6">
-                      <label for="productType" class="form-label">Loại Sản phẩm</label>
-                      <select class="form-select" id="productType">
-                          <option value="" selected disabled>Chọn loại sản phẩm</option>
-                          {% for type in product_types%}
-                          <option value="{{ type.product_type_id }}">{{ type.name }}</option>
-                          {% endfor %}
-                      </select>
-                  </div>
-                  <div class="col-md-6">
-                    <label for="priceRange" class="form-label">Giá cả</label>
-                    <select class="form-select" id="priceRange">
-                      <option value="" selected disabled>Chọn khoảng giá</option>
-                      <option value="<1000000"> < 1.000.000 đ</option>
-                      <option value="1000000-2000000">1.000.000 - 2.000.000 đ</option>
-                      <option value="2000000-5000000">2.000.000 - 5.000.000 đ</option>
-                      <option value=">5000000"> > 5.000.000 đ</option>
-                    </select>
-                  </div>
-                  <!-- <div class="col-md-6">
+  <div class="col-lg-6 col-md-8 col-sm-10 mx-auto wow fadeInUp my-4" data-wow-delay="0.1s">
+    <div class="filter-container p-3">
+      <h3 style="color: #1221aa;">Tìm kiếm sản phẩm</h3>
+
+      <!-- Search Input and Selects in Horizontal Form -->
+      <form class="mb-3">
+        <div class="row g-2">
+          <!-- Search Input -->
+          <div class="col-12">
+            <input type="text" class="form-control search-textbox" placeholder="Nhập từ khóa để tìm kiếm">
+          </div>
+          <!-- Select Dropdowns -->
+          <div class="col-md-6">
+            <label for="productType" class="form-label">Loại Sản phẩm</label>
+            <select class="form-select" id="productType">
+              <option value="" selected disabled>Chọn loại sản phẩm</option>
+              {% for type in product_types%}
+              <option value="{{ type.product_type_id }}">{{ type.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="priceRange" class="form-label">Giá cả</label>
+            <select class="form-select" id="priceRange">
+              <option value="" selected disabled>Chọn khoảng giá</option>
+              <option value="<1000000">
+                < 1.000.000 đ</option>
+              <option value="1000000-2000000">1.000.000 - 2.000.000 đ</option>
+              <option value="2000000-5000000">2.000.000 - 5.000.000 đ</option>
+              <option value=">5000000"> > 5.000.000 đ</option>
+            </select>
+          </div>
+          <!-- <div class="col-md-6">
                       <label for="brand" class="form-label">Thương hiệu</label>
                       <select class="form-select" id="brand">
                           <option value="" selected disabled>Chọn thương hiệu</option>
@@ -91,7 +97,7 @@
                           <option value="brand3">Thương hiệu 3</option>
                       </select>
                   </div> -->
-                  <!-- <div class="col-md-6">
+          <!-- <div class="col-md-6">
                       <label for="level" class="form-label">Trình độ</label>
                       <select class="form-select" id="level">
                           <option value="" selected disabled>Chọn trình độ</option>
@@ -100,356 +106,369 @@
                           <option value="advanced">Nâng cao</option>
                       </select>
                   </div> -->
-              </div>
-            </form>
-            <button onclick="handleSearchButton()">Xác nhận</button>
-      </div>
+        </div>
+      </form>
+      <button onclick="handleSearchButton()">Xác nhận</button>
+    </div>
   </div>
-  
-  
-    <!-- Product Start -->
-    <div class="product-sections container-xxl py-5 my-5">
-        <div class="container">
-          <div class="row g-0 gx-5 align-items-end">
-            <div class="col-lg-6">
-              <div
-                class="section-header text-start mb-5 wow fadeInUp"
-                data-wow-delay="0.1s"
-                style="max-width: 500px;"
-              >
-                <h1 class="text-lora display-5 mb-3">Sản phẩm mới</h1>
-                <p>
-                  Khám phá khó sản phẩm mới đa dạng đang được cập nhật liên tục tại đây nè mấy ní 😉
-                </p>
-              </div>
-            </div>
-            <div
-              class="col-lg-6 text-start text-lg-end wow slideInRight"
-              data-wow-delay="0.1s"
-            >
-              <ul id="product-type-list" class="nav nav-pills d-inline-flex justify-content-end mb-5"></ul>            
-            </div>
+
+
+  <!-- Product Start -->
+  <div class="product-sections container-xxl py-5 my-5">
+    <div class="container">
+      <div class="row g-0 gx-5 align-items-end">
+        <div class="col-lg-6">
+          <div class="section-header text-start mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+            <h1 class="text-lora display-5 mb-3">Sản phẩm mới</h1>
+            <p>
+              Khám phá khó sản phẩm mới đa dạng đang được cập nhật liên tục tại đây nè mấy ní 😉
+            </p>
           </div>
-          <div id="product-container-list" class="tab-content"></div>
+        </div>
+        <div class="col-lg-6 text-start text-lg-end wow slideInRight" data-wow-delay="0.1s">
+          <ul id="product-type-list" class="nav nav-pills d-inline-flex justify-content-end mb-5"></ul>
         </div>
       </div>
-    <div id="product-section"></div>
-    <!-- Product End -->
+      <div id="product-container-list" class="tab-content"></div>
+    </div>
+  </div>
+  <div id="product-section"></div>
+  <!-- Product End -->
 
-    <!-- Footer Start -->
-    {% include 'components/footer.html' with blogs=blogs %}
-    <!-- Footer End -->
+  <!-- Footer Start -->
+  {% include 'components/footer.html' with blogs=blogs %}
+  <!-- Footer End -->
 
-    <!-- Optional JavaScript; choose one of the two! -->
-    <script src="{% static 'js/main.js' %}"></script>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script>
-        async function handleSearchButton() {
-              const keyword = document.querySelector('.search-textbox').value;
-              const productType = document.querySelector('#productType').value;
-              const priceRange = document.querySelector('#priceRange').value;
+  <!-- Optional JavaScript; choose one of the two! -->
+  <script src="{% static 'js/main.js' %}"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script>
+    const is_staff = "{{ is_staff }}";
+    async function handleSearchButton() {
+      let searchResults = []
+      const keyword = document.querySelector('.search-textbox').value;
+      const productType = document.querySelector('#productType').value;
+      const priceRange = document.querySelector('#priceRange').value;
 
-              try {
-                  const searchData = {
-                      keyword: keyword,
-                      type: productType,
-                      priceRange: priceRange
-                  };
+      try {
+        const searchData = {
+          keyword: keyword,
+          type: productType,
+          priceRange: priceRange
+        };
 
-                  const searchResults = await searchProducts(searchData);
-                  // Xử lý dữ liệu kết quả tìm kiếm ở đây
-              } catch (error) {
-                  console.error('Error searching products:', error);
-              }
-        }
-        
-        document.addEventListener('DOMContentLoaded', async function () {
-          const is_staff = "{{ is_staff }}";  
-          async function getAllProductsWithImages() {
-            try {
-              const response = await fetch('/api/product-with-type/', {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-              });
-      
-              if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-              }
-      
-              const data = await response.json();
-              console.log('All products with images:', data);
-              return data;
-            } catch (error) {
-              console.error('Error fetching all products with images:', error);
-            }
-          }
-          
-          function renderProductTypes(productTypes) {
-            const productTypeList = document.getElementById('product-type-list');
-            
-            productTypes.forEach((type,index) => {
-              const listItem = document.createElement('li');
-              listItem.classList.add('nav-item', 'me-2');
-          
-              const link = document.createElement('a');
-              index == 0 ? link.classList.add('btn', 'btn-outline-primary', 'border-2', 'active') : link.classList.add('btn', 'btn-outline-primary', 'border-2');
-              
-              link.setAttribute('data-bs-toggle', 'pill');
-              link.setAttribute('href', `#tab-${type.type.product_type_id}`);
-              link.textContent = type.type.name;
-          
-              listItem.appendChild(link);
-              productTypeList.appendChild(listItem);
-            })
-          }
-          
-          function renderProducts(productsWithImages, isStaff) {
-            const productContainerList = document.getElementById('product-container-list');
-            
-            productsWithImages.forEach((productTypeInfo, index) => {
-              const tabPane = document.createElement('div');
-              index == 0 ? tabPane.classList.add('tab-pane', 'fade', 'show', 'p-0', 'active') : tabPane.classList.add('tab-pane', 'fade', 'show', 'p-0');
-              tabPane.setAttribute('id', `tab-${productTypeInfo.type.product_type_id}`);
-          
-              if (productTypeInfo.type.product_type_id === 1) {
-                tabPane.classList.add('active');
-              }
-          
-              const row = document.createElement('div');
-              row.classList.add('row', 'g-4');
-          
-              productTypeInfo.products.forEach((productInfo, index2) => {
-                const col = document.createElement('div');
-                col.classList.add('col-xl-3', 'col-lg-4', 'col-md-6', 'wow', 'fadeInUp', 'my-4');
-                col.setAttribute('data-wow-delay', '0.1s');
-        
-                const productItem = document.createElement('div');
-                productItem.classList.add('product-item', 'rounded-3', 'border', 'box-shadow-custom');
-        
-                const positionRelative = document.createElement('div');
-                positionRelative.classList.add('position-relative', 'bg-light', 'overflow-hidden');
-                
-                const productImage = document.createElement('img');
-                for (const imageInfo of productInfo.images) {
-                productImage.classList.add('card-img-top', 'w-100');
-                productImage.setAttribute('alt', 'Product Image');
-                if (imageInfo) {
-                    productImage.setAttribute('src', imageInfo.url);
-                } else {
-                    productImage.setAttribute('src', '/static/img/product-1.jpg'); // Đường dẫn mặc định cho hình ảnh sản phẩm
-                }
-                }
-        
-                const carrotBgcolor = document.createElement('div');
-                carrotBgcolor.classList.add('carrot-bgcolor', 'rounded', 'text-white', 'position-absolute', 'start-0', 'top-0', 'm-2', 'py-1', 'px-1');
-                carrotBgcolor.textContent = 'New';
-        
-                positionRelative.appendChild(productImage);
-                positionRelative.appendChild(carrotBgcolor);
-        
-                const textCenter = document.createElement('div');
-                textCenter.classList.add('text-center', 'p-4');
-        
-                const productLink = document.createElement('a');
-                productLink.classList.add('d-block', 'h5', 'text-decoration-none', 'text-dark', 'text-lora', 'mb-2', 'text-start', 'text-truncate');
-                productLink.setAttribute('href', `/products/${productInfo.product_id}`);
-                productLink.textContent = productInfo.name || ' ';
-        
-                // Move the declaration here
-                const textDetails = document.createElement('div');
-                textDetails.classList.add('text-details');
-        
-                const productDetails = document.createElement('div');
-                productDetails.classList.add('product-details', 'd-flex', 'align-items-center', 'justify-content-start');
-        
-                const textBody1 = document.createElement('div');
-                textBody1.classList.add('text-body', 'text-decoration-line-through', 'text-truncate', 'text-start', 'p-0', 'convert-to-vnd');
-                textBody1.textContent = productInfo.price || ' ';
-        
-                const textDanger = document.createElement('div');
-                textDanger.classList.add('text-danger', 'fw-bold', 'h5', 'text-truncate', 'text-start', 'my-3', 'convert-to-vnd');
-                textDanger.textContent = productInfo.pricesale || ' ';
-        
-                textDetails.appendChild(textBody1);
-                textDetails.appendChild(textDanger);
-        
-                productDetails.appendChild(textDetails);
-        
-                if (productInfo.pricesale < productInfo.price) {
-                const bigSaleIcon = document.createElement('img');
-                bigSaleIcon.classList.add('bigsale-icon', 'mx-auto');
-                bigSaleIcon.setAttribute('src', '/static/img/bigsale.gif'); // Đường dẫn mặc định cho biểu tượng giảm giá lớn
-                bigSaleIcon.setAttribute('alt', 'bigsale');
-                productDetails.appendChild(bigSaleIcon);
-                }
-        
-                textCenter.appendChild(productLink);
-                textCenter.appendChild(productDetails);
-        
-                productItem.appendChild(positionRelative);
-                productItem.appendChild(textCenter);
-        
-                if (isStaff === 'True') {
-                const borderTop1 = document.createElement('div');
-                borderTop1.classList.add('border-top', 'd-flex');
-        
-                const small1 = document.createElement('small');
-                small1.classList.add('w-50', 'text-center', 'border-end', 'py-2');
-        
-                const editLink = document.createElement('a');
-                editLink.classList.add('text-body', 'text-decoration-none');
-                editLink.setAttribute('href', `/products/edit/${productInfo.product_id}`);
-                editLink.innerHTML = '<i class="fa fa-pen greentea-color me-2"></i>Sửa';
-        
-                small1.appendChild(editLink);
-        
-                const small2 = document.createElement('small');
-                small2.classList.add('w-50', 'text-center', 'py-2');
-        
-                const deleteLink = document.createElement('a');
-                deleteLink.classList.add('text-body', 'text-decoration-none');
-                deleteLink.setAttribute('href', `/products/delete/${productInfo.product_id}`);
-                deleteLink.innerHTML = '<i class="fa fa-trash carrot-color me-2"></i>Xóa';
-        
-                small2.appendChild(deleteLink);
-        
-                borderTop1.appendChild(small1);
-                borderTop1.appendChild(small2);
-        
-                productItem.appendChild(borderTop1);
-                } else {
-                const borderTop2 = document.createElement('div');
-                borderTop2.classList.add('border-top', 'd-flex');
-        
-                const small3 = document.createElement('small');
-                small3.classList.add('w-50', 'text-center', 'border-end', 'py-2');
-        
-                const viewDetailButton = document.createElement('button');
-                viewDetailButton.setAttribute('type', 'button');
-                viewDetailButton.classList.add('btn', 'btn-transparent', 'btn-sm');
-        
-                const viewDetailLink = document.createElement('a');
-                viewDetailLink.classList.add('text-body', 'text-decoration-none', 'view-detail');
-                viewDetailLink.setAttribute('href', `/products/${productInfo.product_id}`);
-                viewDetailLink.innerHTML = '<i class="fa fa-eye greentea-color me-2"></i>Xem chi tiết';
-        
-                viewDetailButton.appendChild(viewDetailLink);
-                small3.appendChild(viewDetailButton);
-        
-                const small4 = document.createElement('small');
-                small4.classList.add('w-50', 'text-center', 'py-2');
-        
-                const addToCartButton = document.createElement('button');
-                addToCartButton.setAttribute('type', 'button');
-                addToCartButton.classList.add('btn', 'btn-transparent', 'btn-sm');
-        
-                const addToCartLink = document.createElement('a');
-                addToCartLink.classList.add('text-body', 'text-decoration-none', 'pe-auto', 'add-to-cart');
-                addToCartLink.setAttribute('data-product-id', productInfo.product_id);
-                addToCartLink.setAttribute('onclick', `updateCartItemCount('${productInfo.product_id}', 1)`);
-                addToCartLink.innerHTML = '<i class="fa fa-shopping-bag greentea-color me-2"></i>Thêm vào giỏ';
-        
-                addToCartButton.appendChild(addToCartLink);
-                small4.appendChild(addToCartButton);
-        
-                borderTop2.appendChild(small3);
-                borderTop2.appendChild(small4);
-        
-                productItem.appendChild(borderTop2);
-                }
-        
-                col.appendChild(productItem);
-                row.appendChild(col);
-            
-              });
-          
-              // const col12 = document.createElement('div');
-              // col12.classList.add('col-12', 'text-center', 'wow', 'fadeInUp');
-              // col12.setAttribute('data-wow-delay', '0.1s');
-          
-              // const browseMoreLink = document.createElement('a');
-              // browseMoreLink.classList.add('btn', 'btn-primary', 'rounded-pill', 'py-3', 'px-5');
-              // browseMoreLink.setAttribute('href', '/products');
-              // browseMoreLink.textContent = 'Browse More Products';
-          
-              // col12.appendChild(browseMoreLink);
-              // row.appendChild(col12);
-          
-              tabPane.appendChild(row);
-              productContainerList.appendChild(tabPane);
-            });
-          }
-          
-          async function updateProducts() {
-            const searchTerm = $('#searchInput').val();
-            const productType = $('#productType').val();
-            const brand = $('#brand').val();
-            const priceRange = $('#priceRange').val();
-            const level = $('#level').val();
-      
-            // Fetch updated products based on the filter criteria
-            const updatedProducts = await getAllProductsWithImages({
-              searchTerm,
-              productType,
-              brand,
-              priceRange,
-              level,
-            });
-      
-            // Render the updated products to the HTML
-            renderProductTypes(updatedProducts);
-            renderProducts(updatedProducts);
-      
-            // Update VND conversion for prices
-            var priceElements = document.querySelectorAll('.convert-to-vnd');
-            priceElements.forEach(function(element) {
-              var priceValue = element.innerHTML.trim();
-              var convertedValue = convertToVND(parseFloat(priceValue));
-              element.innerHTML = convertedValue;
-            });
-          }
-      
-          // Initial rendering of products
-          const initialProductsData = await getAllProductsWithImages();
-          renderProductTypes(initialProductsData);
-          renderProducts(initialProductsData, is_staff);
-      
-          // Initial VND conversion for prices
-          var priceElements = document.querySelectorAll('.convert-to-vnd');
-          priceElements.forEach(function(element) {
-            var priceValue = element.innerHTML.trim();
-            var convertedValue = convertToVND(parseFloat(priceValue));
-            element.innerHTML = convertedValue;
+        searchResults = await searchProducts(searchData);
+        console.log("🚀 ~ searchResults:", searchResults);
+        const productContainerList = document.getElementById('product-container-list');
+        productContainerList.innerHTML = "";
+        const productTypeList = document.getElementById('product-type-list');
+        productTypeList.innerHTML = "";
+
+        renderProductTypes(searchResults);
+        renderProducts(searchResults, is_staff);
+
+        var priceElements = document.querySelectorAll('.convert-to-vnd');
+        priceElements.forEach(function (element) {
+          var priceValue = element.innerHTML.trim();
+          var convertedValue = convertToVND(parseFloat(priceValue));
+          element.innerHTML = convertedValue;
+        });
+      } catch (error) {
+        console.error('Error searching products:', error);
+      }
+
+    }
+
+    document.addEventListener('DOMContentLoaded', async function () {
+      const is_staff = "{{ is_staff }}";
+      async function getAllProductsWithImages() {
+        try {
+          const response = await fetch('/api/product-with-type/', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
           });
-      
-          // Attach event listeners for form changes
-          // $('form').on('change submit', async function (event) {
-          //   event.preventDefault();
-          //   updateProducts();
-          // });
-        });
-    </script>
-    
-    <script>
-        // Gọi hàm convertToVND ở đây
-        document.addEventListener("DOMContentLoaded", function() {
-            var priceElements = document.querySelectorAll('.convert-to-vnd');
-            priceElements.forEach(function(element) {
-                var priceValue = element.innerHTML.trim();
-                var convertedValue = convertToVND(parseFloat(priceValue));
-                element.innerHTML = convertedValue;
-            });
-        });
-      </script>
-    <!-- Option 1: Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
-    <!-- Option 2: Separate Popper and Bootstrap JS -->
-    <!--
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+
+          const data = await response.json();
+          console.log('All products with images:', data);
+          return data;
+        } catch (error) {
+          console.error('Error fetching all products with images:', error);
+        }
+      }
+
+      function renderProductTypes(productTypes) {
+        const productTypeList = document.getElementById('product-type-list');
+
+        productTypes.forEach((type, index) => {
+          const listItem = document.createElement('li');
+          listItem.classList.add('nav-item', 'me-2');
+
+          const link = document.createElement('a');
+          index == 0 ? link.classList.add('btn', 'btn-outline-primary', 'border-2', 'active') : link.classList.add('btn', 'btn-outline-primary', 'border-2');
+
+          link.setAttribute('data-bs-toggle', 'pill');
+          link.setAttribute('href', `#tab-${type.type.product_type_id}`);
+          link.textContent = type.type.name;
+
+          listItem.appendChild(link);
+          productTypeList.appendChild(listItem);
+        })
+      }
+
+      function renderProducts(productsWithImages, isStaff) {
+        const productContainerList = document.getElementById('product-container-list');
+
+        productsWithImages.forEach((productTypeInfo, index) => {
+          const tabPane = document.createElement('div');
+          index == 0 ? tabPane.classList.add('tab-pane', 'fade', 'show', 'p-0', 'active') : tabPane.classList.add('tab-pane', 'fade', 'show', 'p-0');
+          tabPane.setAttribute('id', `tab-${productTypeInfo.type.product_type_id}`);
+
+          if (productTypeInfo.type.product_type_id === 1) {
+            tabPane.classList.add('active');
+          }
+
+          const row = document.createElement('div');
+          row.classList.add('row', 'g-4');
+
+          productTypeInfo.products.forEach((productInfo, index2) => {
+            const col = document.createElement('div');
+            col.classList.add('col-xl-3', 'col-lg-4', 'col-md-6', 'wow', 'fadeInUp', 'my-4');
+            col.setAttribute('data-wow-delay', '0.1s');
+
+            const productItem = document.createElement('div');
+            productItem.classList.add('product-item', 'rounded-3', 'border', 'box-shadow-custom');
+
+            const positionRelative = document.createElement('div');
+            positionRelative.classList.add('position-relative', 'bg-light', 'overflow-hidden');
+
+            const productImage = document.createElement('img');
+            for (const imageInfo of productInfo.images) {
+              productImage.classList.add('card-img-top', 'w-100');
+              productImage.setAttribute('alt', 'Product Image');
+              if (imageInfo) {
+                productImage.setAttribute('src', imageInfo.url);
+              } else {
+                productImage.setAttribute('src', '/static/img/product-1.jpg'); // Đường dẫn mặc định cho hình ảnh sản phẩm
+              }
+            }
+
+            const carrotBgcolor = document.createElement('div');
+            carrotBgcolor.classList.add('carrot-bgcolor', 'rounded', 'text-white', 'position-absolute', 'start-0', 'top-0', 'm-2', 'py-1', 'px-1');
+            carrotBgcolor.textContent = 'New';
+
+            positionRelative.appendChild(productImage);
+            positionRelative.appendChild(carrotBgcolor);
+
+            const textCenter = document.createElement('div');
+            textCenter.classList.add('text-center', 'p-4');
+
+            const productLink = document.createElement('a');
+            productLink.classList.add('d-block', 'h5', 'text-decoration-none', 'text-dark', 'text-lora', 'mb-2', 'text-start', 'text-truncate');
+            productLink.setAttribute('href', `/products/${productInfo.product_id}`);
+            productLink.textContent = productInfo.name || ' ';
+
+            // Move the declaration here
+            const textDetails = document.createElement('div');
+            textDetails.classList.add('text-details');
+
+            const productDetails = document.createElement('div');
+            productDetails.classList.add('product-details', 'd-flex', 'align-items-center', 'justify-content-start');
+
+            const textBody1 = document.createElement('div');
+            textBody1.classList.add('text-body', 'text-decoration-line-through', 'text-truncate', 'text-start', 'p-0', 'convert-to-vnd');
+            textBody1.textContent = productInfo.price || ' ';
+
+            const textDanger = document.createElement('div');
+            textDanger.classList.add('text-danger', 'fw-bold', 'h5', 'text-truncate', 'text-start', 'my-3', 'convert-to-vnd');
+            textDanger.textContent = productInfo.pricesale || ' ';
+
+            textDetails.appendChild(textBody1);
+            textDetails.appendChild(textDanger);
+
+            productDetails.appendChild(textDetails);
+
+            if (productInfo.pricesale < productInfo.price) {
+              const bigSaleIcon = document.createElement('img');
+              bigSaleIcon.classList.add('bigsale-icon', 'mx-auto');
+              bigSaleIcon.setAttribute('src', '/static/img/bigsale.gif'); // bigsale icon
+              bigSaleIcon.setAttribute('alt', 'bigsale');
+              productDetails.appendChild(bigSaleIcon);
+            }
+
+            textCenter.appendChild(productLink); 
+            textCenter.appendChild(productDetails);
+
+            productItem.appendChild(positionRelative);
+            productItem.appendChild(textCenter);
+
+            if (isStaff === 'True') {
+              const borderTop1 = document.createElement('div');
+              borderTop1.classList.add('border-top', 'd-flex');
+
+              const small1 = document.createElement('small');
+              small1.classList.add('w-50', 'text-center', 'border-end', 'py-2');
+
+              const editLink = document.createElement('a');
+              editLink.classList.add('text-body', 'text-decoration-none');
+              editLink.setAttribute('href', `/products/edit/${productInfo.product_id}`);
+              editLink.innerHTML = '<i class="fa fa-pen greentea-color me-2"></i>Sửa';
+
+              small1.appendChild(editLink);
+
+              const small2 = document.createElement('small');
+              small2.classList.add('w-50', 'text-center', 'py-2');
+
+              const deleteLink = document.createElement('a');
+              deleteLink.classList.add('text-body', 'text-decoration-none');
+              deleteLink.setAttribute('href', `/products/delete/${productInfo.product_id}`);
+              deleteLink.innerHTML = '<i class="fa fa-trash carrot-color me-2"></i>Xóa';
+
+              small2.appendChild(deleteLink);
+
+              borderTop1.appendChild(small1);
+              borderTop1.appendChild(small2);
+
+              productItem.appendChild(borderTop1);
+            } else {
+              const borderTop2 = document.createElement('div');
+              borderTop2.classList.add('border-top', 'd-flex');
+
+              const small3 = document.createElement('small');
+              small3.classList.add('w-50', 'text-center', 'border-end', 'py-2');
+
+              const viewDetailButton = document.createElement('button');
+              viewDetailButton.setAttribute('type', 'button');
+              viewDetailButton.classList.add('btn', 'btn-transparent', 'btn-sm');
+
+              const viewDetailLink = document.createElement('a');
+              viewDetailLink.classList.add('text-body', 'text-decoration-none', 'view-detail');
+              viewDetailLink.setAttribute('href', `/products/${productInfo.product_id}`);
+              viewDetailLink.innerHTML = '<i class="fa fa-eye greentea-color me-2"></i>Xem chi tiết';
+
+              viewDetailButton.appendChild(viewDetailLink);
+              small3.appendChild(viewDetailButton);
+
+              const small4 = document.createElement('small');
+              small4.classList.add('w-50', 'text-center', 'py-2');
+
+              const addToCartButton = document.createElement('button');
+              addToCartButton.setAttribute('type', 'button');
+              addToCartButton.classList.add('btn', 'btn-transparent', 'btn-sm');
+
+              const addToCartLink = document.createElement('a');
+              addToCartLink.classList.add('text-body', 'text-decoration-none', 'pe-auto', 'add-to-cart');
+              addToCartLink.setAttribute('data-product-id', productInfo.product_id);
+              addToCartLink.setAttribute('onclick', `updateCartItemCount('${productInfo.product_id}', 1)`);
+              addToCartLink.innerHTML = '<i class="fa fa-shopping-bag greentea-color me-2"></i>Thêm vào giỏ';
+
+              addToCartButton.appendChild(addToCartLink);
+              small4.appendChild(addToCartButton);
+
+              borderTop2.appendChild(small3);
+              borderTop2.appendChild(small4);
+
+              productItem.appendChild(borderTop2);
+            }
+
+            col.appendChild(productItem);
+            row.appendChild(col);
+
+          });
+
+          // const col12 = document.createElement('div');
+          // col12.classList.add('col-12', 'text-center', 'wow', 'fadeInUp');
+          // col12.setAttribute('data-wow-delay', '0.1s');
+
+          // const browseMoreLink = document.createElement('a');
+          // browseMoreLink.classList.add('btn', 'btn-primary', 'rounded-pill', 'py-3', 'px-5');
+          // browseMoreLink.setAttribute('href', '/products');
+          // browseMoreLink.textContent = 'Browse More Products';
+
+          // col12.appendChild(browseMoreLink);
+          // row.appendChild(col12);
+
+          tabPane.appendChild(row);
+          productContainerList.appendChild(tabPane);
+        });
+      }
+
+      async function updateProducts() {
+        const searchTerm = $('#searchInput').val();
+        const productType = $('#productType').val();
+        const brand = $('#brand').val();
+        const priceRange = $('#priceRange').val();
+        const level = $('#level').val();
+
+        // Fetch updated products based on the filter criteria
+        const updatedProducts = await getAllProductsWithImages({
+          searchTerm,
+          productType,
+          brand,
+          priceRange,
+          level,
+        });
+
+        // Render the updated products to the HTML
+        renderProductTypes(updatedProducts);
+        renderProducts(updatedProducts);
+
+        // Update VND conversion for prices
+        var priceElements = document.querySelectorAll('.convert-to-vnd');
+        priceElements.forEach(function (element) {
+          var priceValue = element.innerHTML.trim();
+          var convertedValue = convertToVND(parseFloat(priceValue));
+          element.innerHTML = convertedValue;
+        });
+      }
+
+      // Initial rendering of products
+      const initialProductsData = await getAllProductsWithImages();
+      renderProductTypes(initialProductsData);
+      renderProducts(initialProductsData, is_staff);
+
+      // Initial VND conversion for prices
+      var priceElements = document.querySelectorAll('.convert-to-vnd');
+      priceElements.forEach(function (element) {
+        var priceValue = element.innerHTML.trim();
+        var convertedValue = convertToVND(parseFloat(priceValue));
+        element.innerHTML = convertedValue;
+      });
+
+      // Attach event listeners for form changes
+      // $('form').on('change submit', async function (event) {
+      //   event.preventDefault();
+      //   updateProducts();
+      // });
+    });
+  </script>
+
+  <script>
+    // Gọi hàm convertToVND ở đây
+    document.addEventListener("DOMContentLoaded", function () {
+      var priceElements = document.querySelectorAll('.convert-to-vnd');
+      priceElements.forEach(function (element) {
+        var priceValue = element.innerHTML.trim();
+        var convertedValue = convertToVND(parseFloat(priceValue));
+        element.innerHTML = convertedValue;
+      });
+    });
+  </script>
+  <!-- Option 1: Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+
+  <!-- Option 2: Separate Popper and Bootstrap JS -->
+  <!--
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
     -->
-  </body>
+</body>
+
 </html>
