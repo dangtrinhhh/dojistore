@@ -53,7 +53,7 @@
             <div class="card-body p-4">
               <div class="d-flex justify-content-between align-items-center mb-4">
                 <p class="lead fw-normal mb-0" style="color: #3c6fdc;">Đơn hàng</p>
-                <p class="small text-muted mb-0">Mã đơn hàng : 1KAU9-84UIL</p>
+                <p class="small text-muted mb-0">Mã đơn hàng : {{ order_details.order_code }}</p>
               </div>
 
               <div id="product-section"></div>
@@ -102,24 +102,23 @@
 
               <div class="d-flex justify-content-between pt-2">
                 <p class="fw-bold mb-0">Chi tiết đơn hàng</p>
-                <p class="text-muted mb-0"><span class="fw-bold me-4">Tổng cộng</span><span class="total-amount convert-to-vnd"></span></p>
+                <p class="text-muted mb-0"><span class="fw-bold me-4">Tổng cộng</span><span class="convert-to-vnd"></span></p>
               </div>
 
               <div class="d-flex justify-content-between pt-2">
-                <p class="text-muted mb-0">Mã đơn hàng : 788152</p>
+                <p class="text-muted mb-0">Thanh toán: {{ order_details.payment_method }}</p>
                 <p class="text-muted mb-0"><span class="fw-bold me-4">Giảm giá</span> 0 ₫ </p>
               </div>
 
               <div class="d-flex justify-content-between">
-                <p class="text-muted mb-0">Ngày nhận đơn : 22 Dec,2023</p>
+                <p class="text-muted mb-0 date-delivery"></p>
                 <p class="text-muted mb-0"><span class="fw-bold me-4">Phí giao hàng</span> Free</p>
               </div>
 
             </div>
             <div class="card-footer border-0 px-4 py-5"
               style="background-color: #3c6fdc; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
-              <h5 class="d-flex align-items-center justify-content-end text-white text-uppercase mb-0">Total
-                paid: <span class="h2 mb-0 ms-2 total-amount"></span></h5>
+              <h5 class="d-flex align-items-center justify-content-end text-white text-uppercase mb-0">Tổng cộng: <span class="h2 mb-0 ms-2 convert-to-vnd"></span></h5>
             </div>
           </div>
         </div>
@@ -144,66 +143,22 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
     -->
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      var cart_id = "{{ cart.cart_id }}";
-      console.log("🚀 ~ cart_id:", cart_id);
+    var total_amount = "{{ order_details.total_amount }}"
+    console.log("🚀 ~ total_amount:", total_amount)
+    var convertVNDDiv = document.querySelectorAll('.convert-to-vnd');
+    convertVNDDiv.forEach(item => item.innerHTML = convertToVND(parseFloat(total_amount)));
 
-      // Fetch cart details and use the data
-      fetchCartDetails(cart_id)
-        .then(data => {
-          console.log("🚀 ~ fetchCartDetails(cart_id):", data);
-          
-          // Show products
-          products = data;
-          const productsContainer = generateProductCards(products);
-          var productSection = document.getElementById('product-section');
-          productSection.appendChild(productsContainer);
+    function calculateDeliveryDate() {
+      var currentDate = new Date();
+      var deliveryDate = new Date(currentDate.getTime() + (3 * 24 * 60 * 60 * 1000));
+      var options = { year: 'numeric', month: 'short', day: 'numeric' };
+      return deliveryDate.toLocaleDateString('en-US', options);
+    }
 
-
-          let totalAmount = countTotalBill(data);
-
-          var totalAmountDiv = document.querySelectorAll('.total-amount');
-          // var totalAmountProduct = document.getElementById('total-amount-product');
-          totalAmountDiv.forEach(item => item.innerHTML += convertToVND(parseFloat(totalAmount)));
-          // totalAmountProduct.innerHTML += convertToVND(parseFloat(totalAmount));
-
-          // Lắng nghe sự kiện click của các nút tăng/giảm và cập nhật giá trị của ô input
-          document.querySelectorAll('.btn-plus').forEach(btnPlus => {
-            btnPlus.addEventListener('click', event => {
-              const input = event.target.parentNode.querySelector('input[type=number]');
-              if (input) {
-                input.stepUp();
-                input.dispatchEvent(new Event('input')); // Gửi sự kiện input để cập nhật giá trị
-              }
-            });
-          });
-
-          document.querySelectorAll('.btn-minus').forEach(btnMinus => {
-            btnMinus.addEventListener('click', event => {
-              const input = event.target.parentNode.querySelector('input[type=number]');
-              if (input) {
-                input.stepDown();
-                input.dispatchEvent(new Event('input')); // Gửi sự kiện input để cập nhật giá trị
-              }
-            });
-          });
-
-          // Lắng nghe sự kiện input của ô input và gọi hàm cập nhật số lượng
-          document.querySelectorAll('.product-quantity').forEach(input => {
-            input.addEventListener('input', event => {
-              const cartProductId = event.target.dataset.cartProductId;
-              const quantity = event.target.value;
-              updateCartItemQuantity(cartProductId, quantity);
-            });
-          });
-          // Continue with other tasks as needed
-          // fetchCart();
-        })
-        .catch(error => {
-          // Handle the error if necessary
-          console.error('Error fetching cart details:', error);
-        });
-    });
+    // Lấy ngày nhận đơn từ Django template và hiển thị
+    var deliveryDate = calculateDeliveryDate();
+    document.querySelector(".date-delivery").innerText = "Ngày nhận đơn: " + deliveryDate;
+    document.addEventListener('DOMContentLoaded', function () {});
   </script>
 </body>
 

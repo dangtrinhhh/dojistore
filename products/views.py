@@ -71,8 +71,6 @@ def index(request):
         user_profile, created = Users.objects.get_or_create(user=user)
         cart, created = Carts.objects.get_or_create(user=user_profile)
     
-    # print(request.META.get("REMOTE_ADDR"))
-    
     product_types = Product_Types.objects.all()
     products_with_images = getProductOrderedType()
     blogs = Blogs.objects.all().order_by('-created_at')[:6]
@@ -351,7 +349,6 @@ def cart(request):
         user_profile, created = Users.objects.get_or_create(user=user)
         user = user_profile.user
         cart, created = Carts.objects.get_or_create(user=user_profile)
-    print(user)
     return render(request, 'cart.html', {'user': user, 'cart': cart, 'blogs': blogs})
 
 
@@ -361,15 +358,21 @@ def orders(request):
 def orderHistory(request):
     return render(request, 'orderHistory.html', {})
 
-def orderDetails(request):
+def orderDetails(request, slug):
     user = request.user
-    print(user)
     cart = None
-    if user.is_authenticated:
+    try:
+        order_details = Orders.objects.get(order_code=slug)
+    except Orders.DoesNotExist:
+        return redirect('/404')
+        
+    if user.is_authenticated and order_details:
         user_profile, created = Users.objects.get_or_create(user=user)
         cart, created = Carts.objects.get_or_create(user=user_profile)
-
-    return render(request, 'orderDetails.html', {'user': user, 'cart': cart})
+        if user_profile.id == order_details.user_id:
+            return render(request, 'orderDetails.html', {'user': user, 'cart': cart, 'order_details': order_details})
+    
+    return redirect('/404')
 
 def payment(request):
     return render(request, 'payment.html', {})
@@ -396,6 +399,8 @@ def server_error_view(request):
 def handler404(request, exception):
     return render(request, '404.html', status=404)
 
+def notFound(request):
+    return render(request, '404.html', status=404)
 
 # _____________________API_________________________
 
@@ -436,8 +441,24 @@ class ProductSearchView(generics.ListAPIView):
                 if name:
                     products = products.filter(Q(name__icontains=name) | Q(description__icontains=name))
                 if pricesale:
-                    min_price, max_price = (0, 1000000) if pricesale == '<1000000' else (5000000, float('inf'))
-                    products = products.filter(pricesale__range=(min_price, max_price))
+                    if '-' in pricesale:
+                        min_price, max_price = map(int, pricesale.split('-'))
+                    else:
+                        if pricesale == '<1000000':
+                            min_price = 0
+                            max_price = 1000000
+                        elif pricesale == '>5000000':
+                            min_price = 5000000
+                            max_price = float('inf')
+                    # Tạo danh sách lọc
+                    filtered_products = []
+                    for product in products:
+                        # Chuyển đổi giá tiền từ chuỗi thành số
+                        product_pricesale = int(product.pricesale)
+                        if min_price <= product_pricesale < max_price:
+                            filtered_products.append(product)
+
+                    products = filtered_products                
 
                 serialized_products = ProductSerializer(products, many=True).data
 
@@ -449,8 +470,25 @@ class ProductSearchView(generics.ListAPIView):
                 if name:
                     products = products.filter(Q(name__icontains=name) | Q(description__icontains=name))
                 if pricesale:
-                    min_price, max_price = (0, 1000000) if pricesale == '<1000000' else (5000000, float('inf'))
-                    products = products.filter(pricesale__range=(min_price, max_price))
+                    if '-' in pricesale:
+                        min_price, max_price = map(int, pricesale.split('-'))
+                    else:
+                        if pricesale == '<1000000':
+                            min_price = 0
+                            max_price = 1000000
+                        elif pricesale == '>5000000':
+                            min_price = 5000000
+                            max_price = float('inf')
+
+                    # Tạo danh sách lọc
+                    filtered_products = []
+                    for product in products:
+                        # Chuyển đổi giá tiền từ chuỗi thành số
+                        product_pricesale = int(product.pricesale)
+                        if min_price <= product_pricesale < max_price:
+                            filtered_products.append(product)
+
+                    products = filtered_products
 
                 serialized_products = ProductSerializer(products, many=True).data
 
@@ -462,7 +500,6 @@ class ProductSearchView(generics.ListAPIView):
 
                 queryset.append({'type': ProductTypeSerializer(product_type).data, 'products': serialized_products})
 
-        print(queryset)
         return queryset
     
     def list(self, request, *args, **kwargs):
@@ -473,7 +510,6 @@ class ProductSearchView(generics.ListAPIView):
         for product_data in serializer.data:
             products = product_data['products']
             for product in products:
-                print(product)
                 product_obj = Products.objects.get(product_id=product['product_id'])
                 images_serializer = ProductImageSerializer(product_obj.product_images.all(), many=True)
                 product['images'] = images_serializer.data
@@ -506,7 +542,6 @@ class ProductWithTypeAPIView(generics.ListAPIView):
         for product_data in serializer.data:
             products = product_data['products']
             for product in products:
-                print(product)
                 product_obj = Products.objects.get(product_id=product['product_id'])
                 images_serializer = ProductImageSerializer(product_obj.product_images.all(), many=True)
                 product['images'] = images_serializer.data

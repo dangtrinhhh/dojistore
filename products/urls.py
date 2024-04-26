@@ -42,13 +42,15 @@ urlpatterns = [
     path('cart', views.cart, name='cart'),
     path('orders', views.orders, name='orders'),
     path('order/history', views.orderHistory, name='orderHistory'),
-    path('order/details', views.orderDetails, name='orderDetails'),
+    path('order/details/<str:slug>', views.orderDetails, name='orderDetails'),
     path('order/payment', views.payment, name='payment'),
     path('order/payment/success/', views.paymentSuccess, name='paymentSuccess'),
     path('order/payment/failed/', views.paymentFailed, name='paymentFailed'),
     path('accounts/password/reset/', CustomPasswordResetView.as_view(), name='account_reset_password'),
     path('accounts/', include('allauth.urls')),
     path('handler404/', handler404),
+    path('404', views.notFound, name='notFound'),
+
     # path('accounts/reset/fail', CustomPasswordResetView.as_view(), name='password_reset'),
     
     # ____________________________________API_____________________________________

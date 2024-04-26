@@ -214,6 +214,7 @@
       const day = currentDate.getDate().toString().padStart(2, '0');
 
       let username = user.toString().toUpperCase()
+      console.log("🚀 ~ user:", typeof user)
       
       let order = {
         "payment_method": "Zalopay",
@@ -222,6 +223,12 @@
         "status": "pending",
         "order_details": orderDetails,
       }
+
+      let payload_zalopay = {
+        'username': user,
+        'price': countTotalBill(products)
+      }
+      console.log("🚀 ~ payload_zalopay:", JSON.stringify(payload_zalopay))
       // "order_code": `${year}${month}${day}${username}${user.id}`
       
       createOrderDoubleTBad(order);
@@ -232,16 +239,24 @@
           'Content-Type': 'application/json',
           'X-CSRFToken': getCookie('csrftoken')
         },
-        body: JSON.stringify('payload'),
+        body: JSON.stringify(payload_zalopay),
       })
         .then(response => response.json())
         .then(data => {
           console.log('Processed payment:', data);
-          window.location.href = data.order_url;
+          if (data.return_code === 1) {
+            window.location.href = data.order_url;
+          } else if (data.return_code === 2) {
+            window.location.href = '/cart';
+          }
         })
         .catch(error => {
           console.error('Error when processing image:', error);
         })
+      
+      
+      
+      // End Process Payment
     }
 
     // Call the function to render product HTML

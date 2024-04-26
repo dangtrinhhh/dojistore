@@ -32,7 +32,7 @@ def add_to_cart(request):
 
     # Cập nhật thông tin giỏ hàng
     cart.total_quantity += quantity
-    cart.total_amount += int(product.price) * quantity
+    cart.total_amount += int(product.pricesale) * quantity
     cart.save()
 
     # Serialize giỏ hàng để trả về thông tin mới nhất
@@ -53,7 +53,6 @@ def update_cart_item_quantity(request, cart_detail_id):
 
     # Update total_quantity in cart
     cart_detail.cart.total_quantity += (int(new_quantity) - int(cart_detail.quantity))
-    print(cart_detail.cart.total_quantity)
     cart_detail.cart.save()
 
     # Update total_amount in cart
@@ -157,31 +156,6 @@ def order_detail(request, order_id):
         return Response({'order': order_serializer.data, 'order_details': details_serializer.data})
     except Orders.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    
-#_________________________________________________________________
-
-# Create your views here.
-# def add_to_cart(request, product_id):
-#     # Lấy hoặc tạo giỏ hàng cho người dùng
-#     cart, created = Carts.objects.get_or_create(user=request.user)
-
-#     # Thêm sản phẩm vào giỏ hàng
-#     product = Products.objects.get(pk=product_id)
-#     cart.products.add(product)
-
-#     return redirect('cart')
-
-# def view_cart(request):
-#     # Lấy giỏ hàng của người dùng
-#     user = request.user  # Đây là user đăng nhập, nếu có
-#     cart = None
-#     if user.is_authenticated:
-#         user_profile, created = Users.objects.get_or_create(user=user)
-#         cart, created = Carts.objects.get_or_create(user=user_profile)
-    
-#     print(cart)
-#     # Hiển thị thông tin giỏ hàng trong template
-#     return render(request, 'cart.html', {'cart': cart})
 
 #_______________________________________API__________________________________
 
@@ -282,6 +256,8 @@ def hash_mac(key, data):
 
 @api_view(['POST'])
 def process_payment(request):
+    username = request.data.get('username')
+    price = request.data.get('price')
     config = {
         "app_id": 2553,
         "key1": "PcY4iZIKFCIdgZvA6ueMcMHHUbRLYjPL",
@@ -293,11 +269,11 @@ def process_payment(request):
     order = {
         "app_id": config["app_id"],
         "app_trans_id": "{:%y%m%d}_{}".format(datetime.today(), transID), # mã giao dich có định dạng yyMMdd_xxxx
-        "app_user": "Dang Trinh",
+        "app_user": username,
         "app_time": int(round(time() * 1000)), # miliseconds
         "embed_data": generate_embed_data(''),
         "item": json.dumps([{}]),
-        "amount": 100,
+        "amount": price,
         "description": "DoubleTBad - Thanh toán đơn hàng #" + str(transID),
         "bank_code": "zalopayapp",
         "callback_url": ZALOPAY_CALLBACK_URL,
@@ -320,12 +296,30 @@ def process_payment(request):
     # personal_information = main(image_file)
 
     return Response(result, status=status.HTTP_200_OK)
+    
 
 @api_view(['POST'])
 def payment_status(request):
+    user = request.user
+    user_profile, created = Users.objects.get_or_create(user=user)
     type = request.data.get('type')
-    print(f"{CALLBACK_URL}order/payment/success")
+    # print(f"{CALLBACK_URL}order/payment/success")
+    
     if (type == 1):
+        user = request.user
+        user_profile, created = Users.objects.get_or_create(user=user)
+        try:
+            # Lấy giỏ hàng của người dùng
+            cart, created = Carts.objects.get_or_create(user=user_profile.id)
+            # Xóa tất cả chi tiết giỏ hàng của giỏ hàng đó
+            cart_details = Cart_Details.objects.filter(cart=cart)
+            # Xóa chi tiết giỏ hàng
+            cart_details.delete()
+            # Xóa giỏ hàng
+            cart.delete()
+        except Carts.DoesNotExist:
+            print({'error': 'Cart not found'})
+
         return redirect(f"{CALLBACK_URL}order/payment/success")
     else:
         return redirect(f"{CALLBACK_URL}order/payment/fail")
