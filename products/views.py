@@ -353,7 +353,14 @@ def cart(request):
 
 
 def orders(request):
-    return render(request, 'orders.html', {})
+    user = request.user
+    blogs = Blogs.objects.all().order_by('-created_at')
+
+    if user.is_authenticated:
+        user_profile, created = Users.objects.get_or_create(user=user)
+        orders = Orders.objects.filter(user=user_profile).order_by('-created_at')
+
+    return render(request, 'orders.html', {'orders': orders, 'blogs': blogs})
 
 def orderHistory(request):
     return render(request, 'orderHistory.html', {})

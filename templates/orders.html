@@ -15,8 +15,15 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/products.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/cart.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/tables.css' %}">
     <link rel="stylesheet" href="{% static '/font/themify-icons-font/themify-icons.css' %}">
     <link rel="stylesheet" href="{% static 'font/fontawesome/css/all.css' %}">
+    <!-- Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <!-- Data Table CSS -->
+    <link rel='stylesheet' href='https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css'>
+    <!-- Font Awesome CSS -->
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css'>
     <title>DoubleT Bad | Thanh toán thành công</title>
 </head>
 
@@ -34,36 +41,60 @@
     <!-- Modal End -->
 
     <!-- Orders Start -->
+    <div class="gradient-custom h-100"
+        style="display: flex; align-items: center; justify-content: center; padding-top: 50px;">
+        <section class="w-100">
+            <div class="container py-5">
+                <div class="row justify-content-center">
+                    <div class="col-lg-12 col-xl-12">
+                        <div class="card shadow" style="border-radius: 10px;">
+                            <div class="card-body">
+                                <!-- sort table edit here -->
+                                <table id="example" class="table table-striped" style="width:100%" data-order='[[ 0, "asc" ]]' data-page-length='10'>
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Mã đơn hàng</th>
+                                            <th>Thanh toán</th>
+                                            <th>Đơn giá</th>
+                                            <th>Ngày đặt đơn</th>
+                                            <th>Trạng thái</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for order in orders %}
+                                        <tr>
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>{{ order.order_code }}</td>
+                                            <td>{{ order.payment_method }}</td>
+                                            <td>{{ order.total_amount }}</td>
+                                            <td>{{ order.created_at }}</td>
+                                            <td>{{ order.status }}</td>
+                                            <td><button><a href="/order/details/{{ order.order_code }}">Chi tiết</a></button></td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Mã đơn hàng</th>
+                                            <th>Thanh toán</th>
+                                            <th>Đơn giá</th>
+                                            <th>Ngày đặt đơn</th>
+                                            <th>Trạng thái</th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 
-    <table class="table" style="margin-top: 100px;">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td colspan="2">Larry the Bird</td>
-                <td>@twitter</td>
-            </tr>
-        </tbody>
-    </table>
 
     <!-- Orders End -->
 
@@ -72,247 +103,52 @@
     <!-- Optional JavaScript; choose one of the two! -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="{% static 'js/main.js' %}"></script>
+
+    <!-- jQuery -->
+    <script src='https://code.jquery.com/jquery-3.7.0.js'></script>
+    <!-- Data Table JS -->
+    <script src='https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js'></script>
+    <script src='https://cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js'></script>
+    <script src='https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js'></script>
     <script>
-        let products = []
-
-        function convertToVND(money) {
-            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(money);
-        }
-
-        // Function to generate HTML code based on product data
-        function generateProductHTML(product) {
-            console.log("🚀 ~ product:", product.product.product_id)
-            return `
-            <div class="product_id-${product.product.product_id}">
-              <div class="row">
-                <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
-                  <!-- Image -->
-                  <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
-                    <img src="${product.product.images[0].url}" class="w-100" />
-                    <a href="#!">
-                      <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
-                    </a>
-                  </div>
-                  <!-- Image -->
-                </div>
-      
-                <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
-                  <!-- Data -->
-                  <p><strong>${product.product.name}</strong></p>
-                  <p>Đã bán: ${product.product.quantity_sold}</p>
-                  <p>Còn lại: ${product.product.quantity}</p>
-      
-                  <button type="button" class="btn btn-primary btn-sm me-1 mb-2" data-mdb-toggle="tooltip" title="Xóa">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                  <button type="button" class="btn btn-danger btn-sm mb-2" data-mdb-toggle="tooltip" title="Thích">
-                    <i class="fas fa-heart"></i>
-                  </button>
-                  <!-- Data -->
-                </div>
-      
-                <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
-                  <!-- Quantity -->
-                  <div class="d-flex mb-4" style="max-width: 300px">
-                    <button class="btn btn-primary px-3 me-2 btn-minus">
-                      <i class="fas fa-minus"></i>
-                    </button>
-      
-                    <div class="form-outline">
-                      <input id="form1" min="0" name="quantity" value="${product.quantity}" type="number" class="form-control product-quantity" data-cart-product-id="${product.cart_details_id}" />
-                      <label class="form-label" for="form1">Số lượng</label>
-                    </div>
-      
-                    <button class="btn btn-primary px-3 ms-2 btn-plus">
-                      <i class="fas fa-plus"></i>
-                    </button>
-                  </div>
-                  <!-- Quantity -->
-      
-                  <!-- Price -->
-                  <p class="text-start text-md-center convert-to-vnd">
-                    <strong>${convertToVND(parseFloat(product.product.pricesale))}</strong>
-                  </p>
-                  <!-- Price -->
-                </div>
-              </div>
-              <hr class="my-4" />
-            </div>
-        `;
-        }
-
-
-        // Function to render product HTML in the container
-        function renderProductHTML(productData) {
-            var productContainer = document.getElementById('productContainer');
-            productData.forEach(function (product) {
-                productContainer.innerHTML += generateProductHTML(product);
-            });
-        }
-
-        // Call the function to render product HTML
-        // renderProductHTML(a);
-
+        var data = "{{ orders }}";
         document.addEventListener('DOMContentLoaded', function () {
-            var cart_id = "{{ cart.cart_id }}";
-            console.log("🚀 ~ cart_id:", cart_id);
 
-            // Fetch cart details and use the data
-            fetchCartDetails(cart_id)
-                .then(data => {
-                    console.log("🚀 ~ fetchCartDetails(cart_id):", data);
-                    products = data;
-                    renderProductHTML(data);
-
-                    let totalAmount = countTotalBill(data);
-
-                    var totalAmountDiv = document.getElementById('total-amount');
-                    var totalAmountProduct = document.getElementById('total-amount-product');
-                    totalAmountDiv.innerHTML += convertToVND(parseFloat(totalAmount));
-                    totalAmountProduct.innerHTML += convertToVND(parseFloat(totalAmount));
-
-                    // Lắng nghe sự kiện click của các nút tăng/giảm và cập nhật giá trị của ô input
-                    document.querySelectorAll('.btn-plus').forEach(btnPlus => {
-                        btnPlus.addEventListener('click', event => {
-                            const input = event.target.parentNode.querySelector('input[type=number]');
-                            if (input) {
-                                input.stepUp();
-                                input.dispatchEvent(new Event('input')); // Gửi sự kiện input để cập nhật giá trị
-                            }
-                        });
-                    });
-
-                    document.querySelectorAll('.btn-minus').forEach(btnMinus => {
-                        btnMinus.addEventListener('click', event => {
-                            const input = event.target.parentNode.querySelector('input[type=number]');
-                            if (input) {
-                                input.stepDown();
-                                input.dispatchEvent(new Event('input')); // Gửi sự kiện input để cập nhật giá trị
-                            }
-                        });
-                    });
-
-                    // Lắng nghe sự kiện input của ô input và gọi hàm cập nhật số lượng
-                    document.querySelectorAll('.product-quantity').forEach(input => {
-                        input.addEventListener('input', event => {
-                            const cartProductId = event.target.dataset.cartProductId;
-                            const quantity = event.target.value;
-                            updateCartItemQuantity(cartProductId, quantity);
-                        });
-                    });
-                    // Continue with other tasks as needed
-                    // fetchCart();
+            $(document).ready(function () {
+                $('#example').DataTable({
+                    //disable sorting on last column
+                    paging: true,
+                    "columnDefs": [
+                    {
+                        targets: [4],
+                        orderData: [1, 0]
+                    },
+                    { "orderable": false, "targets": 6 },
+                    ],
+                    language: {
+                        //customize pagination prev and next buttons: use arrows instead of words
+                        'paginate': {
+                            'previous': '<span class="fa fa-chevron-left"></span>',
+                            'next': '<span class="fa fa-chevron-right"></span>'
+                        },
+                        //customize number of elements to be displayed
+                        "lengthMenu": 'Display <select class="form-control input-sm">' +
+                            '<option value="10">10</option>' +
+                            '<option value="20">20</option>' +
+                            '<option value="30">30</option>' +
+                            '<option value="40">40</option>' +
+                            '<option value="50">50</option>' +
+                            '<option value="-1">All</option>' +
+                            '</select> results'
+                    }, 
+                    order: [[0, 'desc']]
                 })
-                .catch(error => {
-                    // Handle the error if necessary
-                    console.error('Error fetching cart details:', error);
-                });
-
-            var priceElements = document.querySelectorAll('.convert-to-vnd');
-            priceElements.forEach(function (element) {
-                var priceValue = element.innerHTML.trim();
-                var convertedValue = convertToVND(parseFloat(priceValue));
-                element.innerHTML = convertedValue;
             });
-        });
 
-        // Hàm để gọi API cập nhật số lượng
-        function updateCartItemQuantity(cartDetailId, newQuantity) {
-            // Tạo một đối tượng chứa dữ liệu cần gửi
-            const data = {
-                quantity: newQuantity
-            };
-            console.log("🚀 ~ data:", data)
+        })
 
-            // Gửi request PUT đến endpoint update-cart-item-quantity/<cart_detail_id>/
-            fetch(`/api/update-cart-item-quantity/${cartDetailId}/`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken')  // Lấy CSRF token từ cookie
-                },
-                body: JSON.stringify(data)
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to update cart item quantity');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // Xử lý dữ liệu trả về nếu cần
-                    console.log('Cart item quantity updated:', data);
-                    if (data && data.quantity === 0) {
-                        // Remove if quantity equal to 0
-                        fetch(`/api/delete-cart-item/${cartDetailId}/`, {
-                            method: 'DELETE',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRFToken': getCookie('csrftoken') // Lấy CSRF token từ cookie
-                            }
-                        })
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error('Failed to delete cart item');
-                                }
-                                // Xóa thành công, có thể thực hiện các hành động cần thiết (ví dụ: cập nhật giao diện người dùng)
-                            })
-                            .catch(error => {
-                                console.error('Error deleting cart item:', error);
-                                // Xử lý lỗi nếu cần
-                            });
-                        // Remove if quantity equal to 0
-                        const foundProductIndex = products.findIndex(item => item.product && item.product.product_id == data.product.product_id);
-                        if (foundProductIndex !== -1) {
-                            products[foundProductIndex].quantity = data.quantity;
-                            console.log("🚀 ~ products:", products);
-                        }
-
-                        $(`.product_id-${data.product.product_id}`).remove();
-                    } else {
-                        const foundProduct = products.find(item => item.product && item.product.product_id == data.product.product_id);
-                        if (foundProduct) {
-                            foundProduct.quantity = data.quantity;
-                            console.log("🚀 ~ products:", products);
-                        }
-                    }
-
-                    // Ví dụ: Cập nhật giao diện người dùng để hiển thị số lượng mới
-                    let totalAmount = countTotalBill(products);
-
-                    var totalAmountDiv = document.getElementById('total-amount');
-                    var totalAmountProduct = document.getElementById('total-amount-product');
-                    totalAmountDiv.innerHTML = convertToVND(parseFloat(totalAmount));
-                    totalAmountProduct.innerHTML = convertToVND(parseFloat(totalAmount));
-
-                    let totalQuantity = countTotalItems(products);
-                    var totalQuantityProduct = document.getElementById('cart-item-count');
-                    var totalItems = document.querySelector('.total-item-cart-quantity');
-
-                    totalQuantityProduct.innerHTML = totalQuantity;
-                    totalItems.innerHTML = `Giỏ hàng - ${totalQuantity} Sản phẩm`
-                })
-                .catch(error => {
-                    console.error('Error updating cart item quantity:', error);
-                    // Xử lý lỗi nếu cần
-                });
-        }
-
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    // Kiểm tra xem cookie có tên là name= không
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
+        // JS for tables
+        // End Script
     </script>
     <!-- Option 1: Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
