@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,7 +29,7 @@ DEBUG = True
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'c056-2405-4802-90a4-50f0-64ee-63ac-8d18-fd9.ngrok-free.app']
 ALLOWED_HOSTS = ['*']
 # ALLOWED_HOSTS = [".awsapprunner.com"]
-CSRF_TRUSTED_ORIGINS = ['https://8a1d-2405-4802-90a4-50f0-e40d-1c7a-1846-bd8a.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS = ['https://581d-2405-4802-8002-c850-4522-6467-b49c-cfcd.ngrok-free.app']
 
 # Application definition
 
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'rest_framework',
     'corsheaders',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -159,6 +161,21 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# Django x JWT
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ],
+}
+
 
 AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',

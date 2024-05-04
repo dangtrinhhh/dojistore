@@ -3,11 +3,13 @@ from .views import (
     CartListCreateView, CartDetailView,
     CartDetailListCreateView, CartDetailDetailView,
     OrderListCreateView, OrderDetailView,
-    OrderDetailListCreateView, OrderDetailDetailView
+    OrderDetailListCreateView, OrderDetailDetailView, LoginAPIView
 )
 from . import views
 
 urlpatterns = [
+    path('login/', LoginAPIView.as_view(), name='api_login'),
+
     path('add-to-cart/', views.add_to_cart, name='add-to-cart'),
     path('carts/', CartListCreateView.as_view(), name='cart-list-create'),
     path('carts/<int:pk>/', CartDetailView.as_view(), name='cart-detail'),

@@ -13,6 +13,7 @@ from django.urls import reverse
 from allauth.account.utils import filter_users_by_email
 import numpy as np
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework_simplejwt.tokens import RefreshToken
 
 class CustomPasswordResetView(PasswordResetView):
     def form_valid(self, form):
@@ -85,6 +86,10 @@ def index(request):
 
             if user is not None:
                 auth.login(request, user)
+                refresh = RefreshToken.for_user(user)
+                # Lưu refresh token vào session hoặc cookie
+                request.session['refresh_token'] = str(refresh)
+                
                 messages.success(request, f"Login successfully! Welcome back, {username}.")
                 return redirect('/')
             else:
@@ -352,15 +357,29 @@ def cart(request):
     return render(request, 'cart.html', {'user': user, 'cart': cart, 'blogs': blogs})
 
 
+def convert_to_vnd(amount):
+    amount = int(amount)
+    formatted_amount = "{:,}".format(int(amount))
+
+    formatted_amount = formatted_amount.replace(',', '.')
+
+    formatted_amount += ' đ'
+
+    return formatted_amount
+
 def orders(request):
     user = request.user
     blogs = Blogs.objects.all().order_by('-created_at')
 
     if user.is_authenticated:
         user_profile, created = Users.objects.get_or_create(user=user)
+        cart, created = Carts.objects.get_or_create(user=user_profile)
         orders = Orders.objects.filter(user=user_profile).order_by('-created_at')
 
-    return render(request, 'orders.html', {'orders': orders, 'blogs': blogs})
+        for order in orders:
+            order.total_amount = convert_to_vnd(order.total_amount)
+
+    return render(request, 'orders.html', {'orders': orders, 'cart': cart, 'blogs': blogs})
 
 def orderHistory(request):
     return render(request, 'orderHistory.html', {})
@@ -385,9 +404,16 @@ def payment(request):
     return render(request, 'payment.html', {})
 
 def paymentSuccess(request):
-    if 'amount' in request.GET:
-        return render(request, 'paymentSuccess.html', {})
-    return render(request, 'paymentSuccess.html', {})
+    user = request.user
+    if user.is_authenticated:
+        user_profile, created = Users.objects.get_or_create(user=user)
+        order = Orders.objects.filter(user=user_profile).order_by('-created_at')[0]
+        print(order)
+
+    if ('amount' in request.GET) or (order is not None):
+        return render(request, 'paymentSuccess.html', {'order_code': order.order_code})
+    
+    return render(request, 'paymentSuccess.html')
 
 def paymentFailed(request):
     if 'amount' in request.GET:

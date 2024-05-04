@@ -8,36 +8,69 @@ from .models import Carts, Cart_Details
 from .serializers import CartSerializer, CartDetailSerializer
 from decimal import Decimal
 from django.db.models import F
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken
 
 #_________________________________API________________________________
+# Trong views.py của ứng dụng của bạn
+from rest_framework.views import APIView
+from django.contrib.auth import authenticate
+from django.contrib.auth.models import User, auth
+from django.contrib import messages
+class LoginAPIView(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            refresh = RefreshToken.for_user(user)
+            auth.login(request, user)
+            messages.success(request, f"Login successfully! Welcome back, {username}.")
+            return Response({'refreshToken': str(refresh), 'accessToken': str(refresh.access_token)}, status=status.HTTP_200_OK)
+        else:
+            messages.info(request, 'Invalid username or password.')
+            return Response({'message': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def add_to_cart(request):
+    if 'Authorization' not in request.headers:
+        return Response({"message": "JWT is missing in request header."}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    refresh_token = request.session.get('refresh_token')
+    print(refresh_token)
+
     # Lấy thông tin sản phẩm từ request data (POST data)
     product_id = request.data.get('product_id')
     quantity = request.data.get('quantity', 1)  # Mặc định là 1 nếu không có quantity
 
-    # Lấy hoặc tạo giỏ hàng cho người dùng hiện tại
-    user = request.user  # Đây là user đăng nhập, nếu có
-    user_profile, created = Users.objects.get_or_create(user=user)
-    cart, created = Carts.objects.get_or_create(user=user_profile)
+    try:
+        user = request.user  # Đây là user đăng nhập, nếu có
+        user_profile, created = Users.objects.get_or_create(user=user)
+        cart, created = Carts.objects.get_or_create(user=user_profile)
 
-    # Lấy thông tin sản phẩm từ database
-    product = Products.objects.get(pk=product_id)
+        # Lấy thông tin sản phẩm từ database
+        product = Products.objects.get(pk=product_id)
 
-    # Tạo hoặc cập nhật chi tiết giỏ hàng cho sản phẩm
-    cart_detail, created = Cart_Details.objects.get_or_create(cart=cart, product=product)
-    cart_detail.quantity += quantity
-    cart_detail.save()
+        # Tạo hoặc cập nhật chi tiết giỏ hàng cho sản phẩm
+        cart_detail, created = Cart_Details.objects.get_or_create(cart=cart, product=product)
+        cart_detail.quantity += quantity
+        cart_detail.save()
 
-    # Cập nhật thông tin giỏ hàng
-    cart.total_quantity += quantity
-    cart.total_amount += int(product.pricesale) * quantity
-    cart.save()
+        # Cập nhật thông tin giỏ hàng
+        cart.total_quantity += quantity
+        cart.total_amount += int(product.pricesale) * quantity
+        cart.save()
 
-    # Serialize giỏ hàng để trả về thông tin mới nhất
-    cart_serializer = CartSerializer(cart)
-    return Response(cart_serializer.data, status=status.HTTP_200_OK)
+        # Serialize giỏ hàng để trả về thông tin mới nhất
+        cart_serializer = CartSerializer(cart)
+        return Response(cart_serializer.data, status=status.HTTP_200_OK)
+    except Users.DoesNotExist:
+        return Response({"message": "Fail to add product to cart."}, status=status.HTTP_404_NOT_FOUND)
+    
 
 @api_view(['PUT'])
 def update_cart_item_quantity(request, cart_detail_id):
@@ -179,12 +212,16 @@ class CartDetailListCreateView(generics.ListCreateAPIView):
     serializer_class = CartDetailSerializer
 
 class CartDetailDetailView(generics.ListAPIView):
-    # generics.RetrieveUpdateDestroyAPIView
     serializer_class = CartDetailSerializer
+
+    def dispatch(self, request, *args, **kwargs):
+        if 'Authorization' not in request.headers:
+            return Response({"message": "JWT is missing in request header."}, status=status.HTTP_401_UNAUTHORIZED)
+        return super().dispatch(request, *args, **kwargs)
+    
     def get_queryset(self):
         cart_id = self.kwargs['pk']
         return Cart_Details.objects.filter(cart__cart_id=cart_id)
-    # queryset = Cart_Details.objects.all()
 
 class OrderListCreateView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Orders.objects.all()
@@ -224,7 +261,8 @@ from time import time
 from datetime import datetime
 import json, hmac, hashlib, urllib.request, urllib.parse, random
 
-CALLBACK_URL='https://8a1d-2405-4802-90a4-50f0-e40d-1c7a-1846-bd8a.ngrok-free.app/'
+# CALLBACK_URL='http://127.0.0.1:8000/'
+CALLBACK_URL='https://581d-2405-4802-8002-c850-4522-6467-b49c-cfcd.ngrok-free.app/'
 ZALOPAY_KEY_1 = "sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn"
 ZALOPAY_APP_ID = 2554
 ZALOPAY_CALLBACK_URL = f"{CALLBACK_URL}api/payment-status/"
@@ -239,7 +277,8 @@ def generate_embed_data(provider):
     preferred_payment_method = []
     embed_data = {
         'preferred_payment_method': preferred_payment_method,
-        'redirecturl': f"{CALLBACK_URL}order/payment/success/"
+        'redirecturl': f"{CALLBACK_URL}order/payment/success/",
+        'user_id': provider
     }
     return json.dumps(embed_data)
 
@@ -257,6 +296,7 @@ def hash_mac(key, data):
 @api_view(['POST'])
 def process_payment(request):
     username = request.data.get('username')
+    userid = request.data.get('userid')
     price = request.data.get('price')
     config = {
         "app_id": 2553,
@@ -271,7 +311,7 @@ def process_payment(request):
         "app_trans_id": "{:%y%m%d}_{}".format(datetime.today(), transID), # mã giao dich có định dạng yyMMdd_xxxx
         "app_user": username,
         "app_time": int(round(time() * 1000)), # miliseconds
-        "embed_data": generate_embed_data(''),
+        "embed_data": generate_embed_data(userid),
         "item": json.dumps([{}]),
         "amount": price,
         "description": "DoubleTBad - Thanh toán đơn hàng #" + str(transID),
@@ -300,15 +340,26 @@ def process_payment(request):
 
 @api_view(['POST'])
 def payment_status(request):
-    user = request.user
-    user_profile, created = Users.objects.get_or_create(user=user)
+#     user = request.user
+#     user_profile, created = Users.objects.get_or_create(user=user)
+    print(request.data)
     type = request.data.get('type')
+    # request_data = request.data.get('data')
     # print(f"{CALLBACK_URL}order/payment/success")
+    data_dict = json.loads(request.data['data'])
+
+    # Phân tích dữ liệu JSON từ chuỗi JSON trong khóa "embed_data"
+    embed_data_dict = json.loads(data_dict['embed_data'])
+
+    # Lấy giá trị của khóa "user_id"
+    user_id = embed_data_dict['user_id']
     
     if (type == 1):
-        user = request.user
-        user_profile, created = Users.objects.get_or_create(user=user)
+        # user_id = request_data['embed_data']['user_id']
+        print("🚀 ~ user_id:", user_id)
+        
         try:
+            user_profile = Users.objects.get(user=user_id)
             # Lấy giỏ hàng của người dùng
             cart, created = Carts.objects.get_or_create(user=user_profile.id)
             # Xóa tất cả chi tiết giỏ hàng của giỏ hàng đó
@@ -317,8 +368,8 @@ def payment_status(request):
             cart_details.delete()
             # Xóa giỏ hàng
             cart.delete()
-        except Carts.DoesNotExist:
-            print({'error': 'Cart not found'})
+        except Users.DoesNotExist:
+            print({'error': 'Not found'})
 
         return redirect(f"{CALLBACK_URL}order/payment/success")
     else:
@@ -329,4 +380,4 @@ def payment_status(request):
     # f"{CALLBACK_URL}order/payment/success"
     # Process result
 
-    return Response(result, status=status.HTTP_200_OK)
+    return Response(type, status=status.HTTP_200_OK)

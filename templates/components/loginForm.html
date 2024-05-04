@@ -9,9 +9,7 @@
       <header class="modal-header-custom">Chào mừng đến với DoubleT Bad</header>
 
       <div class="modal-body">
-        <!-- For: only use with id -->
-        <form method="POST" action="{% url 'login' %}">
-          {% csrf_token %}
+        <form id="loginForm">
           <label class="modal-label">
             <i class="ti-user"></i>
             Tên đăng nhập
@@ -60,3 +58,45 @@
       </div>
     </div>
 </div>
+
+<script>
+  document.getElementById('loginForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var formData = new FormData(this);
+    fetch('/api/login/', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('Failed to log in');
+        }
+    })
+    .then(data => {
+        if (data.hasOwnProperty('accessToken')) {
+            // Đăng nhập thành công, lưu trữ accessToken
+            var accessToken = data.accessToken;
+            var refreshToken = data.refreshToken
+
+            // Lưu trữ accessToken vào localStorage hoặc sessionStorage
+            localStorage.setItem('accessToken', data.accessToken);
+            localStorage.setItem('refreshToken', data.refreshToken);
+            
+            console.log("🚀 ~ accessToken:", accessToken)
+            window.location.href = '/';
+            
+            // Tiếp tục xử lí sau khi đăng nhập thành công
+        } else {
+            // Đăng nhập không thành công, xử lí thông báo lỗi
+            console.error('Failed to log in:', data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+});
+
+</script>

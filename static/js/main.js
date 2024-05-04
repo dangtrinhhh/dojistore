@@ -146,38 +146,70 @@ function togglePasswordFields() {
 
 // Handle API
 
-// Hàm cập nhật số lượng sản phẩm trong giỏ hàng
-// function updateCartItemCount(product_id, quantity) {
-//   const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+// Refresh token
+function refreshAccessToken() {
+    const refresh_token = localStorage.getItem('refreshToken'); // Lấy refresh token từ localStorage
+    console.log("🚀 ~ refresh_token:", refresh_token)
 
-//   console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-//   console.log(csrfToken)
-//   // Thực hiện logic để lấy số lượng sản phẩm trong giỏ hàng (tùy thuộc vào cách bạn triển khai giỏ hàng)
-//   var cartItemCount = 10; // Đổi số này bằng số lượng thực tế trong giỏ hàng
+    if (!refresh_token) {
+        console.error("Refresh token not found.");
+        return;
+    }
 
-//   // Cập nhật số lượng trên giao diện
-//   document.getElementById('cart-item-count').innerText = cartItemCount;
+    const url = '/api/token/refresh/';
+    const data = { refresh: refresh_token };
 
-//   const productId = 1; // ID của sản phẩm
-//   const quantity = 2; // Số lượng sản phẩm
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Lưu trữ mã token mới vào localStorage
+        localStorage.setItem('accessToken', data.access);
+        console.log("New access token:", data.access);
+    })
+    .catch(error => {
+        console.error("Error refreshing access token:", error);
+    });
+}
 
-//   fetch('/api/add-to-cart/', {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//       'X-CSRFToken': csrfToken, // Điền CSRF token nếu bạn đang sử dụng CSRF protection
-//     },
-//     body: JSON.stringify({ product_id: productId, quantity }),
-//   })
-//     .then(response => response.json())
-//     .then(data => {
-//       console.log('Giỏ hàng đã được cập nhật:', data);
-//       // Xử lý dữ liệu giỏ hàng nếu cần
-//     })
-//     .catch(error => {
-//       console.error('Lỗi khi thêm vào giỏ hàng:', error);
-//     });
+// function parseJwt(token) {
+//     try {
+//         const base64Url = token.split('.')[1];
+//         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+//         const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+//             return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+//         }).join(''));
 
+//         return JSON.parse(jsonPayload);
+//     } catch (error) {
+//         console.error("Error parsing JWT:", error);
+//         return null;
+//     }
+// }
+
+// function checkTokenExpiration() {
+//     const accessToken = localStorage.getItem('accessToken');
+//     if (!accessToken) {
+//         console.error("Access token not found.");
+//         return;
+//     }
+
+//     const tokenData = parseJwt(accessToken); // Hàm parseJwt() để trích xuất thông tin từ mã token
+
+//     const currentTime = Math.floor(Date.now() / 1000); // Thời gian hiện tại tính bằng giây
+//     const expirationTime = tokenData.exp; // Thời gian hết hạn của mã token
+
+//     if (currentTime >= expirationTime) {
+//         console.log("Access token has expired.");
+//         refreshAccessToken(); // Gọi hàm làm mới token khi mã token hết hạn
+//     } else {
+//         console.log("Access token is still valid.");
+//     }
 // }
 
 function countTotalBill(data) {
@@ -225,13 +257,18 @@ function updateCartItemCount(product_id, quantity) {
 
     // Lấy giá trị của CSRF token từ trang web
     const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
-
+    // Kiểm tra token còn hợp lệ không
+    // checkTokenExpiration()
+    refreshAccessToken();
+    var accessToken = localStorage.getItem('accessToken');
+    
     // Thực hiện fetch với CSRF token lấy từ trang web
     fetch('/api/add-to-cart/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'X-CSRFToken': csrfToken,
+            'Authorization': `Bearer ${accessToken}`,
         },
         body: JSON.stringify({ product_id: product_id, quantity: quantity }), // Sử dụng tham số truyền vào
     })
@@ -250,8 +287,17 @@ function updateCartItemCount(product_id, quantity) {
 
 // Hàm fetch giỏ hàng
 function fetchCart() {
+    // Lấy giá trị của CSRF token từ trang web
+    const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+    var accessToken = localStorage.getItem('accessToken');
+
     fetch('/api/carts/', {
         method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken,
+            'Authorization': `Bearer ${accessToken}`,
+        },
     })
         .then(response => response.json())
         .then(data => {
@@ -265,8 +311,19 @@ function fetchCart() {
 
 // Hàm fetch chi tiết giỏ hàng
 function fetchCartDetails(cartId) {
+    // Lấy giá trị của CSRF token từ trang web
+    refreshAccessToken();
+    const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+    var accessToken = localStorage.getItem('accessToken');
+    console.log("🚀 ~ accessToken:", accessToken)
+
     return fetch(`/api/cart-details/${cartId}`, {
         method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken,
+            'Authorization': `Bearer ${accessToken}`,
+        },
     })
         .then(response => response.json())
         .then(data => {

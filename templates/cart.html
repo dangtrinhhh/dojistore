@@ -121,6 +121,7 @@
   <script src="{% static 'js/main.js' %}"></script>
   <script>
     const user = "{{ user }}";
+    const userid = "{{ user.id }}";
     let products = []
 
     function convertToVND(money) {
@@ -226,7 +227,8 @@
 
       let payload_zalopay = {
         'username': user,
-        'price': countTotalBill(products)
+        'price': countTotalBill(products),
+        'userid': userid
       }
       console.log("🚀 ~ payload_zalopay:", JSON.stringify(payload_zalopay))
       // "order_code": `${year}${month}${day}${username}${user.id}`
