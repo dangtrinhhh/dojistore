@@ -17,6 +17,10 @@ nav li {
     margin: auto;
 }
 
+.normal-text-doubletbad {
+    font-size: 1rem;
+}
+
 /*  */
 .modal {
     position: fixed;

@@ -184,6 +184,7 @@
       const is_staff = "{{ is_staff }}";
       async function getAllProductsWithImages() {
         try {
+
           const response = await fetch('/api/product-with-type/', {
             method: 'GET',
             headers: {
@@ -236,6 +237,10 @@
 
           const row = document.createElement('div');
           row.classList.add('row', 'g-4');
+
+          if (productTypeInfo.products.length == 0) {
+            row.innerHTML = '<div class="text-center">Không có sản phẩm.</div>'
+          }
 
           productTypeInfo.products.forEach((productInfo, index2) => {
             const col = document.createElement('div');

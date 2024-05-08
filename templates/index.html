@@ -159,6 +159,7 @@
         
         async function getAllProductsWithImages() {
           try {
+
             const response = await fetch('/api/product-with-type/', {
               method: 'GET',
               headers: {
@@ -211,6 +212,10 @@
         
             const row = document.createElement('div');
             row.classList.add('row', 'g-4');
+
+            if (productTypeInfo.products.length == 0) {
+              row.innerHTML = '<div class="text-center">Không có sản phẩm.</div>'
+            }
         
             productTypeInfo.products.forEach((productInfo, index2) => {
               if (index2 < 8) {
@@ -377,7 +382,7 @@
         
         // Use await to get the data
         const productsData = await getAllProductsWithImages();
-    
+        
         // Render products to HTML
         renderProductTypes(productsData);
         renderProducts(productsData, is_staff);

@@ -241,7 +241,7 @@ class OrderDetailDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 
 
-from .retrieve_information import main
+# from .retrieve_information import main
 from django.middleware.csrf import get_token
 from django.http import JsonResponse
 

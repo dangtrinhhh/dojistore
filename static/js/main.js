@@ -341,11 +341,15 @@ async function createOrderDoubleTBad(data) {
     console.log("🚀 ~ data:", data)
     try {
         const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+        refreshAccessToken();
+        var accessToken = localStorage.getItem('accessToken');
+
         const response = await fetch('/api/create-order/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': csrfToken,
+                'Authorization': `Bearer ${accessToken}`,
             },
             body: JSON.stringify(data),
         });
@@ -364,8 +368,15 @@ async function createOrderDoubleTBad(data) {
 
 // Hàm fetch đơn hàng
 function fetchOrders() {
+    refreshAccessToken();
+    var accessToken = localStorage.getItem('accessToken');
+
     fetch('/orders/', {
         method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
+        },
     })
         .then(response => response.json())
         .then(data => {
@@ -379,8 +390,15 @@ function fetchOrders() {
 
 // Hàm fetch chi tiết đơn hàng
 function fetchOrderDetails(orderId) {
+    refreshAccessToken();
+    var accessToken = localStorage.getItem('accessToken');
+
     fetch(`/order-details/?order=${orderId}`, {
         method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
+        },
     })
         .then(response => response.json())
         .then(data => {
@@ -393,6 +411,7 @@ function fetchOrderDetails(orderId) {
 }
 
 function getAllProductsWithImages() {
+
     return fetch('/api/products/', {
         method: 'GET',
         headers: {
@@ -417,6 +436,7 @@ function getAllProductsWithImages() {
 
 async function getAllProductsWithImages() {
     try {
+        
         const response = await fetch('/api/product-with-type/', {
             method: 'GET',
             headers: {
@@ -890,10 +910,14 @@ function createOrder({
 // Handle search products
 async function searchProducts(query) {
     try {
+        // refreshAccessToken();
+        // var accessToken = localStorage.getItem('accessToken');
+
         const response = await fetch(`/api/products/search/?keyword=${encodeURIComponent(query.keyword)}&price=${encodeURIComponent(query.priceRange)}&type=${encodeURIComponent(query.type)}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                // 'Authorization': `Bearer ${accessToken}`,
             },
         });
 

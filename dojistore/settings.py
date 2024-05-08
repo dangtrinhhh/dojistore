@@ -65,12 +65,15 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-# CORS_ALLOWED_ORIGINS = [
-#     'http://127.0.0.1:5500',
-#     'http://127.0.0.1:3001',
-# ]
+CORS_ORIGIN_ALLOW_ALL = False
 
-CORS_ALLOW_ALL_ORIGINS = True
+# Define trusted origin
+CORS_ORIGIN_WHITELIST = [
+    'http://127.0.0.1:8000',
+    # 'http://127.0.0.1:3000',
+]
+
+# CORS_ALLOW_ALL_ORIGINS = True
 
 LOGGING = {
     'version': 1,
@@ -110,27 +113,27 @@ WSGI_APPLICATION = 'dojistore.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'doubletbad',
-#         'USER': 'doubletbad',
-#         'PASSWORD': '@Double2T.',
-#         'HOST': 'db',
-#         'PORT': '5432',
-#     }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dojistore',
-        'USER': 'postgres',
-        'PASSWORD': '@Trinhdilam9.',
-        'HOST': 'localhost', # db
+        'NAME': 'doubletbad',
+        'USER': 'doubletbad',
+        'PASSWORD': '@Double2T.',
+        'HOST': 'db',
         'PORT': '5432',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'dojistore',
+#         'USER': 'postgres',
+#         'PASSWORD': '@Trinhdilam9.',
+#         'HOST': 'localhost', # db
+#         'PORT': '5432',
+#     }
+# }
 
 # DATABASES = {
 #   'default': {
