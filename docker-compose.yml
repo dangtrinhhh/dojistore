@@ -16,10 +16,42 @@ services:
       - DJANGO_DB_NAME=doubletbad
       - DJANGO_DB_USER=doubletbad
       - DJANGO_DB_PASSWORD=@Double2T.
+    networks:
+      - doublet-bad
 
   db:
-    image: postgres
+    image: postgres:latest
     environment:
       - POSTGRES_DB=doubletbad
       - POSTGRES_USER=doubletbad
       - POSTGRES_PASSWORD=@Double2T.
+    volumes:
+        - postgres-db-volume:/var/lib/postgresql/data
+    ports:
+        - 5432:5432
+    networks:
+      - doublet-bad
+  
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: 'dangtrinh.dev@gmail.com'
+      PGADMIN_DEFAULT_PASSWORD: '@Double2T.'
+    ports:
+      - 16543:80
+    volumes:
+      - /servers.json:/pgadmin4/servers.json
+    networks:
+      - doublet-bad
+
+volumes:
+    postgres-db-volume:
+        driver: local
+        driver_opts:
+            type: none
+            o: bind
+            device: ./data
+
+networks:
+  doublet-bad:
+    driver: bridge
