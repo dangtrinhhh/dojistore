@@ -276,6 +276,7 @@
       fetchCartDetails(cart_id)
         .then(data => {
           console.log("🚀 ~ fetchCartDetails(cart_id):", data);
+
           products = data;
           renderProductHTML(data);
 

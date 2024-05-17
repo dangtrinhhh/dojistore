@@ -70,8 +70,12 @@ def index(request):
     cart = None
     if user.is_authenticated:
         user_profile, created = Users.objects.get_or_create(user=user)
-        cart, created = Carts.objects.get_or_create(user=user_profile)
-    
+        try:
+            cart, created = Carts.objects.get_or_create(user=user_profile)
+        except Exception as e:
+            cart = Carts.objects.filter(user=user_profile).order_by('-created_at').first()
+            messages.error(request, f"Lỗi lấy giỏ hàng: {str(e)}")
+
     product_types = Product_Types.objects.all()
     products_with_images = getProductOrderedType()
     blogs = Blogs.objects.all().order_by('-created_at')[:6]
@@ -175,7 +179,11 @@ def updateprofile(request):
     cart = None
     if user.is_authenticated:
         user_profile, created = Users.objects.get_or_create(user=user)
-        cart, created = Carts.objects.get_or_create(user=user_profile)
+        try:
+            cart, created = Carts.objects.get_or_create(user=user_profile)
+        except Exception as e:
+            cart = Carts.objects.filter(user=user_profile).order_by('-created_at').first()
+            messages.error(request, f"Lỗi lấy giỏ hàng: {str(e)}")
     
     if request.method == 'POST':
         password = request.POST['password']
@@ -212,7 +220,11 @@ def addproduct(request):
     cart = None
     if user.is_authenticated:
         user_profile, created = Users.objects.get_or_create(user=user)
-        cart, created = Carts.objects.get_or_create(user=user_profile)
+        try:
+            cart, created = Carts.objects.get_or_create(user=user_profile)
+        except Exception as e:
+            cart = Carts.objects.filter(user=user_profile).order_by('-created_at').first()
+            messages.error(request, f"Lỗi lấy giỏ hàng: {str(e)}")
     
     if user and user.is_superuser:
         unique_names = Product_Types.objects.values_list('name', flat=True).distinct()
@@ -327,7 +339,11 @@ def products(request):
     cart = None
     if user.is_authenticated:
         user_profile, created = Users.objects.get_or_create(user=user)
-        cart, created = Carts.objects.get_or_create(user=user_profile)
+        try:
+            cart, created = Carts.objects.get_or_create(user=user_profile)
+        except Exception as e:
+            cart = Carts.objects.filter(user=user_profile).order_by('-created_at').first()
+            messages.error(request, f"Lỗi lấy giỏ hàng: {str(e)}")
         
     product_types = Product_Types.objects.all()
     products_with_images = getProductOrderedType() 
@@ -339,7 +355,11 @@ def productDetails(request, slug):
     cart = None
     if user.is_authenticated:
         user_profile, created = Users.objects.get_or_create(user=user)
-        cart, created = Carts.objects.get_or_create(user=user_profile)
+        try:
+            cart, created = Carts.objects.get_or_create(user=user_profile)
+        except Exception as e:
+            cart = Carts.objects.filter(user=user_profile).order_by('-created_at').first()
+            messages.error(request, f"Lỗi lấy giỏ hàng: {str(e)}")
         
     product = Products.objects.get(product_id=slug)
     product_images = Product_Images.objects.filter(product=product)
@@ -353,7 +373,13 @@ def cart(request):
     if user.is_authenticated:
         user_profile, created = Users.objects.get_or_create(user=user)
         user = user_profile.user
-        cart, created = Carts.objects.get_or_create(user=user_profile)
+
+        try:
+            cart, created = Carts.objects.get_or_create(user=user_profile)
+        except Exception as e:
+            cart = Carts.objects.filter(user=user_profile).order_by('-created_at').first()
+            messages.error(request, f"Lỗi lấy giỏ hàng: {str(e)}")
+
     return render(request, 'cart.html', {'user': user, 'cart': cart, 'blogs': blogs})
 
 
@@ -373,7 +399,15 @@ def orders(request):
 
     if user.is_authenticated:
         user_profile, created = Users.objects.get_or_create(user=user)
-        cart, created = Carts.objects.get_or_create(user=user_profile)
+        
+        try:
+            cart, created = Carts.objects.get_or_create(user=user_profile)
+        except Exception as e:
+            cart = Carts.objects.filter(user=user_profile).order_by('-created_at').first()
+            messages.error(request, f"Lỗi lấy giỏ hàng: {str(e)}")
+
+        print('User id: ', user_profile.id)
+        # orders = Orders.objects.all()
         orders = Orders.objects.filter(user=user_profile).order_by('-created_at')
 
         for order in orders:
@@ -386,6 +420,7 @@ def orderHistory(request):
 
 def orderDetails(request, slug):
     user = request.user
+    blogs = Blogs.objects.all().order_by('-created_at')
     cart = None
     try:
         order_details = Orders.objects.get(order_code=slug)
@@ -394,9 +429,15 @@ def orderDetails(request, slug):
         
     if user.is_authenticated and order_details:
         user_profile, created = Users.objects.get_or_create(user=user)
-        cart, created = Carts.objects.get_or_create(user=user_profile)
+        
+        try:
+            cart, created = Carts.objects.get_or_create(user=user_profile)
+        except Exception as e:
+            cart = Carts.objects.filter(user=user_profile).order_by('-created_at').first()
+            messages.error(request, f"Lỗi lấy giỏ hàng: {str(e)}")
+
         if user_profile.id == order_details.user_id:
-            return render(request, 'orderDetails.html', {'user': user, 'cart': cart, 'order_details': order_details})
+            return render(request, 'orderDetails.html', {'user': user, 'cart': cart, 'order_details': order_details, 'blogs': blogs})
     
     return redirect('/404')
 

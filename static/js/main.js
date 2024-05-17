@@ -147,35 +147,67 @@ function togglePasswordFields() {
 // Handle API
 
 // Refresh token
+// function refreshAccessToken() {
+//     const refresh_token = localStorage.getItem('refreshToken'); // Lấy refresh token từ localStorage
+//     console.log("🚀 ~ refresh_token:", refresh_token)
+
+//     if (!refresh_token) {
+//         console.error("Refresh token not found.");
+//         return;
+//     }
+
+//     const url = '/api/token/refresh/';
+//     const data = { refresh: refresh_token };
+
+//     fetch(url, {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify(data),
+//     })
+//     .then(response => {
+//         if (response.ok) {
+//             return response.json();
+//         }
+//         // Nếu mã trạng thái là 401 (Unauthorized), gọi lại hàm refreshAccessToken và thực hiện lại yêu cầu API
+//         if (data.code == 'token_not_valid') {
+//             window.location.href = '/logout';
+//         }
+//     })
+//     .then(data => {
+//         // Lưu trữ mã token mới vào localStorage
+//         localStorage.setItem('accessToken', data.access);
+//         console.log("New access token:", data.access);
+//     })
+//     .catch(error => {
+//         console.error("Error refreshing access token:", error);
+//     });
+// }
+
 function refreshAccessToken() {
-    const refresh_token = localStorage.getItem('refreshToken'); // Lấy refresh token từ localStorage
-    console.log("🚀 ~ refresh_token:", refresh_token)
-
-    if (!refresh_token) {
-        console.error("Refresh token not found.");
-        return;
-    }
-
-    const url = '/api/token/refresh/';
-    const data = { refresh: refresh_token };
-
-    fetch(url, {
+    return fetch('/api/token/refresh/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value,
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ refresh: localStorage.getItem('refreshToken') })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            if (response.status === 401) {
+                window.location.href = '/'; // Chuyển hướng người dùng về trang chủ
+            }
+            throw new Error('Failed to refresh access token');
+        }
+        return response.json();
+    })
     .then(data => {
-        // Lưu trữ mã token mới vào localStorage
         localStorage.setItem('accessToken', data.access);
-        console.log("New access token:", data.access);
-    })
-    .catch(error => {
-        console.error("Error refreshing access token:", error);
     });
 }
+
 
 // function parseJwt(token) {
 //     try {
@@ -310,9 +342,34 @@ function fetchCart() {
 }
 
 // Hàm fetch chi tiết giỏ hàng
+// function fetchCartDetails(cartId) {
+//     // Lấy giá trị của CSRF token từ trang web
+//     refreshAccessToken();
+//     const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+//     var accessToken = localStorage.getItem('accessToken');
+//     console.log("🚀 ~ accessToken:", accessToken)
+
+//     return fetch(`/api/cart-details/${cartId}`, {
+//         method: 'GET',
+//         headers: {
+//             'Content-Type': 'application/json',
+//             'X-CSRFToken': csrfToken,
+//             'Authorization': `Bearer ${accessToken}`,
+//         },
+//     })
+//         .then(response => response.json())
+//         .then(data => {
+//             // console.log('Dữ liệu chi tiết giỏ hàng:', data);
+//             // Xử lý dữ liệu chi tiết giỏ hàng nếu cần
+//             return data;
+//         })
+//         .catch(error => {
+//             console.error('Lỗi khi lấy dữ liệu chi tiết giỏ hàng:', error);
+//             throw error; // Rethrow the error to be handled by the caller
+//         });
+// }
 function fetchCartDetails(cartId) {
     // Lấy giá trị của CSRF token từ trang web
-    refreshAccessToken();
     const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
     var accessToken = localStorage.getItem('accessToken');
     console.log("🚀 ~ accessToken:", accessToken)
@@ -325,16 +382,32 @@ function fetchCartDetails(cartId) {
             'Authorization': `Bearer ${accessToken}`,
         },
     })
-        .then(response => response.json())
-        .then(data => {
-            // console.log('Dữ liệu chi tiết giỏ hàng:', data);
-            // Xử lý dữ liệu chi tiết giỏ hàng nếu cần
-            return data;
-        })
-        .catch(error => {
-            console.error('Lỗi khi lấy dữ liệu chi tiết giỏ hàng:', error);
-            throw error; // Rethrow the error to be handled by the caller
-        });
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        }
+
+        if (response.status === 401) {
+            console.log('Token not valid. Refreshing access token...');
+            refreshAccessToken()
+            return fetchCartDetails(cartId);
+            
+            // return refreshAccessToken().then(() => {
+            //     return fetchCartDetails(cartId);
+            // });
+        }
+        // Nếu mã trạng thái không phải là 401, ném lỗi để xử lý ở phía caller
+        throw new Error('Failed to fetch cart details');
+    })
+    .then(data => {
+        // Xử lý dữ liệu chi tiết giỏ hàng nếu cần
+        console.log('Dữ liệu chi tiết giỏ hàng:', data);
+        return data;
+    })
+    .catch(error => {
+        console.error('Lỗi khi lấy dữ liệu chi tiết giỏ hàng:', error);
+        throw error; // Ném lại lỗi để xử lý ở phía caller
+    });
 }
 
 async function createOrderDoubleTBad(data) {

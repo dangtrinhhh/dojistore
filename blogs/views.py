@@ -8,6 +8,7 @@ from .forms import BlogPostForm
 from products.models import Users, Products, Product_Types, Product_Images
 from order.models import Carts, Cart_Details, Orders, Order_Details
 from products.views import getProductOrderedType
+from django.utils.datastructures import MultiValueDictKeyError
 
 # Create your views here.
 def writeblog(request):
@@ -20,7 +21,7 @@ def writeblog(request):
                     form.save()
                     messages.success(request, "Thêm blog thành công")
                     return redirect("/writeblog")
-            except MultiValueDictKeyError:
+            except MultiValueDictKeyError as e:
                 messages.error(request, f"Thêm blog thất bại: {str(e)}")
                 pass
         else:
@@ -38,7 +39,12 @@ def editblog(request, slug):
     cart = None
     if user.is_authenticated:
         user_profile, created = Users.objects.get_or_create(user=user)
-        cart, created = Carts.objects.get_or_create(user=user_profile)
+        
+        try:
+            cart, created = Carts.objects.get_or_create(user=user_profile)
+        except Exception as e:
+            cart = Carts.objects.filter(user=user_profile).order_by('-created_at').first()
+            messages.error(request, f"Lỗi lấy giỏ hàng: {str(e)}")
     
     if user and user.is_superuser:
         blog = Blogs.objects.get(id=slug)
@@ -86,7 +92,13 @@ def blogs(request):
     cart = None
     if user.is_authenticated:
         user_profile, created = Users.objects.get_or_create(user=user)
-        cart, created = Carts.objects.get_or_create(user=user_profile)
+        
+        try:
+            cart, created = Carts.objects.get_or_create(user=user_profile)
+        except Exception as e:
+            cart = Carts.objects.filter(user=user_profile).order_by('-created_at').first()
+            messages.error(request, f"Lỗi lấy giỏ hàng: {str(e)}")
+
     blogs = Blogs.objects.all().order_by('-created_at')
     return render(request, 'blogs.html', {'blogs': blogs, 'cart': cart})
     
@@ -95,7 +107,12 @@ def blogDetails(request, slug):
     cart = None
     if user.is_authenticated:
         user_profile, created = Users.objects.get_or_create(user=user)
-        cart, created = Carts.objects.get_or_create(user=user_profile)
+        
+        try:
+            cart, created = Carts.objects.get_or_create(user=user_profile)
+        except Exception as e:
+            cart = Carts.objects.filter(user=user_profile).order_by('-created_at').first()
+            messages.error(request, f"Lỗi lấy giỏ hàng: {str(e)}")
         
     blog = Blogs.objects.get(id=slug)
     blogs = Blogs.objects.all().order_by('-created_at')[:6]
@@ -106,8 +123,13 @@ def aboutUs(request):
     cart = None
     if user.is_authenticated:
         user_profile, created = Users.objects.get_or_create(user=user)
-        cart, created = Carts.objects.get_or_create(user=user_profile)
-        
+
+        try:
+            cart, created = Carts.objects.get_or_create(user=user_profile)
+        except Exception as e:
+            cart = Carts.objects.filter(user=user_profile).order_by('-created_at').first()
+            messages.error(request, f"Lỗi lấy giỏ hàng: {str(e)}")
+
     product_types = Product_Types.objects.all()
     products_with_images = getProductOrderedType(8) 
     blogs = Blogs.objects.all().order_by('-created_at')
@@ -118,7 +140,12 @@ def contact(request):
     cart = None
     if user.is_authenticated:
         user_profile, created = Users.objects.get_or_create(user=user)
-        cart, created = Carts.objects.get_or_create(user=user_profile)
+        
+        try:
+            cart, created = Carts.objects.get_or_create(user=user_profile)
+        except Exception as e:
+            cart = Carts.objects.filter(user=user_profile).order_by('-created_at').first()
+            messages.error(request, f"Lỗi lấy giỏ hàng: {str(e)}")
         
     blogs = Blogs.objects.all().order_by('-created_at')
     return render(request, 'contact.html', {'blogs': blogs, 'cart': cart})
@@ -128,6 +155,11 @@ def profile(request):
     cart = None
     if user.is_authenticated:
         user_profile, created = Users.objects.get_or_create(user=user)
-        cart, created = Carts.objects.get_or_create(user=user_profile)
+        
+        try:
+            cart, created = Carts.objects.get_or_create(user=user_profile)
+        except Exception as e:
+            cart = Carts.objects.filter(user=user_profile).order_by('-created_at').first()
+            messages.error(request, f"Lỗi lấy giỏ hàng: {str(e)}")
         
     return render(request, 'profile.html', {'user_profile': user_profile, 'cart': cart})

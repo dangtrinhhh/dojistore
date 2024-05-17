@@ -231,6 +231,7 @@
                 
                 const productImage = document.createElement('img');
                 for (const imageInfo of productInfo.images) {
+                  console.log("🚀 ~ imageInfo:", imageInfo)
                   productImage.classList.add('card-img-top', 'w-100');
                   productImage.setAttribute('alt', 'Product Image');
                   if (imageInfo) {

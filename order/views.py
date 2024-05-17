@@ -18,6 +18,7 @@ from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
+
 class LoginAPIView(APIView):
     def post(self, request):
         username = request.data.get('username')
@@ -50,13 +51,24 @@ def add_to_cart(request):
     try:
         user = request.user  # Đây là user đăng nhập, nếu có
         user_profile, created = Users.objects.get_or_create(user=user)
-        cart, created = Carts.objects.get_or_create(user=user_profile)
+
+        try:
+            cart, created = Carts.objects.get_or_create(user=user_profile)
+        except Exception as e:
+            cart = Carts.objects.filter(user=user_profile).order_by('-created_at').first()
+            messages.error(request, f"Lỗi lấy giỏ hàng: {str(e)}")
 
         # Lấy thông tin sản phẩm từ database
         product = Products.objects.get(pk=product_id)
 
         # Tạo hoặc cập nhật chi tiết giỏ hàng cho sản phẩm
-        cart_detail, created = Cart_Details.objects.get_or_create(cart=cart, product=product)
+        try:
+            cart_detail, created = Cart_Details.objects.get_or_create(cart=cart, product=product)
+        except Exception as e:
+            cart_detail = Cart_Details.objects.filter(user=user_profile).order_by('-created_at').first()
+            messages.error(request, f"Lỗi lấy chi tiết giỏ hàng: {str(e)}")
+            
+
         cart_detail.quantity += quantity
         cart_detail.save()
 
@@ -361,7 +373,13 @@ def payment_status(request):
         try:
             user_profile = Users.objects.get(user=user_id)
             # Lấy giỏ hàng của người dùng
-            cart, created = Carts.objects.get_or_create(user=user_profile.id)
+            # cart, created = Carts.objects.get_or_create(user=user_profile.id)
+            try:
+                cart, created = Carts.objects.get_or_create(user=user_profile)
+            except Exception as e:
+                cart = Carts.objects.filter(user=user_profile).order_by('-created_at').first()
+                messages.error(request, f"Lỗi lấy giỏ hàng: {str(e)}")
+                
             # Xóa tất cả chi tiết giỏ hàng của giỏ hàng đó
             cart_details = Cart_Details.objects.filter(cart=cart)
             # Xóa chi tiết giỏ hàng

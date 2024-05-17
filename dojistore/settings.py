@@ -80,12 +80,14 @@ LOGGING = {
     'disable_existing_loggers': False,
     'handlers': {
         'console': {
+            'level': 'DEBUG',
             'class': 'logging.StreamHandler',
         },
     },
     'root': {
         'handlers': ['console'],
         'level': 'DEBUG',  # Chọn level thích hợp: DEBUG, INFO, WARNING, ERROR, CRITICAL
+        'propagate': False,
     },
 }
 
@@ -168,7 +170,12 @@ AUTH_PASSWORD_VALIDATORS = [
 # Django x JWT
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=5),
+    # 'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': False,
 }
 
 REST_FRAMEWORK = {
