@@ -1,0 +1,163 @@
+
+@media (max-width: 576px) {
+    .bigsale-icon {
+        width: 50px!important;
+        height: 50px;
+    }
+
+    .multiline-truncate {
+        height: 60px!important;
+        font-weight: bold;
+    }
+
+    .text-lora {
+        font-family: "Lora", serif;
+        font-weight: 500;
+    }
+
+    .h5, .text-start {
+        font-size: 16px;
+    }
+
+    .p-4 {
+        padding: 10px!important;
+    }
+
+    .my-4 {
+        margin-top: 12px !important;
+        margin-bottom: 12px !important;
+    }
+
+    .container-xxl {
+        padding-left: 10px!important;
+        padding-right: 10px!important;
+    }
+
+    .my-3 {
+        margin-top: 8px !important;
+        margin-bottom: 8px !important;
+    }
+    
+    .card-img-top {
+        height: 200px !important;
+        object-fit: cover;
+    }
+
+    .product-details {
+        height: auto !important;
+    }
+
+    .ml-200 {
+        margin-left: 20px;
+    }
+
+    .container {
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    #main-body {
+        margin: 0 10px !important;
+    }
+
+    #carouselExampleControls .carousel-item img {
+        min-height: 0;
+    }
+
+    .about-img {
+        padding: 0 !important;
+    }
+
+    .mb-4 {
+        margin-bottom: 0;
+    }
+}
+
+
+@media (min-width: 700px) and  (max-width: 1200px) {
+    .bigsale-icon {
+        width: 70px!important;
+        height: 70px;
+    }
+
+    .multiline-truncate {
+        height: 80px!important;
+        font-weight: bold;
+    }
+
+    .text-lora {
+        font-family: "Lora", serif;
+        font-weight: 600;
+    }
+
+    .h5, .text-start {
+        font-size: 18px;
+    }
+
+    .p-4 {
+        padding: 15px!important;
+    }
+
+    .my-4 {
+        margin-top: 16px !important;
+        margin-bottom: 16px !important;
+    }
+
+    .container-xxl {
+        padding-left: 14px!important;
+        padding-right: 14px!important;
+    }
+
+    .my-3 {
+        margin-top: 12px !important;
+        margin-bottom: 12px !important;
+    }
+    
+    .card-img-top {
+        height: 300px !important;
+        object-fit: cover;
+    }
+
+    .product-details {
+        height: auto !important;
+    }
+
+    .ml-200 {
+        margin-left: 70px;
+    }
+
+    .container {
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    #carouselExampleControls .carousel-item img {
+        min-height: 200px;
+    }
+
+    #main-body {
+        margin: 0 50px !important;
+    }
+}
+
+/* styles.css */
+
+/* Shopping cart icon for small screens */
+.shopping-bag-icon-small {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    background-color: #fff; /* Optional: background color for better visibility */
+    padding: 10px 15px; /* Optional: padding for better touch area */
+    border-radius: 50%; /* Optional: rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: shadow for better visibility */
+    z-index: 1000; /* Ensure it's above other content */
+    border: 2px solid #1221aa;
+}
+
+/* Additional styles to hide on large screens */
+@media (min-width: 992px) {
+    .shopping-bag-icon-small {
+        display: none;
+    }
+}

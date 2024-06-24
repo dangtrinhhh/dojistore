@@ -11,6 +11,7 @@
     <link rel="icon" href="{% static 'img/logo.png' %}" type="image/x-icon" />
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/responsive.css' %}">
     <link rel="stylesheet" href="{% static '/font/themify-icons-font/themify-icons.css' %}">
     <link rel="stylesheet" href="{% static 'font/fontawesome/css/all.css' %}">
     <title>DoubleT Bad | Về chúng tôi</title>
@@ -53,7 +54,7 @@
                     <p class="text-white mb-0">Khám phá thế giới phụ kiện cầu lông lớn nhất Việt Nam, nơi cung cấp đầy đủ các sản phẩm và dịch vụ cho cộng đồng người chơi cầu lông đam mê. Tại đây, chúng tôi không chỉ cung cấp những chiếc vợt chất lượng, mà còn đồng hành cùng bạn qua mỗi set đấu với những phụ kiện cầu lông đa dạng và chất lượng hàng đầu. Bạn sẽ khám phá thế giới của những đôi giày êm ái, quần áo thoáng khí và những bình nước tiện lợi, tất cả được thiết kế để nâng cao trải nghiệm chơi cầu lông của bạn.</p>
                 </div>
                 <div class="col-md-5 text-md-end wow fadeIn" data-wow-delay="0.5s">
-                    <a class="btn btn-lg btn-carrot rounded-pill py-3 px-5" href="">Xem ngay</a>
+                    <a class="btn btn-lg btn-carrot rounded-pill py-3 px-5" href="/aboutUs">Xem ngay</a>
                 </div>
             </div>
         </div>
@@ -120,6 +121,14 @@
     <!-- Blog Start -->
     {% include 'components/blogs.html' with blogs=blogs %}
     <!-- Blog End -->
+
+    <!-- Shopping Cart Button for Small Screens -->
+    <a href="/cart">
+    <div class="shopping-bag-icon-small d-lg-none">
+        <i class="fa fa-shopping-bag greentea-color"></i>
+        <span class="circle-badge cart-item-count">{{ cart.total_quantity }}</span>
+    </div>
+    </a>
     
     <!-- Footer Start -->
     {% include 'components/footer.html' with blogs=blogs %}

@@ -194,18 +194,19 @@ function refreshAccessToken() {
         },
         body: JSON.stringify({ refresh: localStorage.getItem('refreshToken') })
     })
-    .then(response => {
-        if (!response.ok) {
-            if (response.status === 401) {
-                window.location.href = '/'; // Chuyển hướng người dùng về trang chủ
+        .then(response => {
+            if (!response.ok) {
+                if (response.status === 401) {
+                    alert('Phiên đã hết hạn, vui lòng đăng nhập lại.');
+                    window.location.href = '/logout'; // Tiến hành đăng xuất cho user khi refresh token hết hạn
+                }
+                throw new Error('Failed to refresh access token');
             }
-            throw new Error('Failed to refresh access token');
-        }
-        return response.json();
-    })
-    .then(data => {
-        localStorage.setItem('accessToken', data.access);
-    });
+            return response.json();
+        })
+        .then(data => {
+            localStorage.setItem('accessToken', data.access);
+        });
 }
 
 
@@ -293,7 +294,7 @@ function updateCartItemCount(product_id, quantity) {
     // checkTokenExpiration()
     refreshAccessToken();
     var accessToken = localStorage.getItem('accessToken');
-    
+
     // Thực hiện fetch với CSRF token lấy từ trang web
     fetch('/api/add-to-cart/', {
         method: 'POST',
@@ -309,8 +310,12 @@ function updateCartItemCount(product_id, quantity) {
             // Xử lý dữ liệu giỏ hàng nếu cần
             console.log('Giỏ hàng đã được cập nhật:', data);
             // Cập nhật số lượng trên giao diện
-            var cartItemCount = parseInt(document.getElementById('cart-item-count').innerText);
-            document.getElementById('cart-item-count').innerText = cartItemCount + quantity;
+            var cartItemQuantity = document.querySelectorAll('.cart-item-count');
+
+            cartItemQuantity.forEach(item => {
+                let cartItemCount = parseInt(item.innerText);
+                item.innerHTML = cartItemCount + quantity;
+            })
         })
         .catch(error => {
             console.error('Lỗi khi thêm vào giỏ hàng:', error);
@@ -382,39 +387,39 @@ function fetchCartDetails(cartId) {
             'Authorization': `Bearer ${accessToken}`,
         },
     })
-    .then(response => {
-        if (response.ok) {
-            return response.json();
-        }
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
 
-        if (response.status === 401) {
-            console.log('Token not valid. Refreshing access token...');
-            refreshAccessToken()
-            return fetchCartDetails(cartId);
-            
-            // return refreshAccessToken().then(() => {
-            //     return fetchCartDetails(cartId);
-            // });
-        }
-        // Nếu mã trạng thái không phải là 401, ném lỗi để xử lý ở phía caller
-        throw new Error('Failed to fetch cart details');
-    })
-    .then(data => {
-        // Xử lý dữ liệu chi tiết giỏ hàng nếu cần
-        console.log('Dữ liệu chi tiết giỏ hàng:', data);
-        return data;
-    })
-    .catch(error => {
-        console.error('Lỗi khi lấy dữ liệu chi tiết giỏ hàng:', error);
-        throw error; // Ném lại lỗi để xử lý ở phía caller
-    });
+            if (response.status === 401) {
+                console.log('Token not valid. Refreshing access token...');
+                refreshAccessToken()
+                return fetchCartDetails(cartId);
+
+                // return refreshAccessToken().then(() => {
+                //     return fetchCartDetails(cartId);
+                // });
+            }
+            // Nếu mã trạng thái không phải là 401, ném lỗi để xử lý ở phía caller
+            throw new Error('Failed to fetch cart details');
+        })
+        .then(data => {
+            // Xử lý dữ liệu chi tiết giỏ hàng nếu cần
+            console.log('Dữ liệu chi tiết giỏ hàng:', data);
+            return data;
+        })
+        .catch(error => {
+            console.error('Lỗi khi lấy dữ liệu chi tiết giỏ hàng:', error);
+            throw error; // Ném lại lỗi để xử lý ở phía caller
+        });
 }
 
 async function createOrderDoubleTBad(data) {
     console.log("🚀 ~ data:", data)
     try {
         const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
-        refreshAccessToken();
+        await refreshAccessToken();
         var accessToken = localStorage.getItem('accessToken');
 
         const response = await fetch('/api/create-order/', {
@@ -435,7 +440,7 @@ async function createOrderDoubleTBad(data) {
         console.log('Order created:', responseData);
         return responseData;
     } catch (error) {
-        console.error('Error creating order:', error);
+        console.log('Error creating order:', error);
     }
 }
 
@@ -509,7 +514,7 @@ function getAllProductsWithImages() {
 
 async function getAllProductsWithImages() {
     try {
-        
+
         const response = await fetch('/api/product-with-type/', {
             method: 'GET',
             headers: {
@@ -548,181 +553,195 @@ function renderProductTypes(productTypes) {
     })
 }
 
-function renderProducts(productsWithImages) {
+function renderProducts(productsWithImages, isStaff) {
     const productContainerList = document.getElementById('product-container-list');
 
     productsWithImages.forEach((productTypeInfo, index) => {
-        const tabPane = document.createElement('div');
-        index == 0 ? tabPane.classList.add('tab-pane', 'fade', 'show', 'p-0', 'active') : tabPane.classList.add('tab-pane', 'fade', 'show', 'p-0');
-        tabPane.setAttribute('id', `tab-${productTypeInfo.type.product_type_id}`);
+      const tabPane = document.createElement('div');
+      index == 0 ? tabPane.classList.add('tab-pane', 'fade', 'show', 'p-0', 'active') : tabPane.classList.add('tab-pane', 'fade', 'show', 'p-0');
+      tabPane.setAttribute('id', `tab-${productTypeInfo.type.product_type_id}`);
 
-        if (productTypeInfo.type.product_type_id === 1) {
-            tabPane.classList.add('active');
+      if (productTypeInfo.type.product_type_id === 1) {
+        tabPane.classList.add('active');
+      }
+
+      const row = document.createElement('div');
+      row.classList.add('row', 'g-4');
+
+      if (productTypeInfo.products.length == 0) {
+        row.innerHTML = '<div class="text-center">Không có sản phẩm.</div>'
+      }
+
+      productTypeInfo.products.forEach((productInfo, index2) => {
+        const col = document.createElement('div');
+        col.classList.add('col-xl-3', 'col-md-4', 'col-sm-6', 'col-6', 'wow', 'fadeInUp', 'my-4');
+        col.setAttribute('data-wow-delay', '0.1s');
+
+        const productItem = document.createElement('div');
+        productItem.classList.add('product-item', 'rounded-3', 'border', 'box-shadow-custom');
+
+        const positionRelative = document.createElement('div');
+        positionRelative.classList.add('position-relative', 'bg-light', 'overflow-hidden');
+
+        const productImage = document.createElement('img');
+        for (const imageInfo of productInfo.images) {
+          productImage.classList.add('card-img-top', 'w-100');
+          productImage.setAttribute('alt', 'Product Image');
+          if (imageInfo) {
+            if (imageInfo.url.includes('https')) {
+              // Thực hiện replace
+              let urlString = imageInfo.url.replace('/media/https%3A', 'https:/');
+              productImage.setAttribute('src', urlString);
+            } else {
+              productImage.setAttribute('src', imageInfo.url);
+            }
+          } else {
+            productImage.setAttribute('src', '/static/img/vot-default.webp'); // Đường dẫn mặc định cho hình ảnh sản phẩm
+          }
         }
 
-        const row = document.createElement('div');
-        row.classList.add('row', 'g-4');
+        const carrotBgcolor = document.createElement('div');
+        carrotBgcolor.classList.add('carrot-bgcolor', 'rounded', 'text-white', 'position-absolute', 'start-0', 'top-0', 'm-2', 'py-1', 'px-1');
+        carrotBgcolor.textContent = 'New';
 
-        productTypeInfo.products.forEach((productInfo, index2) => {
-            const col = document.createElement('div');
-            col.classList.add('col-xl-3', 'col-lg-4', 'col-md-6', 'wow', 'fadeInUp', 'my-4');
-            col.setAttribute('data-wow-delay', '0.1s');
+        positionRelative.appendChild(productImage);
+        positionRelative.appendChild(carrotBgcolor);
 
-            const productItem = document.createElement('div');
-            productItem.classList.add('product-item', 'rounded-3', 'border', 'box-shadow-custom');
+        const textCenter = document.createElement('div');
+        textCenter.classList.add('text-center', 'p-4');
 
-            const positionRelative = document.createElement('div');
-            positionRelative.classList.add('position-relative', 'bg-light', 'overflow-hidden');
+        const productLink = document.createElement('a');
+        productLink.classList.add('d-block', 'h5', 'text-decoration-none', 'text-dark', 'text-lora', 'mb-2', 'text-start', 'multiline-truncate');
+        productLink.setAttribute('href', `/products/${productInfo.product_id}`);
+        productLink.textContent = productInfo.name || ' ';
 
-            const productImage = document.createElement('img');
-            for (const imageInfo of productInfo.images) {
-                productImage.classList.add('card-img-top', 'w-100');
-                productImage.setAttribute('alt', 'Product Image');
-                if (imageInfo) {
-                    productImage.setAttribute('src', imageInfo.url);
-                } else {
-                    productImage.setAttribute('src', '/static/img/product-1.jpg'); // Đường dẫn mặc định cho hình ảnh sản phẩm
-                }
-            }
+        // Move the declaration here
+        const textDetails = document.createElement('div');
+        textDetails.classList.add('text-details');
 
-            const carrotBgcolor = document.createElement('div');
-            carrotBgcolor.classList.add('carrot-bgcolor', 'rounded', 'text-white', 'position-absolute', 'start-0', 'top-0', 'm-2', 'py-1', 'px-1');
-            carrotBgcolor.textContent = 'New';
+        const productDetails = document.createElement('div');
+        productDetails.classList.add('product-details', 'd-flex', 'align-items-center', 'justify-content-start');
 
-            positionRelative.appendChild(productImage);
-            positionRelative.appendChild(carrotBgcolor);
+        const textBody1 = document.createElement('div');
+        textBody1.classList.add('text-body', 'text-decoration-line-through', 'text-truncate', 'text-start', 'p-0', 'convert-to-vnd');
+        textBody1.textContent = productInfo.price || ' ';
 
-            const textCenter = document.createElement('div');
-            textCenter.classList.add('text-center', 'p-4');
+        const textDanger = document.createElement('div');
+        textDanger.classList.add('text-danger', 'fw-bold', 'h5', 'text-truncate', 'text-start', 'my-3', 'convert-to-vnd');
+        textDanger.textContent = productInfo.pricesale || ' ';
 
-            const productLink = document.createElement('a');
-            productLink.classList.add('d-block', 'h5', 'text-decoration-none', 'text-dark', 'text-lora', 'mb-2', 'text-start', 'text-truncate');
-            productLink.setAttribute('href', `/products/${productInfo.product_id}`);
-            productLink.textContent = productInfo.name || ' ';
+        textDetails.appendChild(textBody1);
+        textDetails.appendChild(textDanger);
 
-            // Move the declaration here
-            const textDetails = document.createElement('div');
-            textDetails.classList.add('text-details');
+        productDetails.appendChild(textDetails);
 
-            const productDetails = document.createElement('div');
-            productDetails.classList.add('product-details', 'd-flex', 'align-items-center', 'justify-content-start');
+        if (productInfo.pricesale < productInfo.price) {
+          const bigSaleIcon = document.createElement('img');
+          bigSaleIcon.classList.add('bigsale-icon', 'mx-auto');
+          bigSaleIcon.setAttribute('src', '/static/img/bigsale.gif'); // bigsale icon
+          bigSaleIcon.setAttribute('alt', 'bigsale');
+          productDetails.appendChild(bigSaleIcon);
+        }
 
-            const textBody1 = document.createElement('div');
-            textBody1.classList.add('text-body', 'text-decoration-line-through', 'text-truncate', 'text-start', 'p-0', 'convert-to-vnd');
-            textBody1.textContent = productInfo.price || ' ';
+        textCenter.appendChild(productLink); 
+        textCenter.appendChild(productDetails);
 
-            const textDanger = document.createElement('div');
-            textDanger.classList.add('text-danger', 'fw-bold', 'h5', 'text-truncate', 'text-start', 'my-3', 'convert-to-vnd');
-            textDanger.textContent = productInfo.pricesale || ' ';
+        productItem.appendChild(positionRelative);
+        productItem.appendChild(textCenter);
 
-            textDetails.appendChild(textBody1);
-            textDetails.appendChild(textDanger);
+        if (isStaff === 'True') {
+          const borderTop1 = document.createElement('div');
+          borderTop1.classList.add('border-top', 'd-flex');
 
-            productDetails.appendChild(textDetails);
+          const small1 = document.createElement('small');
+          small1.classList.add('w-50', 'text-center', 'border-end', 'py-2');
 
-            if (productInfo.pricesale < productInfo.price) {
-                const bigSaleIcon = document.createElement('img');
-                bigSaleIcon.classList.add('bigsale-icon', 'mx-auto');
-                bigSaleIcon.setAttribute('src', '/static/img/bigsale.gif'); // Đường dẫn mặc định cho biểu tượng giảm giá lớn
-                bigSaleIcon.setAttribute('alt', 'bigsale');
-                productDetails.appendChild(bigSaleIcon);
-            }
+          const editLink = document.createElement('a');
+          editLink.classList.add('text-body', 'text-decoration-none');
+          editLink.setAttribute('href', `/products/edit/${productInfo.product_id}`);
+          editLink.innerHTML = '<i class="fa fa-pen greentea-color me-2"></i>Sửa';
 
-            textCenter.appendChild(productLink);
-            textCenter.appendChild(productDetails);
+          small1.appendChild(editLink);
 
-            productItem.appendChild(positionRelative);
-            productItem.appendChild(textCenter);
+          const small2 = document.createElement('small');
+          small2.classList.add('w-50', 'text-center', 'py-2');
 
-            if (is_staff) {
-                const borderTop1 = document.createElement('div');
-                borderTop1.classList.add('border-top', 'd-flex');
+          const deleteLink = document.createElement('a');
+          deleteLink.classList.add('text-body', 'text-decoration-none');
+          deleteLink.setAttribute('href', `/products/delete/${productInfo.product_id}`);
+          deleteLink.innerHTML = '<i class="fa fa-trash carrot-color me-2"></i>Xóa';
 
-                const small1 = document.createElement('small');
-                small1.classList.add('w-50', 'text-center', 'border-end', 'py-2');
+          small2.appendChild(deleteLink);
 
-                const editLink = document.createElement('a');
-                editLink.classList.add('text-body', 'text-decoration-none');
-                editLink.setAttribute('href', `/products/edit/${productInfo.product_id}`);
-                editLink.innerHTML = '<i class="fa fa-pen greentea-color me-2"></i>Edit';
+          borderTop1.appendChild(small1);
+          borderTop1.appendChild(small2);
 
-                small1.appendChild(editLink);
+          productItem.appendChild(borderTop1);
+        } else {
+          const borderTop2 = document.createElement('div');
+          borderTop2.classList.add('border-top', 'd-flex');
 
-                const small2 = document.createElement('small');
-                small2.classList.add('w-50', 'text-center', 'py-2');
+          const small3 = document.createElement('small');
+          small3.classList.add('w-50', 'text-center', 'border-end', 'py-2');
 
-                const deleteLink = document.createElement('a');
-                deleteLink.classList.add('text-body', 'text-decoration-none');
-                deleteLink.setAttribute('href', `/products/delete/${productInfo.product_id}`);
-                deleteLink.innerHTML = '<i class="fa fa-trash carrot-color me-2"></i>Delete';
+          const viewDetailButton = document.createElement('button');
+          viewDetailButton.setAttribute('type', 'button');
+          viewDetailButton.classList.add('btn', 'btn-transparent', 'btn-sm');
 
-                small2.appendChild(deleteLink);
+          const viewDetailLink = document.createElement('a');
+          viewDetailLink.classList.add('text-body', 'text-decoration-none', 'view-detail');
+          viewDetailLink.setAttribute('href', `/products/${productInfo.product_id}`);
+          viewDetailLink.innerHTML = '<i class="fa fa-eye greentea-color me-2"></i>Xem chi tiết';
 
-                borderTop1.appendChild(small1);
-                borderTop1.appendChild(small2);
+          viewDetailButton.appendChild(viewDetailLink);
+          small3.appendChild(viewDetailButton);
 
-                productItem.appendChild(borderTop1);
-            } else {
-                const borderTop2 = document.createElement('div');
-                borderTop2.classList.add('border-top', 'd-flex');
+          const small4 = document.createElement('small');
+          small4.classList.add('w-50', 'text-center', 'py-2');
 
-                const small3 = document.createElement('small');
-                small3.classList.add('w-50', 'text-center', 'border-end', 'py-2');
+          const addToCartButton = document.createElement('button');
+          addToCartButton.setAttribute('type', 'button');
+          addToCartButton.classList.add('btn', 'btn-transparent', 'btn-sm');
 
-                const viewDetailButton = document.createElement('button');
-                viewDetailButton.setAttribute('type', 'button');
-                viewDetailButton.classList.add('btn', 'btn-transparent', 'btn-sm');
+          const addToCartLink = document.createElement('a');
+          addToCartLink.classList.add('text-body', 'text-decoration-none', 'pe-auto', 'add-to-cart');
+          addToCartLink.setAttribute('data-product-id', productInfo.product_id);
+          addToCartLink.setAttribute('onclick', `updateCartItemCount('${productInfo.product_id}', 1)`);
+          addToCartLink.innerHTML = '<i class="fa fa-shopping-bag greentea-color me-2"></i>Thêm vào giỏ';
 
-                const viewDetailLink = document.createElement('a');
-                viewDetailLink.classList.add('text-body', 'text-decoration-none', 'view-detail');
-                viewDetailLink.setAttribute('href', `/products/${productInfo.product_id}`);
-                viewDetailLink.innerHTML = '<i class="fa fa-eye greentea-color me-2"></i>View detail';
+          addToCartButton.appendChild(addToCartLink);
+          small4.appendChild(addToCartButton);
 
-                viewDetailButton.appendChild(viewDetailLink);
-                small3.appendChild(viewDetailButton);
+          borderTop2.appendChild(small3);
+          borderTop2.appendChild(small4);
 
-                const small4 = document.createElement('small');
-                small4.classList.add('w-50', 'text-center', 'py-2');
+          productItem.appendChild(borderTop2);
+        }
 
-                const addToCartButton = document.createElement('button');
-                addToCartButton.setAttribute('type', 'button');
-                addToCartButton.classList.add('btn', 'btn-transparent', 'btn-sm');
+        col.appendChild(productItem);
+        row.appendChild(col);
 
-                const addToCartLink = document.createElement('a');
-                addToCartLink.classList.add('text-body', 'text-decoration-none', 'pe-auto', 'add-to-cart');
-                addToCartLink.setAttribute('data-product-id', productInfo.product_id);
-                addToCartLink.setAttribute('onclick', `updateCartItemCount('${productInfo.product_id}', 1)`);
-                addToCartLink.innerHTML = '<i class="fa fa-shopping-bag greentea-color me-2"></i>Add to cart';
+      });
 
-                addToCartButton.appendChild(addToCartLink);
-                small4.appendChild(addToCartButton);
+      // const col12 = document.createElement('div');
+      // col12.classList.add('col-12', 'text-center', 'wow', 'fadeInUp');
+      // col12.setAttribute('data-wow-delay', '0.1s');
 
-                borderTop2.appendChild(small3);
-                borderTop2.appendChild(small4);
+      // const browseMoreLink = document.createElement('a');
+      // browseMoreLink.classList.add('btn', 'btn-primary', 'rounded-pill', 'py-3', 'px-5');
+      // browseMoreLink.setAttribute('href', '/products');
+      // browseMoreLink.textContent = 'Browse More Products';
 
-                productItem.appendChild(borderTop2);
-            }
+      // col12.appendChild(browseMoreLink);
+      // row.appendChild(col12);
 
-            col.appendChild(productItem);
-            row.appendChild(col);
-
-        });
-
-        // const col12 = document.createElement('div');
-        // col12.classList.add('col-12', 'text-center', 'wow', 'fadeInUp');
-        // col12.setAttribute('data-wow-delay', '0.1s');
-
-        // const browseMoreLink = document.createElement('a');
-        // browseMoreLink.classList.add('btn', 'btn-primary', 'rounded-pill', 'py-3', 'px-5');
-        // browseMoreLink.setAttribute('href', '/products');
-        // browseMoreLink.textContent = 'Browse More Products';
-
-        // col12.appendChild(browseMoreLink);
-        // row.appendChild(col12);
-
-        tabPane.appendChild(row);
-        productContainerList.appendChild(tabPane);
+      tabPane.appendChild(row);
+      productContainerList.appendChild(tabPane);
     });
+
+    // Get the loading spinner
+    const loadingSpinner = document.getElementById('loading-spinner');
+    loadingSpinner.style.display = 'none';
 }
 
 function generateProductCards(products) {
@@ -860,7 +879,7 @@ function generateProductCards(products) {
 
 ZALOPAY_KEY_1 = 'sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn'
 ZALOPAY_APP_ID = 2554
-ZALOPAY_CALLBACK_URL = 'https://c056-2405-4802-90a4-50f0-64ee-63ac-8d18-fd9.ngrok-free.app/api/payment-status/'
+ZALOPAY_CALLBACK_URL = 'https://e836-2405-4802-8029-8a90-1df5-bdcb-357c-8534.ngrok-free.app/api/payment-status/'
 
 const generateAppTransId = (orderId, createdAt) => {
     return `${createdAt.format('YYMMDD')}_${orderId}`
@@ -891,7 +910,7 @@ const generateEmbedData = (provider) => {
     //   }
     const embedData = {
         preferred_payment_method: preferredPaymentMethod,
-        redirecturl: 'https://c056-2405-4802-90a4-50f0-64ee-63ac-8d18-fd9.ngrok-free.app/order/payment/success'
+        redirecturl: 'https://e836-2405-4802-8029-8a90-1df5-bdcb-357c-8534.ngrok-free.app/order/payment/success'
     };
     return JSON.stringify(embedData);
 };

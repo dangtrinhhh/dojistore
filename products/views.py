@@ -114,7 +114,7 @@ def index(request):
                 else:
                     user = User.objects.create_user(username=username, email=email, password=password)
                     user.save()
-                    messages.success(request, 'Register successfully.')
+                    messages.success(request, 'Register successfully. Chào mừng đến với DoubleT Bad')
                     return redirect('login')
             else:
                 messages.info(request, 'Passwords donot match')
@@ -139,6 +139,7 @@ def register(request):
             else:
                 user = User.objects.create_user(username=username, email=email, password=password)
                 user.save()
+                messages.success(request, 'Register successfully. Chào mừng đến với DoubleT Bad')
                 user = auth.authenticate(username=username, password=password)
                 auth.login(request, user)
                 if nextUrl != '' and nextUrl is not None:
@@ -422,8 +423,31 @@ def orderDetails(request, slug):
     user = request.user
     blogs = Blogs.objects.all().order_by('-created_at')
     cart = None
+
     try:
         order_details = Orders.objects.get(order_code=slug)
+        # Lấy tất cả chi tiết đơn hàng liên quan đến đơn hàng này
+        order_details_products = Order_Details.objects.filter(order=order_details).select_related('product')
+
+        # Retrieve all products from the order details
+        products = [order_detail.product for order_detail in order_details_products]
+
+        # Create a dictionary to hold product images
+        product_images_dict = {}
+
+        # Retrieve images for each product
+        for product in products:
+            product_images_dict[product.product_id] = Product_Images.objects.filter(product_id=product.product_id)
+
+        # Add images as an attribute to each product
+        for product in products:
+            product.images = product_images_dict.get(product.product_id, [])
+            # order_details_products = Order_Details.objects.filter(order_id=order_details.order_id)
+
+        # for order_details_product in order_details_products:
+        #     order_products = Products.objects.filter(product_id=order_details_product.product_id)
+
+        #     products = [order_detail.product for order_detail in order_details_products]
     except Orders.DoesNotExist:
         return redirect('/404')
         
@@ -434,11 +458,11 @@ def orderDetails(request, slug):
             cart, created = Carts.objects.get_or_create(user=user_profile)
         except Exception as e:
             cart = Carts.objects.filter(user=user_profile).order_by('-created_at').first()
-            messages.error(request, f"Lỗi lấy giỏ hàng: {str(e)}")
+            messages.error(request, f"Lỗi lấy đơn hàng: {str(e)}")
 
         if user_profile.id == order_details.user_id:
-            return render(request, 'orderDetails.html', {'user': user, 'cart': cart, 'order_details': order_details, 'blogs': blogs})
-    
+            return render(request, 'orderDetails.html', {'user': user, 'cart': cart, 'order_details': order_details, 'order_details_products': order_details_products, 'order_products': products, 'blogs': blogs})
+
     return redirect('/404')
 
 def payment(request):
@@ -448,11 +472,15 @@ def paymentSuccess(request):
     user = request.user
     if user.is_authenticated:
         user_profile, created = Users.objects.get_or_create(user=user)
-        order = Orders.objects.filter(user=user_profile).order_by('-created_at')[0]
+        order = Orders.objects.filter(user=user_profile).order_by('-created_at')
+        
+        if (len(order) > 1):
+            order = order[0]
+        
         print(order)
 
-    if ('amount' in request.GET) or (order is not None):
-        return render(request, 'paymentSuccess.html', {'order_code': order.order_code})
+        if ('amount' in request.GET) or (order is not None):
+            return render(request, 'paymentSuccess.html', {'order_code': order.order_code})
     
     return render(request, 'paymentSuccess.html')
 

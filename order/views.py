@@ -140,56 +140,58 @@ def delete_cart_item(request, cart_detail_id):
     return Response({"message": "Cart item deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
 
 
+from django.db import transaction
+from rest_framework import status
+
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_order(request):
     user = request.user
+    user_profile, created = Users.objects.get_or_create(user=user)
+
     if request.method == 'POST':
-        order_data = request.data
-        order_data['user'] = user.id 
+        # Extract order information from request data
+        payment_method = request.data.get('payment_method')
+        total_amount = request.data.get('total_amount')
+        note = request.data.get('note')
+        status = request.data.get('status', 'Pending')  # default status if not provided
 
-        order = Orders()
-        # Gọi hàm generate_order_code từ instance
-        order_data['order_code'] = order.generate_order_code()
+        order_details = request.data.get('order_details', [])
 
-        order_serializer = OrderSerializer(data=order_data)
-        if order_serializer.is_valid():
-            order = order_serializer.save()
+        # Create an order transactionally
+        with transaction.atomic():
+            # Create the order instance
+            order = Orders.objects.create(
+                user=user_profile,
+                payment_method=payment_method,
+                total_amount=total_amount,
+                note=note,
+                status=status
+            )
 
-            # Lấy danh sách chi tiết đơn hàng từ dữ liệu yêu cầu
-            order_details_data = request.data.get('order_details', [])
-            if not isinstance(order_details_data, list):
-                return Response({'error': 'Invalid order details format'}, status=status.HTTP_400_BAD_REQUEST)
+            # Create order details for each item in order_details
+            for item in order_details:
+                product_id = item.get('product_id')
+                quantity = item.get('quantity')
+                price = item.get('price')
 
-            # Tạo serializer cho từng chi tiết đơn hàng và lưu vào cơ sở dữ liệu
-            for detail_data in order_details_data:
-                # Lấy thông tin sản phẩm từ order_details
-                product_id = detail_data.get('product_id')
-                price = detail_data.get('price')
+                # Fetch the product instance
+                product = Products.objects.get(product_id=product_id)
 
-                # Kiểm tra xem product_id có tồn tại không
-                if not product_id:
-                    return Response({'error': 'Product ID is required'}, status=status.HTTP_400_BAD_REQUEST)
+                Order_Details.objects.create(
+                    order=order,
+                    product=product,
+                    quantity=quantity,
+                    price=price
+                )
 
-                # Kiểm tra xem sản phẩm có tồn tại trong cơ sở dữ liệu không
-                try:
-                    product = Products.objects.get(pk=product_id)
-                except Products.DoesNotExist:
-                    return Response({'error': f'Product with ID {product_id} does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+            # Optionally, you may want to perform additional operations such as updating stock levels, etc.
 
-                # Cập nhật detail_data với sản phẩm và order tương ứng
-                detail_data['product'] = product_id
-                detail_data['price'] = price
-                detail_data['order'] = order.pk
+        # Serialize and return the order response
+        serializer = OrderSerializer(order)
+        return Response(serializer.data, '201')
 
-                # Tạo serializer cho chi tiết đơn hàng và lưu vào cơ sở dữ liệu
-                detail_serializer = OrderDetailSerializer(data=detail_data)
-                if detail_serializer.is_valid():
-                    detail_serializer.save()
-                else:
-                    return Response(detail_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-            return Response(order_serializer.data, status=status.HTTP_201_CREATED)
-    return Response(order_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response({"message": "Lỗi tạo đơn hàng"})
 
 @api_view(['GET'])
 def order_detail(request, order_id):
@@ -274,7 +276,7 @@ from datetime import datetime
 import json, hmac, hashlib, urllib.request, urllib.parse, random
 
 # CALLBACK_URL='http://127.0.0.1:8000/'
-CALLBACK_URL='https://581d-2405-4802-8002-c850-4522-6467-b49c-cfcd.ngrok-free.app/'
+CALLBACK_URL='https://e836-2405-4802-8029-8a90-1df5-bdcb-357c-8534.ngrok-free.app/'
 ZALOPAY_KEY_1 = "sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn"
 ZALOPAY_APP_ID = 2554
 ZALOPAY_CALLBACK_URL = f"{CALLBACK_URL}api/payment-status/"
@@ -376,6 +378,10 @@ def payment_status(request):
             # cart, created = Carts.objects.get_or_create(user=user_profile.id)
             try:
                 cart, created = Carts.objects.get_or_create(user=user_profile)
+                order, created = Orders.objects.get_or_create(user=user_profile).order_by('-created_at').first()
+                order.status = 'paid'
+                order.save()
+                
             except Exception as e:
                 cart = Carts.objects.filter(user=user_profile).order_by('-created_at').first()
                 messages.error(request, f"Lỗi lấy giỏ hàng: {str(e)}")

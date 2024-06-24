@@ -80,7 +80,7 @@
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                   Phí Ship
-                  <span>Gratis</span>
+                  <span>Free</span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
                   <div>
@@ -130,14 +130,22 @@
 
     // Function to generate HTML code based on product data
     function generateProductHTML(product) {
-      console.log("🚀 ~ product:", product.product.product_id)
+      // console.log("🚀 ~ product:", product.product.product_id)
+      let urlString = ''
+      if (product.product.images[0].url.includes('https')) {
+        // Thực hiện replace
+        urlString = product.product.images[0].url.replace('http://e836-2405-4802-8029-8a90-1df5-bdcb-357c-8534.ngrok-free.app/media/https%3A', 'https:/');
+      } else {
+        urlString = product.product.images[0].url;
+      }
+      
       return `
             <div class="product_id-${product.product.product_id}">
               <div class="row">
                 <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
                   <!-- Image -->
                   <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
-                    <img src="${product.product.images[0].url}" class="w-100" />
+                    <img src="${urlString}" class="w-100" />
                     <a href="#!">
                       <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
                     </a>
@@ -199,7 +207,7 @@
       });
     }
 
-    function processPayment() {
+    async function processPayment() {
       const orderDetails = products.map(item => {
         return {
             product_id: item.product.product_id,
@@ -233,10 +241,11 @@
       console.log("🚀 ~ payload_zalopay:", JSON.stringify(payload_zalopay))
       // "order_code": `${year}${month}${day}${username}${user.id}`
       
-      createOrderDoubleTBad(order);
-
       refreshAccessToken();
       var accessToken = localStorage.getItem('accessToken');
+      console.log("🚀 ~ accessToken before create order:", accessToken)
+
+      await createOrderDoubleTBad(order);
 
       fetch('/api/process-payment/', {
         method: 'POST',
@@ -257,10 +266,8 @@
           }
         })
         .catch(error => {
-          console.error('Error when processing image:', error);
+          console.error('Error when create ZaloPay Order image:', error);
         })
-      
-      
       
       // End Process Payment
     }
@@ -410,10 +417,15 @@
           totalAmountProduct.innerHTML = convertToVND(parseFloat(totalAmount));
 
           let totalQuantity = countTotalItems(products);
-          var totalQuantityProduct = document.getElementById('cart-item-count');
           var totalItems = document.querySelector('.total-item-cart-quantity');
+          
+          var cartItemQuantity = document.querySelectorAll('.cart-item-count');
 
-          totalQuantityProduct.innerHTML = totalQuantity;
+          cartItemQuantity.forEach(item => {
+              let cartItemCount = parseInt(item.innerText);
+              item.innerHTML = totalQuantity;
+          })
+
           totalItems.innerHTML = `Giỏ hàng - ${totalQuantity} Sản phẩm`
         })
         .catch(error => {

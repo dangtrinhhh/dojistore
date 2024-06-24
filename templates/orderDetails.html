@@ -100,9 +100,56 @@
                 </div>
               </div> -->
 
+              <div id="productContainer" class="card-body">
+                {% for product in order_products %}
+                <div class="product_id-{{ product.product_id }}">
+                  <div class="row">
+                    <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
+                      <!-- Image -->
+                      <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
+                        {% for image in product.images %}
+                        {% if "http" not in image.url %}
+                            <img src="/media/{{ image.url }}" class="w-100" />
+                        {% else %}
+                            <img src="{{ image.url }}" class="w-100" />
+                        {% endif %}
+                        {% endfor %}
+                        <a href="#!">
+                          <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
+                        </a>
+                      </div>
+                      <!-- Image -->
+                    </div>
+          
+                    <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
+                      <!-- Data -->
+                      <p><strong>{{ product.name }}</strong></p>
+                      <p>Đã bán: {{ product.quantity_sold }}</p>
+                      <p>Còn lại: {{ product.quantity }}</p>
+          
+                      <button type="button" class="btn btn-danger btn-sm mb-2" data-mdb-toggle="tooltip" title="Thích">
+                        <i class="fas fa-heart"></i>
+                      </button>
+                      <!-- Data -->
+                    </div>
+          
+                    <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                      <!-- Price -->
+                      <p class="text-start text-md-center convert-to-vnd">
+                        {{ product.pricesale }}
+                      </p>
+                      <!-- Price -->
+                    </div>
+                  </div>
+                  <hr class="my-4" />
+                </div>
+                {% endfor %}
+              </div>
+
               <div class="d-flex justify-content-between pt-2">
                 <p class="fw-bold mb-0">Chi tiết đơn hàng</p>
-                <p class="text-muted mb-0"><span class="fw-bold me-4">Tổng cộng</span><span class="convert-to-vnd"></span></p>
+                <p class="text-muted mb-0"><span class="fw-bold me-4">Tổng cộng</span><span
+                    class="convert-to-vnd">{{ order_details.total_amount }}</span></p>
               </div>
 
               <div class="d-flex justify-content-between pt-2">
@@ -118,7 +165,8 @@
             </div>
             <div class="card-footer border-0 px-4 py-5"
               style="background-color: #3c6fdc; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
-              <h5 class="d-flex align-items-center justify-content-end text-white text-uppercase mb-0">Tổng cộng: <span class="h2 mb-0 ms-2 convert-to-vnd"></span></h5>
+              <h5 class="d-flex align-items-center justify-content-end text-white text-uppercase mb-0">Tổng cộng: <span
+                  class="h2 mb-0 ms-2 convert-to-vnd">{{ order_details.total_amount }}</span></h5>
             </div>
           </div>
         </div>
@@ -144,9 +192,19 @@
     -->
   <script>
     var total_amount = "{{ order_details.total_amount }}"
+    var order_products = "{{ order_products }}"
+    console.log("🚀 ~ order_products:", order_products)
     console.log("🚀 ~ total_amount:", total_amount)
-    var convertVNDDiv = document.querySelectorAll('.convert-to-vnd');
-    convertVNDDiv.forEach(item => item.innerHTML = convertToVND(parseFloat(total_amount)));
+    const user = "{{ user }}";
+    const userid = "{{ user.id }}";
+    let products = []
+
+    function convertToVND(money) {
+      return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(money);
+    }
+
+    // var convertVNDDiv = document.querySelectorAll('.convert-to-vnd');
+    // convertVNDDiv.forEach(item => item.innerHTML = convertToVND(parseFloat(total_amount)));
 
     function calculateDeliveryDate() {
       var currentDate = new Date();
@@ -158,7 +216,39 @@
     // Lấy ngày nhận đơn từ Django template và hiển thị
     var deliveryDate = calculateDeliveryDate();
     document.querySelector(".date-delivery").innerText = "Ngày nhận đơn: " + deliveryDate;
-    document.addEventListener('DOMContentLoaded', function () {});
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var cart_id = "{{ cart.cart_id }}";
+      console.log("🚀 ~ cart_id:", cart_id);
+
+      // Fetch cart details and use the data
+      // renderProductHTML(order_products);
+
+      var priceElements = document.querySelectorAll('.convert-to-vnd');
+
+      priceElements.forEach(function (element) {
+        var priceValue = element.innerHTML.trim();
+        var convertedValue = convertToVND(parseFloat(priceValue));
+        element.innerHTML = convertedValue;
+      });
+    });
+
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          // Kiểm tra xem cookie có tên là name= không
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
   </script>
 </body>
 

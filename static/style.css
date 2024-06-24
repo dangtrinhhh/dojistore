@@ -213,6 +213,15 @@ nav li {
     white-space: nowrap;
 }
 
+.multiline-truncate {
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Number of lines to show */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 100px;
+}
+
 .product-type-title {
     color: #fff;
     background-color: #1221aa;

@@ -17,6 +17,7 @@
     <link rel="icon" href="{% static 'img/logo.png' %}" type="image/x-icon" />
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/responsive.css' %}">
     <link
       rel="stylesheet"
       href="{% static '/font/themify-icons-font/themify-icons.css' %}"
@@ -96,7 +97,7 @@
             >
               <h1 class="text-lora display-5 mb-3">Sản phẩm mới</h1>
               <p>
-                Khám phá khó sản phẩm mới đa dạng đang được cập nhật liên tục tại đây nè mấy ní 😉
+                Khám phá kho sản phẩm mới đa dạng đang được cập nhật liên tục tại đây nè mấy ní 😉
               </p>
             </div>
           </div>
@@ -107,6 +108,15 @@
             <ul id="product-type-list" class="nav nav-pills d-inline-flex justify-content-end mb-5"></ul>            
           </div>
         </div>
+        
+        <!-- Loading Effect -->
+        <div id="loading-spinner" style="display: block; text-align: center;">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <div>Đang lấy sản phẩm</div>
+        </div>
+
         <div id="product-container-list" class="tab-content"></div>
       </div>
     </div>
@@ -122,7 +132,7 @@
                   <p class="text-white mb-0">Khám phá thế giới phụ kiện cầu lông lớn nhất Việt Nam, nơi cung cấp đầy đủ các sản phẩm và dịch vụ cho cộng đồng người chơi cầu lông đam mê. Tại đây, chúng tôi không chỉ cung cấp những chiếc vợt chất lượng, mà còn đồng hành cùng bạn qua mỗi set đấu với những phụ kiện cầu lông đa dạng và chất lượng hàng đầu. Bạn sẽ khám phá thế giới của những đôi giày êm ái, quần áo thoáng khí và những bình nước tiện lợi, tất cả được thiết kế để nâng cao trải nghiệm chơi cầu lông của bạn.</p>
               </div>
               <div class="col-md-5 text-md-end wow fadeIn" data-wow-delay="0.5s">
-                  <a class="btn btn-lg btn-carrot rounded-pill py-3 px-5" href="">Xem ngay</a>
+                  <a class="btn btn-lg btn-carrot rounded-pill py-3 px-5" href="/aboutUs">Xem ngay</a>
               </div>
           </div>
       </div>
@@ -144,6 +154,14 @@
   <!-- Brands Start -->
   {% include 'components/brandSlider.html' %}
   <!-- Brands End -->
+
+  <!-- Shopping Cart Button for Small Screens -->
+  <a href="/cart">
+    <div class="shopping-bag-icon-small d-lg-none">
+      <i class="fa fa-shopping-bag greentea-color"></i>
+      <span class="circle-badge cart-item-count">{{ cart.total_quantity }}</span>
+    </div>
+  </a>
 
   <!-- Footer Start -->
   {% include 'components/footer.html' with blogs=blogs %}
@@ -220,7 +238,7 @@
             productTypeInfo.products.forEach((productInfo, index2) => {
               if (index2 < 8) {
                 const col = document.createElement('div');
-                col.classList.add('col-xl-3', 'col-lg-4', 'col-md-6', 'wow', 'fadeInUp', 'my-4');
+                col.classList.add('col-xl-3', 'col-md-4', 'col-sm-6', 'col-6', 'wow', 'fadeInUp', 'my-4');
                 col.setAttribute('data-wow-delay', '0.1s');
         
                 const productItem = document.createElement('div');
@@ -235,9 +253,15 @@
                   productImage.classList.add('card-img-top', 'w-100');
                   productImage.setAttribute('alt', 'Product Image');
                   if (imageInfo) {
-                    productImage.setAttribute('src', imageInfo.url);
+                    if (imageInfo.url.includes('https')) {
+                      // Thực hiện replace
+                      let urlString = imageInfo.url.replace('/media/https%3A', 'https:/');
+                      productImage.setAttribute('src', urlString);
+                    } else {
+                      productImage.setAttribute('src', imageInfo.url);
+                    }
                   } else {
-                    productImage.setAttribute('src', '/static/img/product-1.jpg'); // Đường dẫn mặc định cho hình ảnh sản phẩm
+                    productImage.setAttribute('src', '/static/img/vot-default.webp'); // Đường dẫn mặc định cho hình ảnh sản phẩm
                   }
                 }
         
@@ -252,7 +276,7 @@
                 textCenter.classList.add('text-center', 'p-4');
         
                 const productLink = document.createElement('a');
-                productLink.classList.add('d-block', 'h5', 'text-decoration-none', 'text-dark', 'text-lora', 'mb-2', 'text-start', 'text-truncate');
+                productLink.classList.add('d-block', 'h5', 'text-decoration-none', 'text-dark', 'text-lora', 'mb-2', 'text-start', 'multiline-truncate');
                 productLink.setAttribute('href', `/products/${productInfo.product_id}`);
                 productLink.textContent = productInfo.name || ' ';
         
@@ -328,10 +352,10 @@
                   const viewDetailButton = document.createElement('button');
                   viewDetailButton.setAttribute('type', 'button');
                   viewDetailButton.classList.add('btn', 'btn-transparent', 'btn-sm');
+                  viewDetailButton.setAttribute('onclick', `window.location.href='/products/${productInfo.product_id}'`);
         
                   const viewDetailLink = document.createElement('a');
                   viewDetailLink.classList.add('text-body', 'text-decoration-none', 'view-detail');
-                  viewDetailLink.setAttribute('href', `/products/${productInfo.product_id}`);
                   viewDetailLink.innerHTML = '<i class="fa fa-eye greentea-color me-2"></i>Xem chi tiết';
         
                   viewDetailButton.appendChild(viewDetailLink);
@@ -343,11 +367,11 @@
                   const addToCartButton = document.createElement('button');
                   addToCartButton.setAttribute('type', 'button');
                   addToCartButton.classList.add('btn', 'btn-transparent', 'btn-sm');
+                  addToCartButton.setAttribute('onclick', `updateCartItemCount('${productInfo.product_id}', 1)`);
         
                   const addToCartLink = document.createElement('a');
                   addToCartLink.classList.add('text-body', 'text-decoration-none', 'pe-auto', 'add-to-cart');
                   addToCartLink.setAttribute('data-product-id', productInfo.product_id);
-                  addToCartLink.setAttribute('onclick', `updateCartItemCount('${productInfo.product_id}', 1)`);
                   addToCartLink.innerHTML = '<i class="fa fa-shopping-bag greentea-color me-2"></i>Thêm vào giỏ';
         
                   addToCartButton.appendChild(addToCartLink);
@@ -379,6 +403,10 @@
             tabPane.appendChild(row);
             productContainerList.appendChild(tabPane);
           });
+
+          // Get the loading spinner
+          const loadingSpinner = document.getElementById('loading-spinner');
+          loadingSpinner.style.display = 'none';
         }
         
         // Use await to get the data

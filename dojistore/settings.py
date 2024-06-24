@@ -26,10 +26,10 @@ SECRET_KEY = 'django-insecure-$zljqo972i=qjpzcjx%old9dy$utpl$jkbxb)tq%mh2tplkdam
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'c056-2405-4802-90a4-50f0-64ee-63ac-8d18-fd9.ngrok-free.app']
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'e836-2405-4802-8029-8a90-1df5-bdcb-357c-8534.ngrok-free.app']
+# ALLOWED_HOSTS = ['*']
 # ALLOWED_HOSTS = [".awsapprunner.com"]
-CSRF_TRUSTED_ORIGINS = ['https://581d-2405-4802-8002-c850-4522-6467-b49c-cfcd.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS = ['https://e836-2405-4802-8029-8a90-1df5-bdcb-357c-8534.ngrok-free.app']
 
 # Application definition
 
@@ -170,9 +170,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Django x JWT
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),
-    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=5),
-    # 'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': False,

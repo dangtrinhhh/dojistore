@@ -54,4 +54,4 @@ volumes:
 
 networks:
   doublet-bad:
-    driver: bridge
+    external: true
