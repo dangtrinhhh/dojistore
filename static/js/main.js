@@ -879,7 +879,7 @@ function generateProductCards(products) {
 
 ZALOPAY_KEY_1 = 'sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn'
 ZALOPAY_APP_ID = 2554
-ZALOPAY_CALLBACK_URL = 'https://e836-2405-4802-8029-8a90-1df5-bdcb-357c-8534.ngrok-free.app/api/payment-status/'
+ZALOPAY_CALLBACK_URL = 'https://a4cc-2405-4802-902a-6460-656d-1edc-e80c-7f0d.ngrok-free.app/api/payment-status/'
 
 const generateAppTransId = (orderId, createdAt) => {
     return `${createdAt.format('YYMMDD')}_${orderId}`
@@ -910,7 +910,7 @@ const generateEmbedData = (provider) => {
     //   }
     const embedData = {
         preferred_payment_method: preferredPaymentMethod,
-        redirecturl: 'https://e836-2405-4802-8029-8a90-1df5-bdcb-357c-8534.ngrok-free.app/order/payment/success'
+        redirecturl: 'https://a4cc-2405-4802-902a-6460-656d-1edc-e80c-7f0d.ngrok-free.app/order/payment/success'
     };
     return JSON.stringify(embedData);
 };

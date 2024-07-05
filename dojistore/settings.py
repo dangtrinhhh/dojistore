@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 from datetime import timedelta
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,10 +27,11 @@ SECRET_KEY = 'django-insecure-$zljqo972i=qjpzcjx%old9dy$utpl$jkbxb)tq%mh2tplkdam
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'e836-2405-4802-8029-8a90-1df5-bdcb-357c-8534.ngrok-free.app']
+load_dotenv()
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', os.getenv('NGROK_HOST')]
 # ALLOWED_HOSTS = ['*']
 # ALLOWED_HOSTS = [".awsapprunner.com"]
-CSRF_TRUSTED_ORIGINS = ['https://e836-2405-4802-8029-8a90-1df5-bdcb-357c-8534.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS = [os.getenv('NGROK_URL')]
 
 # Application definition
 

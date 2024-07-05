@@ -258,8 +258,8 @@ class OrderDetailDetailView(generics.RetrieveUpdateDestroyAPIView):
 # from .retrieve_information import main
 from django.middleware.csrf import get_token
 from django.http import JsonResponse
-
-from django.http import JsonResponse
+from dotenv import load_dotenv
+import os
 
 def get_csrf_token(request):
     response = JsonResponse({'csrf_token': 'your_csrf_token'})
@@ -275,8 +275,8 @@ from time import time
 from datetime import datetime
 import json, hmac, hashlib, urllib.request, urllib.parse, random
 
-# CALLBACK_URL='http://127.0.0.1:8000/'
-CALLBACK_URL='https://e836-2405-4802-8029-8a90-1df5-bdcb-357c-8534.ngrok-free.app/'
+load_dotenv()
+CALLBACK_URL=os.getenv('NGROK_URL')
 ZALOPAY_KEY_1 = "sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn"
 ZALOPAY_APP_ID = 2554
 ZALOPAY_CALLBACK_URL = f"{CALLBACK_URL}api/payment-status/"

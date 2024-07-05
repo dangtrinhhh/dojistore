@@ -71,3 +71,13 @@ Werkzeug==3.0.1
 whitenoise==6.6.0
 yarl==1.9.4
 zipp==3.17.0
+requests==2.31.0
+uuid==1.30
+azure-ai-ml==1.17.0
+azure-ai-textanalytics==5.3.0
+azure-identity==1.17.1
+azure-storage-blob==12.20.0
+msal==1.29.0
+msal-extensions==1.2.0
+portalocker==2.10.0
+azure-ai-formrecognizer==3.2.0

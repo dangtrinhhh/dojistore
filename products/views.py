@@ -510,6 +510,7 @@ from rest_framework.response import Response
 from .serializers import ProductTypeSerializer, ProductSerializer, ProductWithTypeSerializer, ProductImageSerializer
 from rest_framework import generics
 from .serializers import ProductSerializer
+from .retrieve_information import getKeyPhrase
 
 # ____________________Search_______________________
 from django.db.models import Q
@@ -530,85 +531,49 @@ class ProductSearchView(generics.ListAPIView):
     serializer_class = ProductWithTypeSerializer
 
     def get_queryset(self):
-        name = self.request.query_params.get('keyword')
+        key = self.request.query_params.get('keyword')
+        keywords = getKeyPhrase(key) if key else []
         pricesale = self.request.query_params.get('price')
         product_type_id = self.request.query_params.get('type')
 
         queryset = []
 
-        if product_type_id:
-            product_type = Product_Types.objects.filter(product_type_id=product_type_id).first()
-            if product_type:
-                products = Products.objects.filter(product_type_id=product_type_id)
-                if name:
-                    products = products.filter(Q(name__icontains=name) | Q(description__icontains=name))
-                if pricesale:
-                    if '-' in pricesale:
-                        min_price, max_price = map(int, pricesale.split('-'))
-                    else:
-                        if pricesale == '<1000000':
-                            min_price = 0
-                            max_price = 1000000
-                        elif pricesale == '>5000000':
-                            min_price = 5000000
-                            max_price = float('inf')
-                    # Tạo danh sách lọc
-                    filtered_products = []
-                    for product in products:
-                        # Chuyển đổi giá tiền từ chuỗi thành số
-                        product_pricesale = int(product.pricesale)
-                        if min_price <= product_pricesale < max_price:
-                            filtered_products.append(product)
+        product_types = Product_Types.objects.filter(product_type_id=product_type_id) if product_type_id else Product_Types.objects.all()
 
-                    products = filtered_products                
+        for product_type in product_types:
+            products = Products.objects.filter(product_type_id=product_type.product_type_id)
 
-                serialized_products = ProductSerializer(products, many=True).data
+            if keywords:
+                keyword_query = Q()
+                for keyword in keywords:
+                    keyword_query |= Q(name__icontains=keyword) | Q(description__icontains=keyword)
+                products = products.filter(keyword_query)
 
-                queryset.append({'type': ProductTypeSerializer(product_type).data, 'products': serialized_products})
-        else:
-            product_types = Product_Types.objects.all()
-            for product_type in product_types:
-                products = Products.objects.filter(product_type_id=product_type.product_type_id)
-                if name:
-                    products = products.filter(Q(name__icontains=name) | Q(description__icontains=name))
-                if pricesale:
-                    if '-' in pricesale:
-                        min_price, max_price = map(int, pricesale.split('-'))
-                    else:
-                        if pricesale == '<1000000':
-                            min_price = 0
-                            max_price = 1000000
-                        elif pricesale == '>5000000':
-                            min_price = 5000000
-                            max_price = float('inf')
+            if pricesale:
+                products = self.filter_by_price(products, pricesale)
 
-                    # Tạo danh sách lọc
-                    filtered_products = []
-                    for product in products:
-                        # Chuyển đổi giá tiền từ chuỗi thành số
-                        product_pricesale = int(product.pricesale)
-                        if min_price <= product_pricesale < max_price:
-                            filtered_products.append(product)
-
-                    products = filtered_products
-
-                serialized_products = ProductSerializer(products, many=True).data
-
-                # Note: Không được lấy hình ảnh bên trong vì khi gọi nó sẽ trả về null
-                # for product in serialized_products:
-                #     product_obj = Products.objects.get(product_id=product['product_id'])
-                #     images_serializer = ProductImageSerializer(product_obj.product_images.all(), many=True)
-                #     product['images'] = images_serializer.data
-
-                queryset.append({'type': ProductTypeSerializer(product_type).data, 'products': serialized_products})
+            serialized_products = ProductSerializer(products, many=True).data
+            queryset.append({'type': ProductTypeSerializer(product_type).data, 'products': serialized_products})
 
         return queryset
-    
+
+    def filter_by_price(self, products, pricesale):
+        if '-' in pricesale:
+            min_price, max_price = map(int, pricesale.split('-'))
+        else:
+            if pricesale == '<1000000':
+                min_price, max_price = 0, 1000000
+            elif pricesale == '>5000000':
+                min_price, max_price = 5000000, float('inf')
+            else:
+                min_price, max_price = 0, float('inf')
+
+        return [product for product in products if min_price <= int(product.pricesale) < max_price]
+
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
 
-        # Loop through each product and add images
         for product_data in serializer.data:
             products = product_data['products']
             for product in products:
@@ -617,7 +582,7 @@ class ProductSearchView(generics.ListAPIView):
                 product['images'] = images_serializer.data
 
         return Response(serializer.data)
-
+    
 class ProductWithTypeAPIView(generics.ListAPIView):
     serializer_class = ProductWithTypeSerializer
 
