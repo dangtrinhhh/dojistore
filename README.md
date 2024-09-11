@@ -1,5 +1,5 @@
-# dojistore
-My ecomerce website using Django, HTML, CSS, JavaScript
+# DoubleT Badminton
+My e-commerce website using Django REST Framework, PostgreSQL, JWT, ZaloPay Payment, Azure AI Services
 
 # Create instance:
 Note: Create key pair, save testing.pem file (important)
